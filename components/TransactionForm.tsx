@@ -82,6 +82,16 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
     }
   }, [type, editData]);
 
+  // Auto-switch to 'saving' type if investment wallet is selected
+  useEffect(() => {
+    if (!editData && selectedWalletId && wallets.length > 0) {
+      const wallet = wallets.find(w => w.id === selectedWalletId);
+      if (wallet?.type === 'investment') {
+        setType('saving');
+      }
+    }
+  }, [selectedWalletId, wallets, editData]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (Number(amount) <= 0) {

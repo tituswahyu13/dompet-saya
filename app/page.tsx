@@ -76,15 +76,41 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
     const data = filteredTransactions;
     setPage(1); // Reset page on filter change
     
+    // Identify Investment Wallets
+    const investmentWalletIds = new Set(wallets.filter(w => w.type === 'investment').map(w => w.id));
+
     // Standard income/outcome should exclude internal transfers
     const totalInc = data.filter(t => !t.is_transfer).reduce((acc, curr) => acc + (curr.income || 0), 0);
     const totalOut = data.filter(t => !t.is_transfer).reduce((acc, curr) => acc + (curr.outcome || 0), 0);
-    const totalSav = data.filter(t => !t.is_transfer).reduce((acc, curr) => acc + (curr.saving || 0), 0);
+    
+    // Detailed Saving Calculation
+    let totalSav = 0;
+    data.forEach(t => {
+      if (!t.is_transfer) {
+        // 1. Transactions clearly marked as 'saving'
+        totalSav += (t.saving || 0);
+        
+        // 2. Income directly into an investment wallet is also saving
+        if (investmentWalletIds.has(t.wallet_id) && t.income > 0 && t.kategori !== 'Saldo Awal') {
+          totalSav += t.income;
+        }
+      } else {
+        // 3. Transfers IN to an investment wallet (from a non-investment source)
+        if (investmentWalletIds.has(t.wallet_id) && t.income > 0 && !investmentWalletIds.has(t.transfer_from_wallet_id)) {
+          totalSav += t.income;
+        }
+        // 4. Transfers OUT of an investment wallet (to a non-investment destination like Cash/Bank)
+        // This is considered "liquidating assets" or "unsaving"
+        if (investmentWalletIds.has(t.wallet_id) && t.outcome > 0 && !investmentWalletIds.has(t.transfer_to_wallet_id)) {
+          totalSav -= t.outcome;
+        }
+      }
+    });
     
     const initialBalance = data.filter(t => t.kategori === 'Saldo Awal' && !t.is_transfer).reduce((acc, curr) => acc + (curr.income || 0), 0);
     const earnedIncome = totalInc - initialBalance;
 
-    // Actual balance should include transfers
+    // Actual balance should include ALL movements
     const actualInc = data.reduce((acc, curr) => acc + (curr.income || 0), 0);
     const actualOut = data.reduce((acc, curr) => acc + (curr.outcome || 0), 0);
     const actualSav = data.reduce((acc, curr) => acc + (curr.saving || 0), 0);
@@ -96,7 +122,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       balance: actualInc - actualOut - actualSav,
       rate: earnedIncome > 0 ? (totalSav / earnedIncome) * 100 : 0
     });
-  }, [transactions, searchTerm, filterCategory, filterMonth, filterYear, selectedWalletFilter]);
+  }, [transactions, wallets, searchTerm, filterCategory, filterMonth, filterYear, selectedWalletFilter]);
 
   const handleDelete = async (id: any, user: User) => {
     if (!confirm("Hapus transaksi ini?")) return;
@@ -286,7 +312,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               </div>
 
               <div className="space-y-12">
-                <Insights transactions={filteredTransactions} isDark={isDark} />
+                <Insights transactions={filteredTransactions} isDark={isDark} wallets={wallets} />
                 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                   {/* Sidebar: Form & Target */}

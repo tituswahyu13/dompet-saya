@@ -8,11 +8,14 @@ interface Transaction {
   saving: number;
   tanggal: string;
   is_transfer?: boolean;
+  wallet_id: string;
+  transfer_from_wallet_id?: string;
+  transfer_to_wallet_id?: string;
 }
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#6366f1', '#ec4899', '#8b5cf6'];
 
-export default function Insights({ transactions, isDark }: { transactions: Transaction[], isDark: boolean }) {
+export default function Insights({ transactions, isDark, wallets }: { transactions: Transaction[], isDark: boolean, wallets: any[] }) {
   // 1. Process Data for Pie Chart (Outcome by Category)
   const categoryDataRaw = transactions
     .filter(t => t.outcome > 0 && !t.is_transfer)
@@ -79,14 +82,30 @@ export default function Insights({ transactions, isDark }: { transactions: Trans
     text: isDark ? '#94a3b8' : '#64748b'
   };
 
+  const investmentWalletIds = new Set(wallets?.filter(w => w.type === 'investment').map(w => w.id) || []);
+
   const totalEarnedIncome = transactions
-    .filter(t => t.kategori !== 'Saldo Awal')
+    .filter(t => t.kategori !== 'Saldo Awal' && !t.is_transfer)
     .reduce((acc, t) => acc + Number(t.income || 0), 0);
 
-  const totalSaving = transactions
-    .filter(t => t.kategori !== 'Saldo Awal')
-    .reduce((acc, t) => acc + Number(t.saving || 0), 0);
+  let calculatedSaving = 0;
+  transactions.forEach(t => {
+    if (!t.is_transfer) {
+      calculatedSaving += Number(t.saving || 0);
+      if (investmentWalletIds.has(t.wallet_id) && t.income > 0 && t.kategori !== 'Saldo Awal') {
+        calculatedSaving += Number(t.income);
+      }
+    } else {
+      if (investmentWalletIds.has(t.wallet_id) && t.income > 0 && !investmentWalletIds.has(t.transfer_from_wallet_id || '')) {
+        calculatedSaving += Number(t.income);
+      }
+      if (investmentWalletIds.has(t.wallet_id) && t.outcome > 0 && !investmentWalletIds.has(t.transfer_to_wallet_id || '')) {
+        calculatedSaving -= Number(t.outcome);
+      }
+    }
+  });
 
+  const totalSaving = calculatedSaving;
   const netFlow = totalEarnedIncome - totalOutcome - totalSaving;
   const isHealthy = netFlow >= 0;
   
