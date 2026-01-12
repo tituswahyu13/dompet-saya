@@ -1,10 +1,17 @@
-"use client"
 import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import { User } from '@supabase/supabase-js';
 
 interface Transaction {
   kategori: string;
   outcome: number;
   saving?: number;
+}
+
+interface Budget {
+  kategori: string;
+  limit: number;
+  id?: string;
 }
 
 const DEFAULT_BUDGETS = [
@@ -14,25 +21,72 @@ const DEFAULT_BUDGETS = [
   { kategori: 'Personal Care', limit: 300000 },
 ];
 
-export default function BudgetTracker({ transactions, isDark }: { transactions: Transaction[], isDark: boolean }) {
-  const [budgets, setBudgets] = useState(DEFAULT_BUDGETS);
+export default function BudgetTracker({ transactions, isDark, user }: { transactions: Transaction[], isDark: boolean, user: User }) {
+  const [budgets, setBudgets] = useState<Budget[]>(DEFAULT_BUDGETS);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Load from LocalStorage
+  // Load from Supabase
   useEffect(() => {
-    const saved = localStorage.getItem('dompet_budgets');
-    if (saved) {
-      try {
-        setBudgets(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to load budgets", e);
-      }
-    }
-  }, []);
+    fetchBudgets();
+  }, [user.id]);
 
-  const saveBudgets = () => {
-    localStorage.setItem('dompet_budgets', JSON.stringify(budgets));
-    setIsEditing(false);
+  const fetchBudgets = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('budgets')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        // Map DB fields to component state
+        const mapped = data.map(b => ({
+          id: b.id,
+          kategori: b.category,
+          limit: Number(b.limit_amount)
+        }));
+        
+        // Ensure we keep all default categories if some are missing in DB
+        const merged = DEFAULT_BUDGETS.map(def => {
+          const found = mapped.find(m => m.kategori === def.kategori);
+          return found || def;
+        });
+
+        setBudgets(merged);
+      }
+    } catch (error) {
+      console.error("Failed to load budgets from cloud", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveBudgets = async () => {
+    setLoading(true);
+    try {
+      // Upsert all budgets for this user
+      const toUpsert = budgets.map(b => ({
+        user_id: user.id,
+        category: b.kategori,
+        limit_amount: b.limit
+      }));
+
+      const { error } = await supabase
+        .from('budgets')
+        .upsert(toUpsert, { onConflict: 'user_id,category' });
+
+      if (error) throw error;
+      
+      setIsEditing(false);
+      await fetchBudgets(); // Refresh to get IDs
+    } catch (error: any) {
+      alert("Gagal sinkronisasi budget: " + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateLimit = (index: number, newLimit: string) => {
@@ -48,10 +102,7 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
       return acc;
     }, {});
 
-  // Calculate total saving
   const totalSaving = transactions.reduce((acc, curr) => acc + (curr.saving || 0), 0);
-  
-  // Calculate total budget limit
   const totalBudgetLimit = budgets.reduce((acc, curr) => acc + curr.limit, 0);
 
   return (
@@ -64,17 +115,20 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
       <div className="flex justify-between items-center mb-8 relative z-10 shrink-0">
         <div>
           <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Target Analytics</h3>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Management Anggaran</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Management Cloud Anggaran</p>
         </div>
         <button 
           onClick={() => isEditing ? saveBudgets() : setIsEditing(true)}
+          disabled={loading}
           className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${
             isEditing 
               ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' 
               : isDark ? 'bg-slate-800 text-slate-400 hover:text-white border border-white/5' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200'
-          }`}
+          } ${loading ? 'opacity-50' : ''}`}
         >
-          {isEditing ? (
+          {loading ? (
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          ) : isEditing ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
@@ -86,9 +140,14 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
         </button>
       </div>
 
+      {loading && budgets[0].limit === 3000000 && budgets[3].limit === 300000 ? (
+         <div className="absolute inset-0 z-20 bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 animate-pulse">Syncing Cloud...</p>
+         </div>
+      ) : null}
+
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-4 mb-8 relative z-10">
-        {/* Total Saving Card */}
         <div className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
           isDark ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50/50 border-blue-100'
         }`}>
@@ -101,7 +160,6 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
           </div>
         </div>
 
-        {/* Total Budget Card */}
         <div className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
           isDark ? 'bg-indigo-500/5 border-indigo-500/20' : 'bg-indigo-50/50 border-indigo-100'
         }`}>
@@ -115,10 +173,8 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
         </div>
       </div>
 
-      {/* Divider */}
       <div className={`h-px mb-8 relative z-10 ${isDark ? 'bg-white/5' : 'bg-slate-200'}`} />
 
-      {/* Budget Categories */}
       <div className="space-y-6 relative z-10">
         {budgets.map((budget, index) => {
           const spent = spendingByCategory[budget.kategori] || 0;
@@ -159,7 +215,6 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
                 </div>
               </div>
 
-              {/* Progress Bar */}
               <div className={`h-3 w-full rounded-full overflow-hidden flex ${isDark ? 'bg-slate-950/50' : 'bg-slate-100'}`}>
                 <div 
                   className={`h-full rounded-full transition-all duration-1000 relative ${

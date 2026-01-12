@@ -7,6 +7,7 @@ interface Transaction {
   outcome: number;
   saving: number;
   tanggal: string;
+  is_transfer?: boolean;
 }
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#6366f1', '#ec4899', '#8b5cf6'];
@@ -14,13 +15,15 @@ const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#6366f1', '#ec4899'
 export default function Insights({ transactions, isDark }: { transactions: Transaction[], isDark: boolean }) {
   // 1. Process Data for Pie Chart (Outcome by Category)
   const categoryDataRaw = transactions
-    .filter(t => t.outcome > 0)
+    .filter(t => t.outcome > 0 && !t.is_transfer)
     .reduce((acc: any, curr) => {
       acc[curr.kategori] = (acc[curr.kategori] || 0) + Number(curr.outcome || 0);
       return acc;
     }, {});
 
-  const totalOutcome = transactions.reduce((acc, t) => acc + Number(t.outcome || 0), 0);
+  const totalOutcome = transactions
+    .filter(t => !t.is_transfer)
+    .reduce((acc, t) => acc + Number(t.outcome || 0), 0);
 
   const categoryData = Object.keys(categoryDataRaw).map(key => {
     const val = Number(categoryDataRaw[key] || 0);
@@ -52,13 +55,15 @@ export default function Insights({ transactions, isDark }: { transactions: Trans
   }).slice(-15); // Show last 15 active days
 
   // 3. Process Data for Daily Flow (Income vs Outcome)
-  const trendDataRaw = transactions.reduce((acc: any, curr) => {
-    const date = new Date(curr.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
-    if (!acc[date]) acc[date] = { name: date, income: 0, outcome: 0 };
-    acc[date].income += curr.income;
-    acc[date].outcome += curr.outcome;
-    return acc;
-  }, {});
+  const trendDataRaw = transactions
+    .filter(t => !t.is_transfer)
+    .reduce((acc: any, curr) => {
+      const date = new Date(curr.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+      if (!acc[date]) acc[date] = { name: date, income: 0, outcome: 0 };
+      acc[date].income += curr.income;
+      acc[date].outcome += curr.outcome;
+      return acc;
+    }, {});
 
   const trendDataArr = Object.values(trendDataRaw).reverse().slice(-7);
 

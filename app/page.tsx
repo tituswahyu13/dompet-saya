@@ -343,7 +343,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                             Target Anggaran
                           </h2>
                         </div>
-                        <BudgetTracker transactions={filteredTransactions} isDark={isDark} />
+                        <BudgetTracker transactions={filteredTransactions} isDark={isDark} user={user} />
                       </section>
                     </div>
                   </div>
