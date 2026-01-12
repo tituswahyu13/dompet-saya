@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 
 const CATEGORIES = {
   income: ['Saldo Awal', 'Pendapatan', 'Bonus', 'Investasi'],
-  outcome: ['Kebutuhan Pokok', 'Lifestyle (Makan/Jajan)', 'Transport', 'Cicilan', 'Others'],
+  outcome: ['Kebutuhan Pokok', 'Lifestyle (Makan/Jajan)', 'Personal Care', 'Transport', 'Cicilan', 'Others'],
   saving: ['Tabungan', 'Dana Darurat', 'Investasi Saham/Emas', 'Others']
 };
 
