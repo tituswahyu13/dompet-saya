@@ -159,6 +159,21 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
     document.body.removeChild(link);
   };
 
+  const groupedWallets = wallets.reduce((acc: any, w) => {
+    const type = w.type || 'other';
+    if (!acc[type]) acc[type] = [];
+    acc[type].push(w);
+    return acc;
+  }, {});
+
+  const typeLabels: any = {
+    cash: '💵 Cash',
+    bank: '🏦 Bank',
+    ewallet: '📱 E-Wallet',
+    investment: '📈 Investment',
+    other: '💰 Other'
+  };
+
   // Initial fetch
   useEffect(() => {
     fetchData(user);
@@ -166,15 +181,16 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
 
   return (
     <div className={`min-h-screen transition-all duration-700 relative overflow-hidden ${isDark ? 'bg-[#020617] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-            {/* Background Blobs */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px] animate-float" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-500/10 rounded-full blur-[120px] animate-float" style={{ animationDelay: '-3s' }} />
+      {/* Background Blobs */}
+      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[160px] animate-float opacity-50" />
+      <div className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[160px] animate-float opacity-50" style={{ animationDelay: '-3s' }} />
+      <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-purple-600/5 rounded-full blur-[120px] animate-pulse-slow" />
 
-            {/* Header */}
-            <header className={`sticky top-0 z-50 border-b backdrop-blur-md transition-all duration-300 ${isDark ? 'bg-slate-950/50 border-white/5' : 'bg-white/70 border-slate-200'}`}>
-              <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+      {/* Header */}
+      <header className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-500 ${isDark ? 'bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20' : 'bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20'}`}>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-4 group cursor-pointer">
+            <div className="w-11 h-11 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                     </svg>
@@ -241,78 +257,120 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               </div>
             </header>
 
-            <main className="max-w-6xl mx-auto px-6 py-10 relative z-10">
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-12">
-                <div className={`p-6 rounded-3xl border transition-all hover:scale-[1.02] col-span-2 md:col-span-2 lg:col-span-1 shadow-sm ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Total Saldo</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-xs font-bold text-blue-500">Rp</span>
-                    <p className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter`}>{stats.balance.toLocaleString('id-ID')}</p>
+      <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 space-y-12">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
+          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] col-span-2 md:col-span-2 lg:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
+            <div className="absolute -right-8 -bottom-8 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-colors" />
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Total Saldo</p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xs font-black text-blue-500">IDR</span>
+              <p className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter`}>{stats.balance.toLocaleString('id-ID')}</p>
+            </div>
+          </div>
+
+          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
+            <div className="absolute -right-8 -bottom-8 w-24 h-24 bg-green-500/5 rounded-full blur-2xl group-hover:bg-green-500/10 transition-colors" />
+            <p className="text-[10px] font-black text-green-500 uppercase tracking-[0.2em] mb-4">Pemasukan</p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xs font-black text-green-600">IDR</span>
+              <p className="text-3xl font-black text-green-600 tracking-tighter">{stats.income.toLocaleString('id-ID')}</p>
+            </div>
+          </div>
+
+          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
+            <div className="absolute -right-8 -bottom-8 w-24 h-24 bg-red-500/5 rounded-full blur-2xl group-hover:bg-red-500/10 transition-colors" />
+            <p className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em] mb-4">Pengeluaran</p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xs font-black text-red-600">IDR</span>
+              <p className="text-3xl font-black text-red-600 tracking-tighter">{stats.outcome.toLocaleString('id-ID')}</p>
+            </div>
+          </div>
+
+          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-blue-900/20' : 'bg-blue-50/50 border-blue-100'}`}>
+            <div className="absolute -right-8 -bottom-8 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors" />
+            <p className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-4">Tabungan</p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xs font-black text-blue-500">IDR</span>
+              <p className={`text-3xl font-black tracking-tighter ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{stats.saving.toLocaleString('id-ID')}</p>
+            </div>
+          </div>
+
+          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] md:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-indigo-900/20' : 'bg-indigo-50/50 border-indigo-100'}`}>
+            <div className="absolute -right-8 -bottom-8 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-colors" />
+            <p className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4">Saving Rate</p>
+            <p className="text-3xl font-black text-indigo-600 tracking-tighter">{stats.rate.toFixed(1)}<span className="text-sm ml-0.5">%</span></p>
+          </div>
+        </div>
+
+        {/* Wallet Management Section */}
+        <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${
+          isDark ? 'glass-dark border-white/5' : 'glass border-white'
+        }`}>
+          <div className="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/5 rounded-full blur-[100px]" />
+          
+          <div className="flex items-center gap-3 mb-8 px-1">
+            <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
+            <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Arsitektur Wallet</h2>
+          </div>
+
+          <div className="space-y-8">
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedWalletFilter('All')}
+                className={`px-7 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                  selectedWalletFilter === 'All'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-xl shadow-blue-500/20 scale-105'
+                    : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                }`}
+              >
+                🌐 Semua Dompet
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Object.keys(groupedWallets).sort().map(type => (
+                <div key={type} className="space-y-4">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] px-1 border-l-2 border-indigo-500/30 pl-3">
+                    {typeLabels[type] || type.toUpperCase()}
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {groupedWallets[type].map((w: any) => (
+                      <button
+                        key={w.id}
+                        onClick={() => setSelectedWalletFilter(w.id)}
+                        className={`px-5 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-3 group relative overflow-hidden flex-1 min-w-[140px] ${
+                          selectedWalletFilter === w.id
+                            ? 'bg-slate-900 text-white border-transparent shadow-2xl scale-105'
+                            : isDark ? 'bg-slate-900/60 text-slate-500 border-white/5 hover:border-white/10 hover:bg-slate-900/80' : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                        }`}
+                      >
+                        <div 
+                          className="absolute left-0 top-0 bottom-0 w-1 transition-all"
+                          style={{ backgroundColor: w.color }}
+                        />
+                        <span className="text-xl group-hover:scale-110 transition-transform">{w.icon}</span>
+                        <div className="text-left">
+                          <p className={`truncate max-w-[100px] ${selectedWalletFilter === w.id ? 'text-white' : isDark ? 'text-slate-200' : 'text-slate-800'}`}>{w.name}</p>
+                          <p className="text-[9px] opacity-60 font-black tracking-tight">Rp {w.current_balance?.toLocaleString('id-ID')}</p>
+                        </div>
+                      </button>
+                    ))}
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <div className={`p-6 rounded-3xl border transition-all hover:scale-[1.02] shadow-sm ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-                  <p className="text-[10px] font-black text-green-500 uppercase tracking-widest mb-3">Pendapatan</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-xs font-bold text-green-600">Rp</span>
-                    <p className="text-2xl font-black text-green-600 tracking-tighter">{stats.income.toLocaleString('id-ID')}</p>
-                  </div>
-                </div>
-
-                <div className={`p-6 rounded-3xl border transition-all hover:scale-[1.02] shadow-sm ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-                  <p className="text-[10px] font-black text-red-500 uppercase tracking-widest mb-3">Pengeluaran</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-xs font-bold text-red-600">Rp</span>
-                    <p className="text-2xl font-black text-red-600 tracking-tighter">{stats.outcome.toLocaleString('id-ID')}</p>
-                  </div>
-                </div>
-
-                <div className={`p-6 rounded-3xl border transition-all hover:scale-[1.02] shadow-sm ${isDark ? 'glass-dark border-blue-900/20' : 'bg-blue-50/50 border-blue-100 text-blue-600'}`}>
-                  <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-3">Tabungan</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-xs font-bold text-blue-500">Rp</span>
-                    <p className={`text-2xl font-black tracking-tighter ${isDark ? 'text-blue-400' : ''}`}>{stats.saving.toLocaleString('id-ID')}</p>
-                  </div>
-                </div>
-
-                <div className={`p-6 rounded-3xl border transition-all hover:scale-[1.02] md:col-span-1 shadow-sm ${isDark ? 'glass-dark border-indigo-900/20' : 'bg-indigo-50/50 border-indigo-100'}`}>
-                  <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-3">Saving Rate</p>
-                  <p className="text-2xl font-black text-indigo-600 tracking-tighter">{stats.rate.toFixed(1)}<span className="text-sm ml-0.5">%</span></p>
-                </div>
-              </div>
-
-              {/* Wallet Switcher */}
-              <div className="flex flex-wrap gap-2 mb-12">
-                <button
-                  onClick={() => setSelectedWalletFilter('All')}
-                  className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border ${
-                    selectedWalletFilter === 'All'
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/20 scale-105'
-                      : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  🌐 Semua Dompet
-                </button>
-                {wallets.map((w) => (
-                  <button
-                    key={w.id}
-                    onClick={() => setSelectedWalletFilter(w.id)}
-                    className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-2 ${
-                      selectedWalletFilter === w.id
-                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-500/20 scale-105'
-                        : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
-                    }`}
-                  >
-                    <span>{w.icon}</span>
-                    <span>{w.name}</span>
-                    <span className="opacity-50 text-[8px]">Rp {w.current_balance?.toLocaleString('id-ID')}</span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="space-y-12">
-                <Insights transactions={filteredTransactions} isDark={isDark} wallets={wallets} />
+        <div className="space-y-16">
+          <section>
+            <div className="flex items-center gap-3 mb-8 px-2">
+              <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
+              <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Data Intelligence</h2>
+            </div>
+            <Insights transactions={filteredTransactions} isDark={isDark} wallets={wallets} />
+          </section>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                   {/* Sidebar: Form & Target */}
@@ -375,71 +433,60 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                   </div>
 
                   {/* Content: History */}
-                  <div className="lg:col-span-8">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6 px-2">
-                      <div className="flex items-center gap-2">
+                  <div className="lg:col-span-8 space-y-8">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 px-1">
+                      <div className="flex items-center gap-3">
                         <div className="w-1.5 h-6 bg-slate-400 rounded-full" />
-                        <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Alur Transaksi</h2>
+                        <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Arus Kas & Ledger</h2>
                       </div>
-                    <div className="flex flex-wrap w-full md:w-auto gap-2">
-                      <select 
-                        value={filterMonth}
-                        onChange={(e) => setFilterMonth(e.target.value)}
-                        className={`p-2 text-xs border rounded-xl outline-none transition-all shadow-sm cursor-pointer ${
-                          isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
-                        }`}
-                      >
-                        <option value="All">Semua Bulan</option>
-                        {['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((m, i) => (
-                          <option key={m} value={(i + 1).toString()}>{m}</option>
-                        ))}
-                      </select>
+                      
+                      <div className="flex flex-wrap w-full md:w-auto items-center gap-3">
+                        <div className="flex items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5 backdrop-blur-sm">
+                          <select 
+                            value={filterMonth}
+                            onChange={(e) => setFilterMonth(e.target.value)}
+                            className={`p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none transition-all cursor-pointer ${
+                              isDark ? 'text-slate-300' : 'text-slate-600'
+                            }`}
+                          >
+                            <option value="All">Bulan</option>
+                            {['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((m, i) => (
+                              <option key={m} value={(i + 1).toString()}>{m}</option>
+                            ))}
+                          </select>
+                          <div className="w-px h-4 bg-slate-400/20" />
+                          <select 
+                            value={filterYear}
+                            onChange={(e) => setFilterYear(e.target.value)}
+                            className={`p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none transition-all cursor-pointer ${
+                              isDark ? 'text-slate-300' : 'text-slate-600'
+                            }`}
+                          >
+                            {['2024', '2025', '2026'].map(y => (
+                              <option key={y} value={y}>{y}</option>
+                            ))}
+                          </select>
+                        </div>
 
-                      <select 
-                        value={filterYear}
-                        onChange={(e) => setFilterYear(e.target.value)}
-                        className={`p-2 text-xs border rounded-xl outline-none transition-all shadow-sm cursor-pointer ${
-                          isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
-                        }`}
-                      >
-                        <option value="All">Semua Tahun</option>
-                        {[2024, 2025, 2026].map(y => (
-                          <option key={y} value={y.toString()}>{y}</option>
-                        ))}
-                      </select>
-
-                      <select 
-                        value={filterCategory}
-                        onChange={(e) => setFilterCategory(e.target.value)}
-                        className={`p-2 text-xs border rounded-xl outline-none transition-all shadow-sm cursor-pointer ${
-                          isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
-                        }`}
-                      >
-                        <option value="All">Kategori</option>
-                        <option value="Pendapatan">Pendapatan</option>
-                        <option value="Kebutuhan Pokok">Kebutuhan</option>
-                        <option value="Lifestyle (Makan/Jajan)">Lifestyle</option>
-                        <option value="Tabungan">Tabungan</option>
-                      </select>
-
-                      <input 
-                        type="text"
-                        placeholder="Cari..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`flex-1 md:w-32 p-2 text-xs border rounded-xl outline-none transition-all shadow-sm ${
-                          isDark ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900'
-                        }`}
-                      />
-
-                      <button 
-                        onClick={exportToCSV}
-                        className="p-2 text-xs bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100 flex items-center gap-1"
-                      >
-                        CSV
-                      </button>
+                        <div className="flex flex-1 md:flex-none items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5 backdrop-blur-sm">
+                          <input 
+                            type="text"
+                            placeholder="Cari Ledger..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className={`flex-1 md:w-40 p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none placeholder:text-slate-500 ${
+                              isDark ? 'text-white' : 'text-slate-900'
+                            }`}
+                          />
+                          <button 
+                            onClick={exportToCSV}
+                            className="p-2 px-4 text-[10px] font-black bg-blue-600/10 text-blue-500 uppercase tracking-widest rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                          >
+                            Export
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
 
                   <div className={`rounded-[2rem] border overflow-hidden backdrop-blur-sm transition-all duration-500 ${isDark ? 'glass-dark border-white/5 shadow-2xl shadow-black/40' : 'glass border-white/50 shadow-xl shadow-slate-200/50'}`}>
                     {loading ? (
