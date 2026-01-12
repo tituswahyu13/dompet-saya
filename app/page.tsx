@@ -11,6 +11,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
+  const [filterMonth, setFilterMonth] = useState<string>('All');
+  const [filterYear, setFilterYear] = useState<string>(new Date().getFullYear().toString());
   const [isDark, setIsDark] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<any>(null);
 
@@ -22,6 +24,28 @@ export default function Dashboard() {
       .order('tanggal', { ascending: false });
 
     if (data) {
+      setTransactions(data);
+    }
+    setLoading(false);
+  };
+
+  const getFilteredTransactions = () => {
+    return transactions.filter(t => {
+      const date = new Date(t.tanggal);
+      const matchesSearch = t.keterangan.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = filterCategory === 'All' || t.kategori.includes(filterCategory);
+      const matchesMonth = filterMonth === 'All' || (date.getMonth() + 1).toString() === filterMonth;
+      const matchesYear = filterYear === 'All' || date.getFullYear().toString() === filterYear;
+      return matchesSearch && matchesCategory && matchesMonth && matchesYear;
+    });
+  };
+
+  const filteredTransactions = getFilteredTransactions();
+
+  // Re-calculate stats whenever filteredTransactions changes
+  useEffect(() => {
+    if (transactions.length > 0) {
+      const data = filteredTransactions;
       const totalInc = data.reduce((acc, curr) => acc + (curr.income || 0), 0);
       const totalOut = data.reduce((acc, curr) => acc + (curr.outcome || 0), 0);
       const totalSav = data.reduce((acc, curr) => acc + (curr.saving || 0), 0);
@@ -29,7 +53,6 @@ export default function Dashboard() {
       const initialBalance = data.filter(t => t.kategori === 'Saldo Awal').reduce((acc, curr) => acc + (curr.income || 0), 0);
       const earnedIncome = totalInc - initialBalance;
 
-      setTransactions(data);
       setStats({
         income: earnedIncome,
         outcome: totalOut,
@@ -38,8 +61,7 @@ export default function Dashboard() {
         rate: earnedIncome > 0 ? (totalSav / earnedIncome) * 100 : 0
       });
     }
-    setLoading(false);
-  };
+  }, [transactions, searchTerm, filterCategory, filterMonth, filterYear]);
 
   const handleDelete = async (id: any) => {
     if (!confirm("Hapus transaksi ini?")) return;
@@ -55,7 +77,7 @@ export default function Dashboard() {
    
   const exportToCSV = () => {
     const headers = ['Tanggal', 'Keterangan', 'Kategori', 'Pemasukan', 'Pengeluaran', 'Tabungan'];
-    const rows = transactions.map(t => [
+    const rows = filteredTransactions.map(t => [
       t.tanggal,
       t.keterangan,
       t.kategori,
@@ -133,8 +155,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <Insights transactions={transactions} isDark={isDark} />
-        <BudgetTracker transactions={transactions} isDark={isDark} />
+        <Insights transactions={filteredTransactions} isDark={isDark} />
+        <BudgetTracker transactions={filteredTransactions} isDark={isDark} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Form Section */}
@@ -155,17 +177,34 @@ export default function Dashboard() {
           {/* List Section */}
           <div className="lg:col-span-2">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 px-2">
-              <h2 className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>Riwayat Transaksi</h2>
-              <div className="flex w-full md:w-auto gap-2">
-                <input 
-                  type="text"
-                  placeholder="Cari transaksi..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`flex-1 md:w-48 p-2 text-xs border rounded-xl outline-none transition-all shadow-sm ${
-                    isDark ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900'
+              <h2 className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>Riwayat</h2>
+              <div className="flex flex-wrap w-full md:w-auto gap-2">
+                <select 
+                  value={filterMonth}
+                  onChange={(e) => setFilterMonth(e.target.value)}
+                  className={`p-2 text-xs border rounded-xl outline-none transition-all shadow-sm cursor-pointer ${
+                    isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
                   }`}
-                />
+                >
+                  <option value="All">Semua Bulan</option>
+                  {['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((m, i) => (
+                    <option key={m} value={(i + 1).toString()}>{m}</option>
+                  ))}
+                </select>
+
+                <select 
+                  value={filterYear}
+                  onChange={(e) => setFilterYear(e.target.value)}
+                  className={`p-2 text-xs border rounded-xl outline-none transition-all shadow-sm cursor-pointer ${
+                    isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
+                  }`}
+                >
+                  <option value="All">Semua Tahun</option>
+                  {[2024, 2025, 2026].map(y => (
+                    <option key={y} value={y.toString()}>{y}</option>
+                  ))}
+                </select>
+
                 <select 
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e.target.value)}
@@ -173,19 +212,27 @@ export default function Dashboard() {
                     isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
                   }`}
                 >
-                  <option value="All">Semua Kategori</option>
+                  <option value="All">Kategori</option>
                   <option value="Pendapatan">Pendapatan</option>
                   <option value="Kebutuhan Pokok">Kebutuhan</option>
                   <option value="Lifestyle (Makan/Jajan)">Lifestyle</option>
                   <option value="Tabungan">Tabungan</option>
                 </select>
+
+                <input 
+                  type="text"
+                  placeholder="Cari..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={`flex-1 md:w-32 p-2 text-xs border rounded-xl outline-none transition-all shadow-sm ${
+                    isDark ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900'
+                  }`}
+                />
+
                 <button 
                   onClick={exportToCSV}
                   className="p-2 text-xs bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100 flex items-center gap-1"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
                   CSV
                 </button>
               </div>
@@ -194,8 +241,8 @@ export default function Dashboard() {
             <div className={`rounded-2xl shadow-sm border overflow-hidden ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
               {loading ? (
                 <div className="p-12 text-center text-slate-400">Loading data...</div>
-              ) : transactions.length === 0 ? (
-                <div className="p-12 text-center text-slate-400">Belum ada transaksi.</div>
+              ) : filteredTransactions.length === 0 ? (
+                <div className="p-12 text-center text-slate-400 font-medium">Data tidak ditemukan untuk periode ini.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left font-medium">
@@ -208,13 +255,7 @@ export default function Dashboard() {
                       </tr>
                     </thead>
                     <tbody className={`divide-y ${isDark ? 'divide-slate-700' : 'divide-slate-100'}`}>
-                      {transactions
-                        .filter(t => {
-                          const matchesSearch = t.keterangan.toLowerCase().includes(searchTerm.toLowerCase());
-                          const matchesCategory = filterCategory === 'All' || t.kategori.includes(filterCategory);
-                          return matchesSearch && matchesCategory;
-                        })
-                        .map((t) => (
+                      {filteredTransactions.map((t) => (
                         <tr key={t.id} className={`transition-colors group ${isDark ? 'hover:bg-slate-900/30' : 'hover:bg-slate-50/50'}`}>
                           <td className="p-4">
                             <div className={`text-sm font-bold ${isDark ? 'text-slate-200' : 'text-slate-900'}`}>
