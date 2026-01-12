@@ -24,6 +24,28 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
   const [category, setCategory] = useState('Lifestyle (Makan/Jajan)');
   const [loading, setLoading] = useState(false);
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
+  const [wallets, setWallets] = useState<any[]>([]);
+  const [selectedWalletId, setSelectedWalletId] = useState<string>('');
+
+  // Fetch Wallets
+  useEffect(() => {
+    const fetchWallets = async () => {
+      const { data, error } = await supabase
+        .from('wallet_balances')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_active', true);
+      
+      if (data) {
+        setWallets(data);
+        // Default to first wallet if not editing
+        if (!editData && data.length > 0) {
+          setSelectedWalletId(data[0].id);
+        }
+      }
+    };
+    fetchWallets();
+  }, [user.id, editData]);
 
   // Sync state when editData changes
   useEffect(() => {
@@ -32,6 +54,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
       setAmount((editData.income || editData.outcome || editData.saving).toString());
       setCategory(editData.kategori || 'Others');
       setDate(editData.tanggal);
+      setSelectedWalletId(editData.wallet_id || '');
       if (editData.income > 0) setType('income');
       else if (editData.saving > 0) setType('saving');
       else setType('outcome');
@@ -66,6 +89,11 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
       return;
     }
 
+    if (!selectedWalletId) {
+      setErrorStatus("Pilih Wallet sumber/tujuan dana");
+      return;
+    }
+
     setLoading(true);
     setErrorStatus(null);
     const numAmount = Number(amount);
@@ -80,7 +108,8 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
       income,
       outcome,
       saving,
-      user_id: user.id
+      user_id: user.id,
+      wallet_id: selectedWalletId
     };
 
     let error;
@@ -158,31 +187,31 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
         </div>
 
         <div className="space-y-4">
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Keterangan</label>
-            <input 
-              value={desc}
-              onChange={(e) => { setDesc(e.target.value); setErrorStatus(null); }}
-              placeholder="Misal: Investasi Emas" 
-              className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
-                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
-              }`}
-              required
-            />
-          </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Tanggal</label>
-              <input 
-                type="date"
-                value={date}
-                onChange={(e) => { setDate(e.target.value); setErrorStatus(null); }}
-                className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
-                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
-                }`}
-                required
-              />
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Wallet</label>
+              <div className="relative">
+                <select 
+                  value={selectedWalletId}
+                  onChange={(e) => setSelectedWalletId(e.target.value)}
+                  className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-black appearance-none cursor-pointer ${
+                    isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
+                  }`}
+                  required
+                >
+                  <option value="" disabled>Pilih Wallet</option>
+                  {wallets.map(w => (
+                    <option key={w.id} value={w.id}>
+                      {w.icon} {w.name} (Rp {w.current_balance?.toLocaleString('id-ID')})
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
             <div>
               <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Kategori</label>
@@ -205,6 +234,32 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
                 </div>
               </div>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Keterangan</label>
+            <input 
+              value={desc}
+              onChange={(e) => { setDesc(e.target.value); setErrorStatus(null); }}
+              placeholder="Misal: Investasi Emas" 
+              className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
+                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
+              }`}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Tanggal</label>
+            <input 
+              type="date"
+              value={date}
+              onChange={(e) => { setDate(e.target.value); setErrorStatus(null); }}
+              className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
+                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
+              }`}
+              required
+            />
           </div>
 
           <div>

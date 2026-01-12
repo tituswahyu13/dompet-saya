@@ -6,6 +6,7 @@ import Insights from '@/components/Insights';
 import BudgetTracker from '@/components/BudgetTracker';
 import AuthWrapper from '@/components/AuthWrapper';
 import WalletManager from '@/components/WalletManager';
+import TransferForm from '@/components/TransferForm';
 import { User } from '@supabase/supabase-js';
 
 function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
@@ -20,19 +21,36 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
   const [editingTransaction, setEditingTransaction] = useState<any>(null);
   const [page, setPage] = useState(1);
   const [showWalletManager, setShowWalletManager] = useState(false);
+  const [isTransferMode, setIsTransferMode] = useState(false);
+  const [selectedWalletFilter, setSelectedWalletFilter] = useState('All');
+  const [wallets, setWallets] = useState<any[]>([]);
   const ITEMS_PER_PAGE = 10;
 
   const fetchData = async (user: User) => {
     setLoading(true);
-    const { data, error } = await supabase
+    
+    // Fetch transactions
+    const { data: txData, error: txError } = await supabase
       .from('transaction')
       .select('*')
       .eq('user_id', user.id)
       .order('tanggal', { ascending: false });
 
-    if (data) {
-      setTransactions(data);
+    if (txData) {
+      setTransactions(txData);
     }
+
+    // Fetch wallets for filter
+    const { data: wData } = await supabase
+      .from('wallet_balances')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('is_active', true);
+    
+    if (wData) {
+      setWallets(wData);
+    }
+
     setLoading(false);
   };
 
@@ -43,7 +61,8 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       const matchesCategory = filterCategory === 'All' || t.kategori.includes(filterCategory);
       const matchesMonth = filterMonth === 'All' || (date.getMonth() + 1).toString() === filterMonth;
       const matchesYear = filterYear === 'All' || date.getFullYear().toString() === filterYear;
-      return matchesSearch && matchesCategory && matchesMonth && matchesYear;
+      const matchesWallet = selectedWalletFilter === 'All' || t.wallet_id === selectedWalletFilter;
+      return matchesSearch && matchesCategory && matchesMonth && matchesYear && matchesWallet;
     });
 
     return filtered;
@@ -56,21 +75,28 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
   useEffect(() => {
     const data = filteredTransactions;
     setPage(1); // Reset page on filter change
-    const totalInc = data.reduce((acc, curr) => acc + (curr.income || 0), 0);
-    const totalOut = data.reduce((acc, curr) => acc + (curr.outcome || 0), 0);
-    const totalSav = data.reduce((acc, curr) => acc + (curr.saving || 0), 0);
     
-    const initialBalance = data.filter(t => t.kategori === 'Saldo Awal').reduce((acc, curr) => acc + (curr.income || 0), 0);
+    // Standard income/outcome should exclude internal transfers
+    const totalInc = data.filter(t => !t.is_transfer).reduce((acc, curr) => acc + (curr.income || 0), 0);
+    const totalOut = data.filter(t => !t.is_transfer).reduce((acc, curr) => acc + (curr.outcome || 0), 0);
+    const totalSav = data.filter(t => !t.is_transfer).reduce((acc, curr) => acc + (curr.saving || 0), 0);
+    
+    const initialBalance = data.filter(t => t.kategori === 'Saldo Awal' && !t.is_transfer).reduce((acc, curr) => acc + (curr.income || 0), 0);
     const earnedIncome = totalInc - initialBalance;
+
+    // Actual balance should include transfers
+    const actualInc = data.reduce((acc, curr) => acc + (curr.income || 0), 0);
+    const actualOut = data.reduce((acc, curr) => acc + (curr.outcome || 0), 0);
+    const actualSav = data.reduce((acc, curr) => acc + (curr.saving || 0), 0);
 
     setStats({
       income: earnedIncome,
       outcome: totalOut,
       saving: totalSav,
-      balance: totalInc - totalOut - totalSav,
+      balance: actualInc - actualOut - actualSav,
       rate: earnedIncome > 0 ? (totalSav / earnedIncome) * 100 : 0
     });
-  }, [transactions, searchTerm, filterCategory, filterMonth, filterYear]);
+  }, [transactions, searchTerm, filterCategory, filterMonth, filterYear, selectedWalletFilter]);
 
   const handleDelete = async (id: any, user: User) => {
     if (!confirm("Hapus transaksi ini?")) return;
@@ -230,6 +256,35 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                 </div>
               </div>
 
+              {/* Wallet Switcher */}
+              <div className="flex flex-wrap gap-2 mb-12">
+                <button
+                  onClick={() => setSelectedWalletFilter('All')}
+                  className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                    selectedWalletFilter === 'All'
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/20 scale-105'
+                      : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  🌐 Semua Dompet
+                </button>
+                {wallets.map((w) => (
+                  <button
+                    key={w.id}
+                    onClick={() => setSelectedWalletFilter(w.id)}
+                    className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-2 ${
+                      selectedWalletFilter === w.id
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-500/20 scale-105'
+                        : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <span>{w.icon}</span>
+                    <span>{w.name}</span>
+                    <span className="opacity-50 text-[8px]">Rp {w.current_balance?.toLocaleString('id-ID')}</span>
+                  </button>
+                ))}
+              </div>
+
               <div className="space-y-12">
                 <Insights transactions={filteredTransactions} isDark={isDark} />
                 
@@ -238,19 +293,47 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                   <div className="lg:col-span-4 space-y-10">
                     <div className="sticky top-28 space-y-10">
                       <section>
-                        <div className="flex items-center gap-2 mb-6 px-2">
-                          <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
-                          <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>
-                            {editingTransaction ? 'Koreksi Data' : 'Transaksi Baru'}
-                          </h2>
+                        <div className="flex items-center justify-between mb-6 px-2">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-1.5 h-6 ${isTransferMode ? 'bg-indigo-600' : 'bg-blue-600'} rounded-full transition-all`} />
+                            <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>
+                              {editingTransaction ? 'Koreksi Data' : isTransferMode ? 'Transfer Dana' : 'Transaksi Baru'}
+                            </h2>
+                          </div>
+                          
+                          {!editingTransaction && (
+                            <button
+                              onClick={() => setIsTransferMode(!isTransferMode)}
+                              className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border transition-all ${
+                                isTransferMode 
+                                  ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' 
+                                  : 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20'
+                              }`}
+                            >
+                              {isTransferMode ? 'Ke Transaksi' : 'Ke Transfer'}
+                            </button>
+                          )}
                         </div>
-                        <TransactionForm 
-                          onRefresh={() => fetchData(user)} 
-                          isDark={isDark} 
-                          editData={editingTransaction}
-                          onCancel={() => setEditingTransaction(null)}
-                          user={user}
-                        />
+                        
+                        {isTransferMode && !editingTransaction ? (
+                          <TransferForm 
+                            user={user} 
+                            isDark={isDark} 
+                            onRefresh={() => fetchData(user)} 
+                            onCancel={() => setIsTransferMode(false)} 
+                          />
+                        ) : (
+                          <TransactionForm 
+                            onRefresh={() => fetchData(user)} 
+                            isDark={isDark} 
+                            editData={editingTransaction}
+                            onCancel={() => {
+                              setEditingTransaction(null);
+                              setIsTransferMode(false);
+                            }}
+                            user={user}
+                          />
+                        )}
                       </section>
 
                       <section>
@@ -360,16 +443,30 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                             </tr>
                           </thead>
                           <tbody className={`divide-y ${isDark ? 'divide-white/5' : 'divide-slate-100'}`}>
-                            {(() => {
-                              const allSorted = [...transactions].sort((a, b) => new Date(a.tanggal).getTime() - new Date(b.tanggal).getTime());
-                              let running = 0;
-                              const balancesMap: Record<string, number> = {};
-                              allSorted.forEach(t => {
-                                running += (Number(t.income || 0) - Number(t.outcome || 0) - Number(t.saving || 0));
-                                balancesMap[t.id] = running;
-                              });
+                              {(() => {
+                                // Calculate running balance correctly based on filter
+                                const relevantTransactions = selectedWalletFilter === 'All' 
+                                  ? transactions 
+                                  : transactions.filter(t => t.wallet_id === selectedWalletFilter);
+                                
+                                const allSorted = [...relevantTransactions].sort((a, b) => new Date(a.tanggal).getTime() - new Date(b.tanggal).getTime());
+                                
+                                // Initial balance for running calculation
+                                let running = 0;
+                                if (selectedWalletFilter !== 'All') {
+                                  const wallet = wallets.find(w => w.id === selectedWalletFilter);
+                                  running = wallet?.initial_balance || 0;
+                                } else {
+                                  running = wallets.reduce((acc, curr) => acc + (curr.initial_balance || 0), 0);
+                                }
 
-                              return paginatedTransactions.map((t) => (
+                                const balancesMap: Record<string, number> = {};
+                                allSorted.forEach(t => {
+                                  running += (Number(t.income || 0) - Number(t.outcome || 0) - Number(t.saving || 0));
+                                  balancesMap[t.id] = running;
+                                });
+
+                                return paginatedTransactions.map((t) => (
                                 <tr key={t.id} className={`transition-all duration-300 group ${isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-blue-50/30'}`}>
                                   <td className="p-6">
                                     <div className={`text-md font-black tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>
@@ -380,13 +477,24 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                                     </div>
                                   </td>
                                   <td className="p-6">
-                                    <div className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} mb-1`}>{t.keterangan}</div>
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <div className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{t.keterangan}</div>
+                                      {selectedWalletFilter === 'All' && t.wallet_id && (
+                                        <div className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tight ${
+                                          isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'
+                                        }`}>
+                                          {wallets.find(w => w.id === t.wallet_id)?.icon} {wallets.find(w => w.id === t.wallet_id)?.name}
+                                        </div>
+                                      )}
+                                    </div>
                                     <div className={`text-[9px] font-black px-3 py-1 rounded-full inline-flex items-center gap-1.5 uppercase tracking-wider ${
+                                      t.is_transfer ? (isDark ? 'bg-indigo-500/10 text-indigo-400' : 'bg-indigo-100 text-indigo-700') :
                                       t.income > 0 ? (isDark ? 'bg-green-500/10 text-green-400' : 'bg-green-100 text-green-700') : 
                                       t.saving > 0 ? (isDark ? 'bg-blue-500/10 text-blue-400' : 'bg-blue-100 text-blue-700') : 
                                       (isDark ? 'bg-red-500/10 text-red-400' : 'bg-red-100 text-red-700')
                                     }`}>
                                       <div className={`w-1 h-1 rounded-full ${
+                                        t.is_transfer ? 'bg-indigo-500' :
                                         t.income > 0 ? 'bg-green-500' : t.saving > 0 ? 'bg-blue-500' : 'bg-red-500'
                                       } shadow-[0_0_5px_currentColor]`} />
                                       {t.kategori || 'UNCATEGORIZED'}
