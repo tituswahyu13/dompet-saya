@@ -5,6 +5,7 @@ import TransactionForm from '@/components/TransactionForm';
 import Insights from '@/components/Insights';
 import BudgetTracker from '@/components/BudgetTracker';
 import AuthWrapper from '@/components/AuthWrapper';
+import WalletManager from '@/components/WalletManager';
 import { User } from '@supabase/supabase-js';
 
 function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
@@ -18,6 +19,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
   // isDark is now a prop
   const [editingTransaction, setEditingTransaction] = useState<any>(null);
   const [page, setPage] = useState(1);
+  const [showWalletManager, setShowWalletManager] = useState(false);
   const ITEMS_PER_PAGE = 10;
 
   const fetchData = async (user: User) => {
@@ -153,6 +155,19 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
                       </svg>
                     )}
+                  </button>
+
+                  {/* Wallet Manager Button */}
+                  <button 
+                    onClick={() => setShowWalletManager(true)}
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+                      isDark ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100'
+                    } hover:scale-105 active:scale-95`}
+                    title="Manage Wallets"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
                   </button>
 
                   {/* Logout Button */}
@@ -434,9 +449,21 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               </div>
             </div>
           </main>
-    </div>
-  );
-}
+
+          {/* Wallet Manager Modal */}
+          {showWalletManager && (
+            <WalletManager 
+              user={user} 
+              isDark={isDark} 
+              onClose={() => {
+                setShowWalletManager(false);
+                fetchData(user); // Refresh data after wallet changes
+              }} 
+            />
+          )}
+        </div>
+      );
+    }
 
 export default function Dashboard() {
   const [isDark, setIsDark] = useState(false);
