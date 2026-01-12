@@ -16,6 +16,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel 
 }) {
   const [desc, setDesc] = useState('');
   const [amount, setAmount] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [type, setType] = useState<'income' | 'outcome' | 'saving'>('outcome');
   const [category, setCategory] = useState('Lifestyle (Makan/Jajan)');
   const [loading, setLoading] = useState(false);
@@ -26,12 +27,14 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel 
       setDesc(editData.keterangan);
       setAmount((editData.income || editData.outcome || editData.saving).toString());
       setCategory(editData.kategori || 'Others');
+      setDate(editData.tanggal);
       if (editData.income > 0) setType('income');
       else if (editData.saving > 0) setType('saving');
       else setType('outcome');
     } else {
       setDesc('');
       setAmount('');
+      setDate(new Date().toISOString().split('T')[0]);
       setType('outcome');
       setCategory('Lifestyle (Makan/Jajan)');
     }
@@ -66,7 +69,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel 
     const payload = {
       keterangan: desc,
       kategori: category,
-      tanggal: editData?.tanggal || new Date().toISOString().split('T')[0],
+      tanggal: date,
       income,
       outcome,
       saving
@@ -152,6 +155,19 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel 
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
           placeholder="Misal: Beli Kopi" 
+          className={`w-full p-3 border rounded-xl outline-none transition-all text-sm ${
+            isDark ? 'bg-slate-700 border-slate-600 text-white focus:border-blue-500' : 'bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 text-slate-900'
+          }`}
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Tanggal</label>
+        <input 
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
           className={`w-full p-3 border rounded-xl outline-none transition-all text-sm ${
             isDark ? 'bg-slate-700 border-slate-600 text-white focus:border-blue-500' : 'bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 text-slate-900'
           }`}

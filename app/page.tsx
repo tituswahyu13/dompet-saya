@@ -44,23 +44,21 @@ export default function Dashboard() {
 
   // Re-calculate stats whenever filteredTransactions changes
   useEffect(() => {
-    if (transactions.length > 0) {
-      const data = filteredTransactions;
-      const totalInc = data.reduce((acc, curr) => acc + (curr.income || 0), 0);
-      const totalOut = data.reduce((acc, curr) => acc + (curr.outcome || 0), 0);
-      const totalSav = data.reduce((acc, curr) => acc + (curr.saving || 0), 0);
-      
-      const initialBalance = data.filter(t => t.kategori === 'Saldo Awal').reduce((acc, curr) => acc + (curr.income || 0), 0);
-      const earnedIncome = totalInc - initialBalance;
+    const data = filteredTransactions;
+    const totalInc = data.reduce((acc, curr) => acc + (curr.income || 0), 0);
+    const totalOut = data.reduce((acc, curr) => acc + (curr.outcome || 0), 0);
+    const totalSav = data.reduce((acc, curr) => acc + (curr.saving || 0), 0);
+    
+    const initialBalance = data.filter(t => t.kategori === 'Saldo Awal').reduce((acc, curr) => acc + (curr.income || 0), 0);
+    const earnedIncome = totalInc - initialBalance;
 
-      setStats({
-        income: earnedIncome,
-        outcome: totalOut,
-        saving: totalSav,
-        balance: totalInc - totalOut - totalSav,
-        rate: earnedIncome > 0 ? (totalSav / earnedIncome) * 100 : 0
-      });
-    }
+    setStats({
+      income: earnedIncome,
+      outcome: totalOut,
+      saving: totalSav,
+      balance: totalInc - totalOut - totalSav,
+      rate: earnedIncome > 0 ? (totalSav / earnedIncome) * 100 : 0
+    });
   }, [transactions, searchTerm, filterCategory, filterMonth, filterYear]);
 
   const handleDelete = async (id: any) => {
