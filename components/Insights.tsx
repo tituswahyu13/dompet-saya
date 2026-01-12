@@ -78,29 +78,39 @@ export default function Insights({ transactions, isDark }: { transactions: Trans
     .filter(t => t.kategori !== 'Saldo Awal')
     .reduce((acc, t) => acc + Number(t.income || 0), 0);
 
-  const isSavingHealthy = totalEarnedIncome >= totalOutcome;
-  const healthMessage = isSavingHealthy 
-    ? "Status Keuangan: Sehat ✨ (Penghasilan > Pengeluaran)" 
-    : "Perhatian: Pengeluaran melebihi penghasilan bulan ini! ⚠️";
+  const totalSaving = transactions
+    .filter(t => t.kategori !== 'Saldo Awal')
+    .reduce((acc, t) => acc + Number(t.saving || 0), 0);
+
+  const netFlow = totalEarnedIncome - totalOutcome - totalSaving;
+  const isHealthy = netFlow >= 0;
+  
+  const healthMessage = isHealthy 
+    ? `Status Keuangan: Sehat ✨ (Surplus Rp ${netFlow.toLocaleString('id-ID')})`
+    : `Perhatian: Kas menyusut Rp ${Math.abs(netFlow).toLocaleString('id-ID')} bulan ini! ⚠️`;
+
+  const subMessage = totalSaving > 0 
+    ? `Anda telah menyisihkan Rp ${totalSaving.toLocaleString('id-ID')} ke tabungan.`
+    : "Belum ada alokasi tabungan untuk periode ini.";
 
   return (
     <div className="space-y-10 mb-12">
       {/* Financial Health Indicator */}
       {transactions.length > 0 && (
         <div className={`p-6 rounded-[2.5rem] border flex items-center gap-5 transition-all duration-500 shadow-xl overflow-hidden relative ${
-          isSavingHealthy 
+          isHealthy 
             ? (isDark ? 'glass-dark border-green-500/20 shadow-green-900/10' : 'glass border-green-200 shadow-green-200/50')
             : (isDark ? 'glass-dark border-red-500/20 shadow-red-900/10' : 'glass border-red-200 shadow-red-200/50')
         }`}>
           {/* Animated Background Pulse */}
-          <div className={`absolute -right-20 -top-20 w-48 h-48 rounded-full blur-[80px] opacity-20 animate-pulse ${isSavingHealthy ? 'bg-green-500' : 'bg-red-500'}`} />
+          <div className={`absolute -right-20 -top-20 w-48 h-48 rounded-full blur-[80px] opacity-20 animate-pulse ${isHealthy ? 'bg-green-500' : 'bg-red-500'}`} />
 
           <div className={`p-4 rounded-3xl flex-shrink-0 flex items-center justify-center shadow-lg ${
-            isSavingHealthy 
+            isHealthy 
               ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white' 
               : 'bg-gradient-to-br from-red-500 to-rose-600 text-white'
           }`}>
-            {isSavingHealthy ? (
+            {isHealthy ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -111,10 +121,11 @@ export default function Insights({ transactions, isDark }: { transactions: Trans
             )}
           </div>
           <div className="relative z-10">
-            <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${isSavingHealthy ? (isDark ? 'text-green-400/70' : 'text-green-600/70') : (isDark ? 'text-red-400/70' : 'text-red-600/70')}`}>
+            <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${isHealthy ? (isDark ? 'text-green-400/70' : 'text-green-600/70') : (isDark ? 'text-red-400/70' : 'text-red-600/70')}`}>
               Economic Insight
             </p>
             <p className={`text-md md:text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-800'}`}>{healthMessage}</p>
+            <p className={`text-[10px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} mt-1`}>{subMessage}</p>
           </div>
         </div>
       )}
