@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 interface Transaction {
   kategori: string;
   outcome: number;
+  saving?: number;
 }
 
 const DEFAULT_BUDGETS = [
@@ -47,6 +48,12 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
       return acc;
     }, {});
 
+  // Calculate total saving
+  const totalSaving = transactions.reduce((acc, curr) => acc + (curr.saving || 0), 0);
+  
+  // Calculate total budget limit
+  const totalBudgetLimit = budgets.reduce((acc, curr) => acc + curr.limit, 0);
+
   return (
     <div className={`p-8 rounded-[2.5rem] shadow-xl border transition-all duration-500 relative overflow-hidden ${
       isDark ? 'glass-dark border-white/5 shadow-black/20' : 'glass border-white shadow-slate-200/50'
@@ -79,7 +86,40 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
         </button>
       </div>
 
-      <div className="space-y-8 relative z-10">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 gap-4 mb-8 relative z-10">
+        {/* Total Saving Card */}
+        <div className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
+          isDark ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50/50 border-blue-100'
+        }`}>
+          <p className="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] mb-2">Total Saving</p>
+          <div className="flex items-baseline gap-1 overflow-hidden">
+            <span className="text-[10px] font-bold text-blue-500 flex-shrink-0">Rp</span>
+            <p className={`text-base font-black tracking-tighter truncate ${
+              isDark ? 'text-blue-400' : 'text-blue-600'
+            }`}>{totalSaving.toLocaleString('id-ID')}</p>
+          </div>
+        </div>
+
+        {/* Total Budget Card */}
+        <div className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
+          isDark ? 'bg-indigo-500/5 border-indigo-500/20' : 'bg-indigo-50/50 border-indigo-100'
+        }`}>
+          <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-2">Total Anggaran</p>
+          <div className="flex items-baseline gap-1 overflow-hidden">
+            <span className="text-[10px] font-bold text-indigo-500 flex-shrink-0">Rp</span>
+            <p className={`text-base font-black tracking-tighter truncate ${
+              isDark ? 'text-indigo-400' : 'text-indigo-600'
+            }`}>{totalBudgetLimit.toLocaleString('id-ID')}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className={`h-px mb-8 relative z-10 ${isDark ? 'bg-white/5' : 'bg-slate-200'}`} />
+
+      {/* Budget Categories */}
+      <div className="space-y-6 relative z-10">
         {budgets.map((budget, index) => {
           const spent = spendingByCategory[budget.kategori] || 0;
           const percent = Math.min((spent / budget.limit) * 100, 100);
@@ -87,57 +127,53 @@ export default function BudgetTracker({ transactions, isDark }: { transactions: 
 
           return (
             <div key={budget.kategori} className="group">
-              <div className="flex justify-between items-end mb-3 px-1">
-                <div>
-                  <h4 className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{budget.kategori}</h4>
-                  <div className="flex items-baseline gap-1 mt-0.5">
+              <div className="flex justify-between items-start mb-2.5 px-0.5">
+                <div className="flex-1">
+                  <h4 className={`text-[11px] font-black uppercase tracking-[0.15em] mb-1.5 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{budget.kategori}</h4>
+                  <div className="flex items-baseline gap-1.5">
                     {isEditing ? (
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1.5">
                         <span className="text-[10px] font-black text-blue-500">Rp</span>
                         <input 
                           type="number"
                           value={budget.limit}
                           onChange={(e) => updateLimit(index, e.target.value)}
-                          className={`w-24 p-1 text-right font-black rounded-lg border-b outline-none text-md bg-transparent ${
+                          className={`w-28 px-2 py-1 text-right font-black rounded-lg border outline-none text-sm bg-transparent ${
                             isDark ? 'border-white/10 text-white' : 'border-slate-200 text-slate-900'
                           }`}
                         />
                       </div>
                     ) : (
                       <>
-                        <span className="text-[10px] font-black text-blue-500">Rp</span>
-                        <p className={`text-md font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{spent.toLocaleString('id-ID')}</p>
+                        <span className="text-[10px] font-bold text-blue-500">Rp</span>
+                        <p className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{spent.toLocaleString('id-ID')}</p>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">/ {(budget.limit / 1000).toFixed(0)}k</span>
                       </>
                     )}
                   </div>
                 </div>
                 <div className="text-right">
-                  {!isEditing && (
-                    <p className={`text-[10px] font-bold ${isOver ? 'text-red-500' : 'text-slate-400'}`}>
-                      Limit: <span className="font-black">{(budget.limit / 1000).toFixed(0)}k</span>
-                    </p>
-                  )}
-                  <p className={`text-xs font-black ${isOver ? 'text-red-500' : 'text-blue-500'}`}>
+                  <p className={`text-sm font-black ${isOver ? 'text-red-500' : 'text-blue-500'}`}>
                     {percent.toFixed(0)}%
                   </p>
                 </div>
               </div>
 
-              {/* Futuristic Progress Bar */}
-              <div className={`h-2.5 w-full rounded-full overflow-hidden flex ${isDark ? 'bg-slate-950/50' : 'bg-slate-100'}`}>
+              {/* Progress Bar */}
+              <div className={`h-3 w-full rounded-full overflow-hidden flex ${isDark ? 'bg-slate-950/50' : 'bg-slate-100'}`}>
                 <div 
                   className={`h-full rounded-full transition-all duration-1000 relative ${
-                    isOver ? 'bg-gradient-to-r from-red-500 to-rose-600 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 
-                    percent > 80 ? 'bg-gradient-to-r from-amber-500 to-orange-600' :
-                    'bg-gradient-to-r from-blue-500 to-indigo-600 shadow-[0_0_10px_rgba(59,130,246,0.3)]'
+                    isOver ? 'bg-gradient-to-r from-red-500 to-rose-600 shadow-[0_0_12px_rgba(239,68,68,0.4)]' : 
+                    percent > 80 ? 'bg-gradient-to-r from-amber-500 to-orange-600 shadow-[0_0_10px_rgba(245,158,11,0.3)]' :
+                    'bg-gradient-to-r from-blue-500 to-indigo-600 shadow-[0_0_12px_rgba(59,130,246,0.4)]'
                   }`}
                   style={{ width: `${percent}%` }}
                 >
-                  <div className="absolute top-0 right-0 h-full w-4 bg-white/20 blur-[2px] skew-x-[30deg]" />
+                  <div className="absolute top-0 right-0 h-full w-5 bg-white/20 blur-[3px] skew-x-[30deg]" />
                 </div>
               </div>
               {isOver && !isEditing && (
-                <p className="text-[9px] text-red-500 font-black uppercase tracking-widest mt-2 px-1 animate-pulse">Critical: Budget Exceeded!</p>
+                <p className="text-[9px] text-red-500 font-black uppercase tracking-widest mt-2 px-0.5 animate-pulse">⚠ Budget Exceeded!</p>
               )}
             </div>
           );
