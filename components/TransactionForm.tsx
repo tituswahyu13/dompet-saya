@@ -8,11 +8,14 @@ const CATEGORIES = {
   saving: ['Tabungan', 'Dana Darurat', 'Investasi Saham/Emas', 'Others']
 };
 
-export default function TransactionForm({ onRefresh, isDark, editData, onCancel }: { 
+import { User } from '@supabase/supabase-js';
+
+export default function TransactionForm({ onRefresh, isDark, editData, onCancel, user }: { 
   onRefresh: () => void, 
   isDark: boolean,
   editData?: any,
-  onCancel?: () => void
+  onCancel?: () => void,
+  user: User
 }) {
   const [desc, setDesc] = useState('');
   const [amount, setAmount] = useState('');
@@ -76,7 +79,8 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel 
       tanggal: date,
       income,
       outcome,
-      saving
+      saving,
+      user_id: user.id
     };
 
     let error;
