@@ -74,108 +74,224 @@ export default function Insights({ transactions, isDark }: { transactions: Trans
     text: isDark ? '#94a3b8' : '#64748b'
   };
 
+  const totalEarnedIncome = transactions
+    .filter(t => t.kategori !== 'Saldo Awal')
+    .reduce((acc, t) => acc + Number(t.income || 0), 0);
+
+  const isSavingHealthy = totalEarnedIncome >= totalOutcome;
+  const healthMessage = isSavingHealthy 
+    ? "Status Keuangan: Sehat ✨ (Penghasilan > Pengeluaran)" 
+    : "Perhatian: Pengeluaran melebihi penghasilan bulan ini! ⚠️";
+
   return (
-    <div className="space-y-6 mb-10">
-      {/* Top Row: Balance Trend (Large Chart) */}
-      <div className={`p-6 rounded-2xl shadow-sm border h-[380px] transition-colors duration-300 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
-        <div className="flex justify-between items-center mb-6">
-          <h3 className={`text-md font-black ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Tren Saldo Kumulatif</h3>
-          <span className="text-[10px] font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-lg uppercase tracking-wider">Growth View</span>
-        </div>
-        {balanceTrendData.length > 0 ? (
-          <ResponsiveContainer width="100%" height="80%">
-            <AreaChart data={balanceTrendData}>
-              <defs>
-                <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartTheme.grid} />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: chartTheme.text }} />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fontSize: 10, fill: chartTheme.text }}
-                tickFormatter={(value) => `Rp${(value/1000)}k`}
-              />
-              <Tooltip 
-                formatter={(value: any) => [`Rp ${value?.toLocaleString('id-ID')}`, 'Sisa Saldo']}
-                contentStyle={chartTheme.tooltip}
-                itemStyle={{ color: '#3b82f6', fontWeight: 'bold' }}
-              />
-              <Area type="monotone" dataKey="balance" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorBalance)" />
-            </AreaChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className="h-full flex items-center justify-center text-slate-400 text-sm italic">Menunggu data transaksi...</div>
-        )}
-      </div>
+    <div className="space-y-10 mb-12">
+      {/* Financial Health Indicator */}
+      {transactions.length > 0 && (
+        <div className={`p-6 rounded-[2.5rem] border flex items-center gap-5 transition-all duration-500 shadow-xl overflow-hidden relative ${
+          isSavingHealthy 
+            ? (isDark ? 'glass-dark border-green-500/20 shadow-green-900/10' : 'glass border-green-200 shadow-green-200/50')
+            : (isDark ? 'glass-dark border-red-500/20 shadow-red-900/10' : 'glass border-red-200 shadow-red-200/50')
+        }`}>
+          {/* Animated Background Pulse */}
+          <div className={`absolute -right-20 -top-20 w-48 h-48 rounded-full blur-[80px] opacity-20 animate-pulse ${isSavingHealthy ? 'bg-green-500' : 'bg-red-500'}`} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Pie Chart: Proportion */}
-        <div className={`p-6 rounded-2xl shadow-sm border h-[400px] transition-colors duration-300 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
-          <h3 className={`text-sm font-bold mb-4 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Proposi Pengeluaran (%)</h3>
-          {categoryData.length > 0 ? (
-            <ResponsiveContainer width="100%" height="90%">
-              <PieChart margin={{ top: 20, right: 40, left: 40, bottom: 20 }}>
-                <Pie
-                  data={categoryData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                  label={({ name, percent, index }) => {
-                    const pct = categoryData[index]?.percent || '0%';
-                    return `${name} (${pct})`;
-                  }}
-                >
-                  {categoryData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value: any, name: any, props: any) => [
-                    `Rp ${value?.toLocaleString('id-ID')} (${props.payload?.percent || '0%'})`, 
-                    name
-                  ]}
-                  contentStyle={chartTheme.tooltip}
-                />
-                <Legend 
-                  verticalAlign="bottom" 
-                  height={36} 
-                  wrapperStyle={{ fontSize: '10px', color: chartTheme.text, paddingTop: '10px' }} 
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-full flex items-center justify-center text-slate-400 text-sm italic">Belum ada pengeluaran</div>
-          )}
+          <div className={`p-4 rounded-3xl flex-shrink-0 flex items-center justify-center shadow-lg ${
+            isSavingHealthy 
+              ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white' 
+              : 'bg-gradient-to-br from-red-500 to-rose-600 text-white'
+          }`}>
+            {isSavingHealthy ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            )}
+          </div>
+          <div className="relative z-10">
+            <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${isSavingHealthy ? (isDark ? 'text-green-400/70' : 'text-green-600/70') : (isDark ? 'text-red-400/70' : 'text-red-600/70')}`}>
+              Economic Insight
+            </p>
+            <p className={`text-md md:text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-800'}`}>{healthMessage}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Charts Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* Left Column: Balance Equity */}
+        <div className={`p-10 rounded-[2.5rem] shadow-xl border flex flex-col h-[480px] transition-all duration-500 relative overflow-hidden group ${
+          isDark ? 'glass-dark border-white/5 shadow-black/20' : 'glass border-white shadow-slate-200/50'
+        }`}>
+          <div className="flex justify-between items-center mb-10 shrink-0">
+            <div>
+              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Total Equity Value</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Sisa Saldo Kumulatif</p>
+            </div>
+            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+          </div>
+          <div className="flex-1 w-full min-h-0">
+            {balanceTrendData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={balanceTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartTheme.grid} opacity={0.5} />
+                  <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: chartTheme.text, fontSize: 10, fontWeight: 'bold' }} 
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: chartTheme.text, fontSize: 10, fontWeight: 'bold' }} 
+                    tickFormatter={(val) => `Rp${(val/1000).toFixed(0)}k`}
+                  />
+                  <Tooltip 
+                    contentStyle={chartTheme.tooltip as any} 
+                    cursor={{ stroke: '#3b82f6', strokeWidth: 1, strokeDasharray: '5 5' }}
+                    formatter={(val: any) => [`Rp ${val?.toLocaleString('id-ID')}`, 'Saldo']}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="balance" 
+                    stroke="#3b82f6" 
+                    strokeWidth={4} 
+                    fillOpacity={1} 
+                    fill="url(#colorBalance)" 
+                    animationDuration={2000}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center space-y-3">
+                <div className="w-12 h-12 rounded-full border-2 border-dashed border-slate-300 animate-spin" />
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 animate-pulse">Waiting for synchronization...</p>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Bar Chart: Daily Flow */}
-        <div className={`p-6 rounded-2xl shadow-sm border h-[350px] transition-colors duration-300 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
-          <h3 className={`text-sm font-bold mb-4 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Arus Kas 7 Hari Terakhir</h3>
-          {trendDataArr.length > 0 ? (
-            <ResponsiveContainer width="100%" height="90%">
-              <BarChart data={trendDataArr}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartTheme.grid} />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: chartTheme.text }} />
-                <YAxis hide />
-                <Tooltip 
-                   formatter={(value: any) => `Rp ${value?.toLocaleString('id-ID')}`}
-                   contentStyle={chartTheme.tooltip}
+        {/* Right Column: Outcomes */}
+        <div className={`p-10 rounded-[2.5rem] shadow-xl border flex flex-col h-[480px] transition-all duration-500 relative overflow-hidden group ${
+          isDark ? 'glass-dark border-white/5 shadow-black/20' : 'glass border-white shadow-slate-200/50'
+        }`}>
+          <div className="flex justify-between items-center mb-2 shrink-0">
+            <div>
+              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Outcome Proportion</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Berdasarkan Kategori</p>
+            </div>
+            <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+              </svg>
+            </div>
+          </div>
+          <div className="flex-1 min-h-0">
+            {categoryData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
+                  <Pie
+                    data={categoryData}
+                    cx="50%"
+                    cy="45%"
+                    innerRadius={65}
+                    outerRadius={95}
+                    paddingAngle={8}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} (${percent})`}
+                    stroke="none"
+                    animationDuration={1500}
+                  >
+                    {categoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={chartTheme.tooltip as any} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    iconType="circle" 
+                    wrapperStyle={{ paddingTop: '20px', fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300">N/A Metrics</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Row 2: Daily Workflow */}
+        <div className={`p-10 rounded-[2.5rem] shadow-xl border flex flex-col h-[400px] transition-all duration-500 relative overflow-hidden group lg:col-span-2 ${
+          isDark ? 'glass-dark border-white/5 shadow-black/20' : 'glass border-white shadow-slate-200/50'
+        }`}>
+          <div className="flex justify-between items-center mb-8 shrink-0">
+            <div>
+              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Daily Financial Workflow</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Arus Kas 7 Hari Terakhir</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500" />
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-tighter">Income</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-tighter">Outcome</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex-1 min-h-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={trendDataArr} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartTheme.grid} opacity={0.5} />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: chartTheme.text, fontSize: 10, fontWeight: 'bold' }} 
                 />
-                <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '10px' }} />
-                <Bar dataKey="income" fill="#10b981" radius={[4, 4, 0, 0]} barSize={12} name="Masuk" />
-                <Bar dataKey="outcome" fill="#ef4444" radius={[4, 4, 0, 0]} barSize={12} name="Keluar" />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: chartTheme.text, fontSize: 10, fontWeight: 'bold' }} 
+                  tickFormatter={(val) => `${(val/1000).toFixed(0)}k`}
+                />
+                <Tooltip 
+                  contentStyle={chartTheme.tooltip as any} 
+                  cursor={{ fill: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }}
+                  formatter={(val: any) => [`Rp ${val?.toLocaleString('id-ID')}`, 'Value']}
+                />
+                <Bar dataKey="income" fill="url(#colorIncome)" radius={[10, 10, 0, 0]} barSize={12} animationDuration={1500} />
+                <Bar dataKey="outcome" fill="url(#colorOutcome)" radius={[10, 10, 0, 0]} barSize={12} animationDuration={2000} />
+                <defs>
+                  <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={1}/>
+                    <stop offset="95%" stopColor="#059669" stopOpacity={0.8}/>
+                  </linearGradient>
+                  <linearGradient id="colorOutcome" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={1}/>
+                    <stop offset="95%" stopColor="#dc2626" stopOpacity={0.8}/>
+                  </linearGradient>
+                </defs>
               </BarChart>
             </ResponsiveContainer>
-          ) : (
-            <div className="h-full flex items-center justify-center text-slate-400 text-sm italic">Belum ada aktivitas transaksi</div>
-          )}
+          </div>
         </div>
       </div>
     </div>
