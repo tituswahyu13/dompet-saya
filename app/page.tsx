@@ -251,61 +251,76 @@ export default function Dashboard() {
                         <th className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tanggal</th>
                         <th className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Keterangan</th>
                         <th className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Nominal</th>
+                        <th className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Saldo</th>
                         <th className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center w-24">Aksi</th>
                       </tr>
                     </thead>
                     <tbody className={`divide-y ${isDark ? 'divide-slate-700' : 'divide-slate-100'}`}>
-                      {filteredTransactions.map((t) => (
-                        <tr key={t.id} className={`transition-colors group ${isDark ? 'hover:bg-slate-900/30' : 'hover:bg-slate-50/50'}`}>
-                          <td className="p-4">
-                            <div className={`text-sm font-bold ${isDark ? 'text-slate-200' : 'text-slate-900'}`}>
-                              {new Date(t.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}
-                            </div>
-                            <div className="text-[10px] text-slate-400">
-                              {new Date(t.tanggal).toLocaleDateString('id-ID', { year: 'numeric' })}
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <div className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-800'}`}>{t.keterangan}</div>
-                            <div className={`text-[10px] font-black px-2 py-0.5 rounded-lg inline-block mt-1 uppercase tracking-tighter ${
-                              t.income > 0 ? (isDark ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-700') : 
-                              t.saving > 0 ? (isDark ? 'bg-blue-900/30 text-blue-400' : 'bg-blue-100 text-blue-700') : 
-                              (isDark ? 'bg-red-900/30 text-red-400' : 'bg-red-100 text-red-700')
+                      {(() => {
+                        // Calculate running balance based on ALL transactions (chronological)
+                        const allSorted = [...transactions].sort((a, b) => new Date(a.tanggal).getTime() - new Date(b.tanggal).getTime());
+                        let running = 0;
+                        const balancesMap: Record<string, number> = {};
+                        allSorted.forEach(t => {
+                          running += (Number(t.income || 0) - Number(t.outcome || 0) - Number(t.saving || 0));
+                          balancesMap[t.id] = running;
+                        });
+
+                        return filteredTransactions.map((t) => (
+                          <tr key={t.id} className={`transition-colors group ${isDark ? 'hover:bg-slate-900/30' : 'hover:bg-slate-50/50'}`}>
+                            <td className="p-4">
+                              <div className={`text-sm font-bold ${isDark ? 'text-slate-200' : 'text-slate-900'}`}>
+                                {new Date(t.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}
+                              </div>
+                              <div className="text-[10px] text-slate-400">
+                                {new Date(t.tanggal).toLocaleDateString('id-ID', { year: 'numeric' })}
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-800'}`}>{t.keterangan}</div>
+                              <div className={`text-[10px] font-black px-2 py-0.5 rounded-lg inline-block mt-1 uppercase tracking-tighter ${
+                                t.income > 0 ? (isDark ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-700') : 
+                                t.saving > 0 ? (isDark ? 'bg-blue-900/30 text-blue-400' : 'bg-blue-100 text-blue-700') : 
+                                (isDark ? 'bg-red-900/30 text-red-400' : 'bg-red-100 text-red-700')
+                              }`}>
+                                {t.kategori || 'Others'}
+                              </div>
+                            </td>
+                            <td className={`p-4 text-right font-bold text-sm ${
+                              t.income > 0 ? 'text-green-600' : 
+                              t.saving > 0 ? 'text-blue-600' : 
+                              'text-red-600'
                             }`}>
-                              {t.kategori || 'Others'}
-                            </div>
-                          </td>
-                          <td className={`p-4 text-right font-bold text-sm ${
-                            t.income > 0 ? 'text-green-600' : 
-                            t.saving > 0 ? 'text-blue-600' : 
-                            'text-red-600'
-                          }`}>
-                            {t.income > 0 ? '+' : t.saving > 0 ? '🔒' : '-'} Rp {(t.income || t.outcome || t.saving).toLocaleString('id-ID')}
-                          </td>
-                          <td className="p-4">
-                            <div className="flex justify-center gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button 
-                                onClick={() => handleEdit(t)}
-                                className={`p-2 rounded-lg transition-colors ${isDark ? 'text-blue-400 hover:bg-blue-900/30' : 'text-blue-500 hover:bg-blue-50'}`}
-                                title="Edit"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                              </button>
-                              <button 
-                                onClick={() => handleDelete(t.id)}
-                                className={`p-2 rounded-lg transition-colors ${isDark ? 'text-red-400 hover:bg-red-900/30' : 'text-red-500 hover:bg-red-50'}`}
-                                title="Hapus"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                              {t.income > 0 ? '+' : t.saving > 0 ? '🔒' : '-'} Rp {(t.income || t.outcome || t.saving).toLocaleString('id-ID')}
+                            </td>
+                            <td className={`p-4 text-right text-xs font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                              Rp {(balancesMap[t.id] || 0) .toLocaleString('id-ID')}
+                            </td>
+                            <td className="p-4">
+                              <div className="flex justify-center gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button 
+                                  onClick={() => handleEdit(t)}
+                                  className={`p-2 rounded-lg transition-colors ${isDark ? 'text-blue-400 hover:bg-blue-900/30' : 'text-blue-500 hover:bg-blue-50'}`}
+                                  title="Edit"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                  </svg>
+                                </button>
+                                <button 
+                                  onClick={() => handleDelete(t.id)}
+                                  className={`p-2 rounded-lg transition-colors ${isDark ? 'text-red-400 hover:bg-red-900/30' : 'text-red-500 hover:bg-red-50'}`}
+                                  title="Hapus"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ));
+                      })()}
                     </tbody>
                   </table>
                 </div>
