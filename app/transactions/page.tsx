@@ -11,6 +11,7 @@ import Navigation from '@/components/Navigation';
 import RecurringManager from '@/components/RecurringManager';
 import ExportManager from '@/components/ExportManager';
 import ConfirmationModal from '@/components/ConfirmationModal';
+import NotificationCenter from '@/components/NotificationCenter';
 import { User } from '@supabase/supabase-js';
 
 function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
@@ -28,6 +29,9 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
   const [wallets, setWallets] = useState<any[]>([]);
   const [transactionToDelete, setTransactionToDelete] = useState<any>(null);
   const [showExportManager, setShowExportManager] = useState(false);
+  const [budgets, setBudgets] = useState<any[]>([]); // Added for NotificationCenter
+  const [goals, setGoals] = useState<any[]>([]); // Added for NotificationCenter
+  const [recurringTemplates, setRecurringTemplates] = useState<any[]>([]); // Added for NotificationCenter
   const ITEMS_PER_PAGE = 15;
 
   const fetchData = async (user: User) => {
@@ -36,6 +40,15 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
     if (txData) setTransactions(txData);
     const { data: wData } = await supabase.from('wallet_balances').select('*').eq('user_id', user.id).eq('is_active', true);
     if (wData) setWallets(wData);
+    // Fetch budgets, goals, recurringTemplates if needed for NotificationCenter
+    // For now, just initialize them as empty arrays or fetch if there's a specific instruction
+    const { data: budgetData } = await supabase.from('budgets').select('*').eq('user_id', user.id);
+    if (budgetData) setBudgets(budgetData);
+    const { data: goalData } = await supabase.from('goals').select('*').eq('user_id', user.id);
+    if (goalData) setGoals(goalData);
+    const { data: recurringData } = await supabase.from('recurring_transactions').select('*').eq('user_id', user.id);
+    if (recurringData) setRecurringTemplates(recurringData);
+
     setLoading(false);
   };
 
@@ -108,6 +121,14 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                <button onClick={() => setIsDark(!isDark)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-slate-800 text-amber-400 border-white/5' : 'bg-slate-100 text-slate-500 border-slate-200'} hover:scale-105 transition-all`}>
                 {isDark ? <Sun size={20} className="sm:w-5 sm:h-5" /> : <Moon size={20} className="sm:w-5 sm:h-5" />}
               </button>
+              <NotificationCenter
+                transactions={transactions}
+                budgets={budgets}
+                goals={goals}
+                recurringTemplates={recurringTemplates}
+                wallets={wallets}
+                isDark={isDark}
+              />
               <button onClick={() => setShowRecurringManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-600/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-600/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'} hover:scale-105 transition-all`} title="Recurring Engine">
                 <RefreshCw size={18} className="sm:w-5 sm:h-5" />
               </button>

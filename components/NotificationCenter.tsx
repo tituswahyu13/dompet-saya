@@ -200,13 +200,20 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         )}
       </button>
 
-      {/* Notification Dropdown */}
+      {/* Notification Dropdown & Backdrop */}
       {isOpen && (
-        <div className={`absolute right-0 mt-2 w-96 max-h-[500px] overflow-y-auto rounded-2xl border shadow-2xl z-50 ${
-          isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'
-        }`}>
-          {/* Header */}
-          <div className={`sticky top-0 p-4 border-b ${isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'}`}>
+        <>
+          {/* Mobile Backdrop */}
+          <div 
+            className="fixed inset-0 bg-slate-950/20 backdrop-blur-[2px] z-40 sm:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+          
+          <div className={`fixed inset-x-4 top-20 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 w-[calc(100%-2rem)] sm:w-80 md:w-96 max-h-[70vh] sm:max-h-[500px] overflow-hidden rounded-2xl border shadow-2xl z-50 flex flex-col ${
+            isDark ? 'bg-slate-900 border-white/10 shadow-black/40' : 'bg-white border-slate-200 shadow-slate-200/50'
+          }`}>
+            {/* Header */}
+            <div className={`p-4 border-b shrink-0 ${isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'}`}>
             <div className="flex justify-between items-center">
               <h3 className={`text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
                 Notifications ({unreadCount})
@@ -222,45 +229,50 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
             </div>
           </div>
 
-          {/* Notification List */}
-          <div className="divide-y divide-slate-200 dark:divide-white/5">
-            {notifications.length === 0 ? (
-              <div className="p-8 text-center">
-                <p className="text-sm text-slate-400 italic">No notifications yet</p>
-              </div>
-            ) : (
-              notifications.map(notif => (
-                <div
-                  key={notif.id}
-                  className={`p-4 transition-all cursor-pointer ${
-                    notif.is_read 
-                      ? isDark ? 'bg-slate-900 opacity-60' : 'bg-white opacity-60'
-                      : isDark ? 'bg-slate-800/40 hover:bg-slate-800' : 'bg-blue-50/50 hover:bg-blue-50'
-                  }`}
-                  onClick={() => markAsRead(notif.id)}
-                >
-                  <div className="flex gap-3">
-                    <div className="text-2xl flex-shrink-0">{getIcon(notif.type)}</div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className={`text-sm font-bold mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                        {notif.title}
-                      </h4>
-                      <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                        {notif.message}
-                      </p>
-                      <p className="text-[10px] text-slate-500 mt-2">
-                        {format(new Date(notif.created_at), 'dd MMM yyyy, HH:mm')}
-                      </p>
-                    </div>
-                    {!notif.is_read && (
-                      <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
-                    )}
-                  </div>
+            <div className="flex-1 overflow-y-auto divide-y divide-slate-200 dark:divide-white/5">
+              {notifications.length === 0 ? (
+                <div className="p-8 text-center">
+                  <p className="text-sm text-slate-400 italic">No notifications yet</p>
                 </div>
-              ))
-            )}
+              ) : (
+                notifications.map(notif => (
+                  <div
+                    key={notif.id}
+                    className={`p-4 transition-all cursor-pointer ${
+                      notif.is_read 
+                        ? isDark ? 'bg-slate-900 opacity-60' : 'bg-white opacity-60'
+                        : isDark ? 'bg-slate-800/40 hover:bg-slate-800' : 'bg-blue-50/50 hover:bg-blue-50'
+                    }`}
+                    onClick={() => {
+                      markAsRead(notif.id);
+                      if (window.innerWidth < 640) setIsOpen(false);
+                    }}
+                  >
+                    <div className="flex gap-3">
+                      <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-slate-400/10">
+                        {getIcon(notif.type)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className={`text-xs sm:text-sm font-bold mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                          {notif.title}
+                        </h4>
+                        <p className={`text-[10px] sm:text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                          {notif.message}
+                        </p>
+                        <p className="text-[9px] text-slate-500 mt-2 font-medium">
+                          {format(new Date(notif.created_at), 'dd MMM yyyy, HH:mm')}
+                        </p>
+                      </div>
+                      {!notif.is_read && (
+                        <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
