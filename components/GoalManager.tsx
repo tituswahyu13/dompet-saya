@@ -201,7 +201,19 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <button onClick={() => { setEditingId(g.id); setFormData({ ...g, deadline: g.deadline || '' }); setIsAdding(true); }} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}>
+                            <button onClick={() => { 
+                              setEditingId(g.id); 
+                              setFormData({
+                                name: g.name,
+                                target_amount: g.target_amount,
+                                current_amount: g.current_amount,
+                                wallet_id: g.wallet_id || '',
+                                deadline: g.deadline || '',
+                                icon: g.icon,
+                                color: g.color
+                              });
+                              setIsAdding(true); 
+                            }} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}>
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                             </button>
                             <button onClick={() => handleDelete(g)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}>

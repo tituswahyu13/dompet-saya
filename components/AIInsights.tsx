@@ -5,6 +5,7 @@ import { format, startOfMonth, endOfMonth, subMonths, differenceInDays } from 'd
 interface Transaction {
   id: string;
   tanggal: string;
+  keterangan: string;
   income: number;
   outcome: number;
   saving: number;

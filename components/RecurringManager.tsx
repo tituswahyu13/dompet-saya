@@ -274,7 +274,21 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
                           </h4>
                         </div>
                         <div className="flex gap-2">
-                          <button onClick={() => { setEditingId(t.id); setFormData(t); setIsAdding(true); }} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}>
+                          <button onClick={() => { 
+                            setEditingId(t.id); 
+                            setFormData({
+                              keterangan: t.keterangan,
+                              amount: t.amount,
+                              type: t.type,
+                              kategori: t.kategori,
+                              wallet_id: t.wallet_id,
+                              target_wallet_id: t.target_wallet_id || null,
+                              frequency: t.frequency,
+                              day_of_month: t.day_of_month,
+                              is_active: t.is_active
+                            });
+                            setIsAdding(true); 
+                          }} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                           </button>
                           <button onClick={() => handleDelete(t)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}>

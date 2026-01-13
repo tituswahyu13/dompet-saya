@@ -6,6 +6,7 @@ import { format, startOfMonth, endOfMonth, eachMonthOfInterval, subMonths } from
 interface Transaction {
   id: string;
   tanggal: string;
+  keterangan: string;
   income: number;
   outcome: number;
   saving: number;
