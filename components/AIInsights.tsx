@@ -44,8 +44,8 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
     
     return {
       amount: Math.round(predictedSpending),
-      confidence: Math.abs(trend) < 0.2 ? 'High' : Math.abs(trend) < 0.5 ? 'Medium' : 'Low',
-      trend: trend > 0.1 ? 'increasing' : trend < -0.1 ? 'decreasing' : 'stable'
+      confidence: Math.abs(trend) < 0.2 ? 'Tinggi' : Math.abs(trend) < 0.5 ? 'Sedang' : 'Rendah',
+      trend: trend > 0.1 ? 'meningkat' : trend < -0.1 ? 'menurun' : 'stabil'
     };
   }, [transactions]);
 
@@ -74,7 +74,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       const potential = amount * 0.15; // Suggest 15% reduction
       if (potential > 50000) {
         recommendations.push(
-          `Reduce "${kategori}" spending by 15% to save Rp ${Math.round(potential / 1000)}k/month`
+          `Kurangi pengeluaran "${kategori}" sebesar 15% untuk hemat Rp ${Math.round(potential / 1000)}rb/bulan`
         );
       }
     });
@@ -84,7 +84,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
     if (smallTransactions.length > 20) {
       const totalSmall = smallTransactions.reduce((sum, t) => sum + t.outcome, 0);
       recommendations.push(
-        `You made ${smallTransactions.length} small purchases (Rp ${Math.round(totalSmall / 1000)}k total). Consider consolidating to save on fees.`
+        `Anda melakukan ${smallTransactions.length} transaksi kecil (total Rp ${Math.round(totalSmall / 1000)}rb). Pertimbangkan untuk menggabungkannya agar lebih hemat.`
       );
     }
     
@@ -98,7 +98,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       const currentSaving = totalIncome - totalOutcome;
       const gap = targetSaving - currentSaving;
       recommendations.push(
-        `Aim for 20% saving rate. You need to save an additional Rp ${Math.round(gap / 1000)}k/month.`
+        `Targetkan rasio tabungan 20%. Anda perlu menabung tambahan Rp ${Math.round(gap / 1000)}rb/bulan.`
       );
     }
     
@@ -148,7 +148,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       });
     
     const avgByDay = dayOfWeekSpending.map((total, i) => ({
-      day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][i],
+      day: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][i],
       avg: dayOfWeekCount[i] > 0 ? total / dayOfWeekCount[i] : 0
     }));
     
@@ -170,7 +170,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
           </div>
           <div className="flex-1 min-w-0">
             <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-rose-300' : 'text-rose-700'}`}>
-              Next Month Prediction
+              Prediksi Bulan Depan
             </h3>
             <p className={`text-xl sm:text-2xl font-black mb-2 ${isDark ? 'text-white' : 'text-slate-900'} truncate`}>
               Rp {(spendingPrediction.amount / 1000000).toFixed(1)}M
@@ -186,7 +186,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
                 {spendingPrediction.confidence}
               </span>
               <span className={`${isDark ? 'text-slate-400' : 'text-slate-600'} font-bold uppercase tracking-tight`}>
-                Trend: {spendingPrediction.trend}
+                Tren: {spendingPrediction.trend}
               </span>
             </div>
           </div>
@@ -200,12 +200,12 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
             <Lightbulb size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
           </div>
           <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            Smart Recommendations
+            Rekomendasi Pintar
           </h3>
         </div>
         {savingRecommendations.length === 0 ? (
           <p className={`text-[11px] sm:text-sm italic ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-            Great job! Your spending looks optimized.
+            Bagus sekali! Pengeluaran Anda terlihat optimal.
           </p>
         ) : (
           <ul className="space-y-2 sm:space-y-3">
@@ -227,7 +227,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
               <AlertCircle size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
             </div>
             <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-orange-300' : 'text-orange-700'}`}>
-              Unusual Activity
+              Aktivitas Tidak Biasa
             </h3>
           </div>
           <div className="space-y-2">
@@ -251,11 +251,11 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
           </div>
           <div>
             <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-purple-300' : 'text-purple-700'}`}>
-              Spending Pattern
+              Pola Pengeluaran
             </h3>
             <p className={`text-[11px] sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-              Focus on <span className="font-bold">{spendingPatterns.highestDay}s</span>
-              {' '}(avg: Rp {(spendingPatterns.avgAmount / 1000).toFixed(0)}k)
+              Fokus pada <span className="font-bold">{spendingPatterns.highestDay}</span>
+              {' '}(rata-rata: Rp {(spendingPatterns.avgAmount / 1000).toFixed(0)}rb)
             </p>
           </div>
         </div>

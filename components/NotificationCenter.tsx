@@ -42,8 +42,8 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `budget-${budget.id}-100`,
           type: 'budget_alert',
-          title: 'Budget Exceeded!',
-          message: `You've exceeded your budget for "${budget.kategori}" by Rp ${(spent - budget.limit).toLocaleString('id-ID')}`,
+          title: 'Anggaran Terlampaui!',
+          message: `Anda telah melebihi anggaran untuk "${budget.kategori}" sebesar Rp ${(spent - budget.limit).toLocaleString('id-ID')}`,
           is_read: false,
           created_at: now.toISOString()
         });
@@ -51,8 +51,8 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `budget-${budget.id}-90`,
           type: 'budget_alert',
-          title: 'Budget Warning',
-          message: `You've used ${percentage.toFixed(0)}% of your "${budget.kategori}" budget`,
+          title: 'Peringatan Anggaran',
+          message: `Anda telah menggunakan ${percentage.toFixed(0)}% dari anggaran "${budget.kategori}"`,
           is_read: false,
           created_at: now.toISOString()
         });
@@ -60,8 +60,8 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `budget-${budget.id}-80`,
           type: 'budget_alert',
-          title: 'Budget Notice',
-          message: `You've used ${percentage.toFixed(0)}% of your "${budget.kategori}" budget`,
+          title: 'Info Anggaran',
+          message: `Anda telah menggunakan ${percentage.toFixed(0)}% dari anggaran "${budget.kategori}"`,
           is_read: false,
           created_at: now.toISOString()
         });
@@ -78,8 +78,8 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `goal-${goal.id}-100`,
           type: 'goal_milestone',
-          title: 'Goal Achieved!',
-          message: `Congratulations! You've reached your goal: "${goal.name}"!`,
+          title: 'Target Tercapai!',
+          message: `Selamat! Anda telah mencapai target: "${goal.name}"!`,
           is_read: false,
           created_at: now.toISOString()
         });
@@ -87,8 +87,8 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `goal-${goal.id}-75`,
           type: 'goal_milestone',
-          title: 'Almost There!',
-          message: `You're 75% of the way to "${goal.name}"! Keep going!`,
+          title: 'Hampir Sampai!',
+          message: `Anda sudah mencapai 75% dari target "${goal.name}"! Terus semangat!`,
           is_read: false,
           created_at: now.toISOString()
         });
@@ -96,8 +96,8 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `goal-${goal.id}-50`,
           type: 'goal_milestone',
-          title: 'Halfway Point!',
-          message: `You've reached 50% of your "${goal.name}" goal!`,
+          title: 'Titik Tengah!',
+          message: `Anda telah mencapai 50% dari target "${goal.name}"!`,
           is_read: false,
           created_at: now.toISOString()
         });
@@ -126,8 +126,8 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `recurring-${template.id}`,
           type: 'recurring_reminder',
-          title: '🪄 Recurring Transaction Due',
-          message: `"${template.keterangan}" is due in ${daysUntil} day(s)`,
+          title: '🪄 Transaksi Rutin Jatuh Tempo',
+          message: `"${template.keterangan}" jatuh tempo dalam ${daysUntil} hari`,
           is_read: false,
           created_at: now.toISOString()
         });
