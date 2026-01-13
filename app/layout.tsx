@@ -15,12 +15,24 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Dompet Saya Pro - Financial Intelligence Platform",
   description: "Your smart personal finance manager with AI-powered insights, budget tracking, and financial goal management",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Dompet Saya Pro",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   icons: {
     icon: [
       {
         url: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>",
         type: "image/svg+xml",
       },
+    ],
+    apple: [
+      { url: "/icon-192.png" },
     ],
   },
 };
