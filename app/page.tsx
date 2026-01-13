@@ -5,6 +5,7 @@ import Insights from '@/components/Insights';
 import BudgetTracker from '@/components/BudgetTracker';
 import AuthWrapper from '@/components/AuthWrapper';
 import WalletManager from '@/components/WalletManager';
+import GoalManager from '@/components/GoalManager';
 import Navigation from '@/components/Navigation';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
@@ -14,8 +15,10 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
   const [stats, setStats] = useState({ income: 0, outcome: 0, saving: 0, rate: 0, balance: 0 });
   const [loading, setLoading] = useState(true);
   const [showWalletManager, setShowWalletManager] = useState(false);
+  const [showGoalManager, setShowGoalManager] = useState(false);
   const [selectedWalletFilter, setSelectedWalletFilter] = useState('All');
   const [wallets, setWallets] = useState<any[]>([]);
+  const [goals, setGoals] = useState<any[]>([]);
 
   const fetchData = async (user: User) => {
     setLoading(true);
@@ -40,6 +43,17 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
     
     if (wData) {
       setWallets(wData);
+    }
+
+    // Fetch Goals
+    const { data: gData } = await supabase
+      .from('financial_goals')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    
+    if (gData) {
+      setGoals(gData);
     }
 
     setLoading(false);
@@ -159,6 +173,13 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                 )}
               </button>
               <button 
+                onClick={() => setShowGoalManager(true)}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20' : 'bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100'} hover:scale-105 active:scale-95`}
+                title="Financial Goals"
+              >
+                <span className="text-xl">🎯</span>
+              </button>
+              <button 
                 onClick={() => setShowWalletManager(true)}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100'} hover:scale-105 active:scale-95`}
                 title="Manage Wallets"
@@ -251,6 +272,47 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
           </div>
         </section>
 
+        {/* Goals Section */}
+        <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+          <div className="flex justify-between items-center mb-8 px-1">
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-6 bg-blue-500 rounded-full" />
+              <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Financial Goals</h2>
+            </div>
+            <button onClick={() => setShowGoalManager(true)} className="text-xs font-black text-blue-500 uppercase tracking-widest hover:text-blue-400 transition-colors">Kelola Target →</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {goals.length === 0 ? (
+              <div className="col-span-full py-12 text-center opacity-40 italic text-sm">Belum ada target keuangan yang diatur.</div>
+            ) : (
+              goals.slice(0, 4).map((g) => {
+                const wallet = wallets.find(w => w.id === g.wallet_id);
+                const current = g.wallet_id ? (wallet?.current_balance || 0) : g.current_amount;
+                const progress = Math.min((current / g.target_amount) * 100, 100);
+                
+                return (
+                  <div key={g.id} className={`p-6 rounded-3xl border transition-all hover:scale-[1.02] ${isDark ? 'bg-slate-900/40 border-white/5' : 'bg-slate-50 border-slate-200'}`}>
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="text-2xl">{g.icon}</div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-black text-blue-500">{progress.toFixed(0)}%</p>
+                      </div>
+                    </div>
+                    <h3 className={`text-sm font-black mb-1 truncate ${isDark ? 'text-white' : 'text-slate-900'}`}>{g.name}</h3>
+                    <div className="flex justify-between items-baseline mb-3">
+                      <p className="text-[10px] font-bold text-slate-500">Rp {current.toLocaleString('id-ID')}</p>
+                      <p className="text-[10px] font-bold text-slate-400">/ {g.target_amount.toLocaleString('id-ID')}</p>
+                    </div>
+                    <div className={`h-1.5 w-full rounded-full overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+                      <div className="h-full transition-all duration-1000" style={{ width: `${progress}%`, backgroundColor: g.color }} />
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </section>
+
         <div className="space-y-16">
           <section>
             <div className="flex items-center gap-3 mb-8 px-1">
@@ -328,6 +390,9 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
 
       {showWalletManager && (
         <WalletManager user={user} isDark={isDark} onClose={() => { setShowWalletManager(false); fetchData(user); }} />
+      )}
+      {showGoalManager && (
+        <GoalManager user={user} isDark={isDark} onClose={() => { setShowGoalManager(false); fetchData(user); }} />
       )}
     </div>
   );

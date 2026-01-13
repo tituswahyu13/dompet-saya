@@ -8,6 +8,7 @@ export default function Navigation({ isDark }: { isDark: boolean }) {
   const navItems = [
     { name: 'Dashboard', href: '/', icon: '📊' },
     { name: 'Transaksi', href: '/transactions', icon: '💸' },
+    { name: 'Goals', href: '#goals', icon: '🎯' },
   ];
 
   return (
