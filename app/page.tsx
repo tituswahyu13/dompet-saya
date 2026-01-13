@@ -239,39 +239,39 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 space-y-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
-          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] col-span-2 md:col-span-2 lg:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Total Saldo</p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xs font-black text-blue-500">IDR</span>
-              <p className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter`}>{stats.balance.toLocaleString('id-ID')}</p>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10 space-y-8 sm:y-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
+          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] sm:col-span-2 lg:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
+            <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 sm:mb-4">Total Saldo</p>
+            <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
+              <span className="text-[10px] sm:text-xs font-black text-blue-500">IDR</span>
+              <p className={`text-2xl sm:text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter truncate`}>{stats.balance.toLocaleString('id-ID')}</p>
             </div>
           </div>
-          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-            <p className="text-[10px] font-black text-green-500 uppercase tracking-[0.2em] mb-4">Pemasukan</p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xs font-black text-green-600">IDR</span>
-              <p className="text-3xl font-black text-green-600 tracking-tighter">{stats.income.toLocaleString('id-ID')}</p>
+          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
+            <p className="text-[9px] sm:text-[10px] font-black text-green-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Pemasukan</p>
+            <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
+              <span className="text-[10px] sm:text-xs font-black text-green-600">IDR</span>
+              <p className="text-2xl sm:text-3xl font-black text-green-600 tracking-tighter truncate">{stats.income.toLocaleString('id-ID')}</p>
             </div>
           </div>
-          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-            <p className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em] mb-4">Pengeluaran</p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xs font-black text-red-600">IDR</span>
-              <p className="text-3xl font-black text-red-600 tracking-tighter">{stats.outcome.toLocaleString('id-ID')}</p>
+          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
+            <p className="text-[9px] sm:text-[10px] font-black text-red-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Pengeluaran</p>
+            <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
+              <span className="text-[10px] sm:text-xs font-black text-red-600">IDR</span>
+              <p className="text-2xl sm:text-3xl font-black text-red-600 tracking-tighter truncate">{stats.outcome.toLocaleString('id-ID')}</p>
             </div>
           </div>
-          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-blue-900/20' : 'bg-blue-50/50 border-blue-100'}`}>
-            <p className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-4">Tabungan</p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xs font-black text-blue-500">IDR</span>
-              <p className={`text-3xl font-black tracking-tighter ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{stats.saving.toLocaleString('id-ID')}</p>
+          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-blue-900/20' : 'bg-blue-50/50 border-blue-100'}`}>
+            <p className="text-[9px] sm:text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Tabungan</p>
+            <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
+              <span className="text-[10px] sm:text-xs font-black text-blue-500">IDR</span>
+              <p className={`text-2xl sm:text-3xl font-black tracking-tighter truncate ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{stats.saving.toLocaleString('id-ID')}</p>
             </div>
           </div>
-          <div className={`p-7 rounded-[2.5rem] border transition-all hover:scale-[1.02] md:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-indigo-900/20' : 'bg-indigo-50/50 border-indigo-100'}`}>
-            <p className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4">Saving Rate</p>
-            <p className="text-3xl font-black text-indigo-600 tracking-tighter">{stats.rate.toFixed(1)}<span className="text-sm ml-0.5">%</span></p>
+          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-indigo-900/20' : 'bg-indigo-50/50 border-indigo-100'}`}>
+            <p className="text-[9px] sm:text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Saving Rate</p>
+            <p className="text-2xl sm:text-3xl font-black text-indigo-600 tracking-tighter">{stats.rate.toFixed(1)}<span className="text-sm ml-0.5">%</span></p>
           </div>
         </div>
 

@@ -160,29 +160,29 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
   }, [transactions]);
 
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       {/* Spending Prediction */}
-      <div className={`p-6 rounded-2xl border ${isDark ? 'bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-500/20' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200'}`}>
+      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-500/20' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200'}`}>
         <div className="flex items-start gap-4">
-          <div className="text-3xl">🔮</div>
-          <div className="flex-1">
-            <h3 className={`text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
+          <div className="text-2xl sm:text-3xl">🔮</div>
+          <div className="flex-1 min-w-0">
+            <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
               Next Month Prediction
             </h3>
-            <p className={`text-2xl font-black mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            <p className={`text-xl sm:text-2xl font-black mb-2 ${isDark ? 'text-white' : 'text-slate-900'} truncate`}>
               Rp {(spendingPrediction.amount / 1000000).toFixed(1)}M
             </p>
-            <div className="flex items-center gap-2 text-xs">
-              <span className={`px-2 py-1 rounded-full font-bold ${
+            <div className="flex flex-wrap items-center gap-2 text-[9px] sm:text-xs">
+              <span className={`px-2 py-0.5 rounded-full font-bold ${
                 spendingPrediction.confidence === 'High' 
                   ? 'bg-green-500/20 text-green-400' 
                   : spendingPrediction.confidence === 'Medium'
                   ? 'bg-yellow-500/20 text-yellow-400'
                   : 'bg-red-500/20 text-red-400'
               }`}>
-                {spendingPrediction.confidence} Confidence
+                {spendingPrediction.confidence}
               </span>
-              <span className={`${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              <span className={`${isDark ? 'text-slate-400' : 'text-slate-600'} font-bold uppercase tracking-tight`}>
                 Trend: {spendingPrediction.trend}
               </span>
             </div>
@@ -191,23 +191,23 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       </div>
 
       {/* Saving Recommendations */}
-      <div className={`p-6 rounded-2xl border ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-white border-slate-200'}`}>
+      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-white border-slate-200'}`}>
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-2xl">💡</span>
-          <h3 className={`text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
+          <span className="text-xl sm:text-2xl">💡</span>
+          <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
             Smart Recommendations
           </h3>
         </div>
         {savingRecommendations.length === 0 ? (
-          <p className={`text-sm italic ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+          <p className={`text-[11px] sm:text-sm italic ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
             Great job! Your spending looks optimized.
           </p>
         ) : (
-          <ul className="space-y-3">
+          <ul className="space-y-2 sm:space-y-3">
             {savingRecommendations.map((rec, i) => (
-              <li key={i} className="flex gap-3">
-                <span className="text-green-500 font-bold flex-shrink-0">✓</span>
-                <span className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{rec}</span>
+              <li key={i} className="flex gap-2 sm:gap-3">
+                <span className="text-green-500 font-bold flex-shrink-0 text-[10px] sm:text-sm">✓</span>
+                <span className={`text-[11px] sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{rec}</span>
               </li>
             ))}
           </ul>
@@ -216,19 +216,19 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
 
       {/* Anomalies */}
       {anomalies.length > 0 && (
-        <div className={`p-6 rounded-2xl border ${isDark ? 'bg-orange-900/20 border-orange-500/20' : 'bg-orange-50 border-orange-200'}`}>
+        <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-orange-900/20 border-orange-500/20' : 'bg-orange-50 border-orange-200'}`}>
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-2xl">⚠️</span>
-            <h3 className={`text-sm font-black uppercase tracking-wider ${isDark ? 'text-orange-300' : 'text-orange-700'}`}>
-              Unusual Transactions
+            <span className="text-xl sm:text-2xl">⚠️</span>
+            <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-orange-300' : 'text-orange-700'}`}>
+              Unusual Activity
             </h3>
           </div>
           <div className="space-y-2">
             {anomalies.map((anomaly, i) => (
-              <div key={i} className={`flex justify-between items-center text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                <span className="flex-1 truncate">{anomaly.date}: {anomaly.description}</span>
-                <span className="font-bold text-orange-500 ml-2">
-                  Rp {(anomaly.amount / 1000).toFixed(0)}k (+{anomaly.deviation}%)
+              <div key={i} className={`flex justify-between items-center text-[11px] sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                <span className="flex-1 truncate pr-2">{anomaly.date}: {anomaly.description}</span>
+                <span className="font-bold text-orange-500 whitespace-nowrap">
+                   +{anomaly.deviation}%
                 </span>
               </div>
             ))}
@@ -237,15 +237,15 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       )}
 
       {/* Spending Pattern */}
-      <div className={`p-6 rounded-2xl border ${isDark ? 'bg-purple-900/20 border-purple-500/20' : 'bg-purple-50 border-purple-200'}`}>
+      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-purple-900/20 border-purple-500/20' : 'bg-purple-50 border-purple-200'}`}>
         <div className="flex items-start gap-4">
-          <div className="text-3xl">📊</div>
+          <div className="text-2xl sm:text-3xl">📊</div>
           <div>
-            <h3 className={`text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-purple-300' : 'text-purple-700'}`}>
+            <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-purple-300' : 'text-purple-700'}`}>
               Spending Pattern
             </h3>
-            <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-              You tend to spend most on <span className="font-bold">{spendingPatterns.highestDay}s</span>
+            <p className={`text-[11px] sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+              Focus on <span className="font-bold">{spendingPatterns.highestDay}s</span>
               {' '}(avg: Rp {(spendingPatterns.avgAmount / 1000).toFixed(0)}k)
             </p>
           </div>

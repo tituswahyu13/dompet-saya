@@ -96,10 +96,10 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
   return (
     <div className="space-y-8">
       {/* Monthly Trend Chart */}
-      <div className={`p-8 rounded-[2.5rem] border transition-all ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-1.5 h-6 bg-blue-500 rounded-full" />
-          <h3 className={`text-lg font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+      <div className={`p-4 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <div className="flex items-center gap-3 mb-4 sm:mb-6">
+          <div className="w-1.2 sm:w-1.5 h-5 sm:h-6 bg-blue-500 rounded-full" />
+          <h3 className={`text-base sm:text-lg font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
             6-Month Financial Trend
           </h3>
         </div>
@@ -123,12 +123,14 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
             <XAxis 
               dataKey="month" 
               stroke={isDark ? '#94a3b8' : '#64748b'}
-              style={{ fontSize: '11px', fontWeight: 'bold' }}
+              style={{ fontSize: '9px', fontWeight: 'bold' }}
+              tick={{ fontSize: 9 }}
             />
             <YAxis 
               stroke={isDark ? '#94a3b8' : '#64748b'}
-              style={{ fontSize: '11px', fontWeight: 'bold' }}
-              label={{ value: 'Juta (IDR)', angle: -90, position: 'insideLeft', style: { fontSize: '10px', fontWeight: 'bold' } }}
+              style={{ fontSize: '9px', fontWeight: 'bold' }}
+              tick={{ fontSize: 9 }}
+              label={{ value: 'M (IDR)', angle: -90, position: 'insideLeft', style: { fontSize: '9px', fontWeight: 'bold' } }}
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend 
@@ -167,10 +169,10 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
       </div>
 
       {/* Category Breakdown Chart */}
-      <div className={`p-8 rounded-[2.5rem] border transition-all ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-1.5 h-6 bg-purple-500 rounded-full" />
-          <h3 className={`text-lg font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+      <div className={`p-4 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <div className="flex items-center gap-3 mb-4 sm:mb-6">
+          <div className="w-1.2 sm:w-1.5 h-5 sm:h-6 bg-purple-500 rounded-full" />
+          <h3 className={`text-base sm:text-lg font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
             Top Spending Categories
           </h3>
         </div>
@@ -180,15 +182,17 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
             <XAxis 
               type="number" 
               stroke={isDark ? '#94a3b8' : '#64748b'}
-              style={{ fontSize: '11px', fontWeight: 'bold' }}
-              label={{ value: 'Juta (IDR)', position: 'insideBottom', offset: -5, style: { fontSize: '10px', fontWeight: 'bold' } }}
+              style={{ fontSize: '9px', fontWeight: 'bold' }}
+              tick={{ fontSize: 9 }}
+              label={{ value: 'M (IDR)', position: 'insideBottom', offset: -5, style: { fontSize: '9px', fontWeight: 'bold' } }}
             />
             <YAxis 
               type="category" 
               dataKey="kategori" 
               stroke={isDark ? '#94a3b8' : '#64748b'}
-              style={{ fontSize: '11px', fontWeight: 'bold' }}
-              width={150}
+              style={{ fontSize: '9px', fontWeight: 'bold' }}
+              tick={{ fontSize: 9 }}
+              width={80}
             />
             <Tooltip content={<CustomTooltip />} />
             <Bar 

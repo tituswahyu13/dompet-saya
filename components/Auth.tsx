@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import PWAInstallPrompt from './PWAInstallPrompt';
 
 interface AuthProps {
   isDark: boolean;
@@ -43,6 +44,8 @@ export default function Auth({ isDark }: AuthProps) {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+      <PWAInstallPrompt isDark={isDark} />
+      
       {/* Background Animated Blobs */}
       <div className="absolute top-0 left-0 w-full h-full -z-10">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/20 rounded-full blur-[120px] animate-pulse" />
@@ -53,15 +56,13 @@ export default function Auth({ isDark }: AuthProps) {
         isDark ? 'glass-dark border-white/5 shadow-2xl shadow-black/40' : 'glass border-white shadow-xl shadow-slate-200/50'
       }`}>
         <div className="text-center mb-10">
-          <div className="w-16 h-16 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
+          <div className="w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/20 overflow-hidden border-4 border-white/10">
+            <img src="/icon-192.png" alt="Dompet Saya Pro Logo" className="w-14 h-14 object-contain" />
           </div>
           <h2 className={`text-2xl font-black uppercase tracking-[0.2em] ${isDark ? 'text-white' : 'text-slate-900'}`}>
             {isSignUp ? 'New Account' : 'Gateway Access'}
           </h2>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Dompet Saya - Auth Protocol</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Dompet Saya Pro - Auth Protocol</p>
         </div>
 
         {message && (
