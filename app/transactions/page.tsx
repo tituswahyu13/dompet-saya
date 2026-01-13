@@ -7,6 +7,7 @@ import AuthWrapper from '@/components/AuthWrapper';
 import WalletManager from '@/components/WalletManager';
 import Navigation from '@/components/Navigation';
 import RecurringManager from '@/components/RecurringManager';
+import ExportManager from '@/components/ExportManager';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import { User } from '@supabase/supabase-js';
 
@@ -24,6 +25,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
   const [showRecurringManager, setShowRecurringManager] = useState(false);
   const [wallets, setWallets] = useState<any[]>([]);
   const [transactionToDelete, setTransactionToDelete] = useState<any>(null);
+  const [showExportManager, setShowExportManager] = useState(false);
   const ITEMS_PER_PAGE = 15;
 
   const fetchData = async (user: User) => {
@@ -217,6 +219,14 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
         onCancel={() => setTransactionToDelete(null)}
         isDark={isDark}
       />
+      {showExportManager && (
+        <ExportManager 
+          transactions={transactions}
+          wallets={wallets}
+          isDark={isDark}
+          onClose={() => setShowExportManager(false)}
+        />
+      )}
     </div>
   );
 }

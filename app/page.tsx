@@ -6,6 +6,9 @@ import BudgetTracker from '@/components/BudgetTracker';
 import AuthWrapper from '@/components/AuthWrapper';
 import WalletManager from '@/components/WalletManager';
 import GoalManager from '@/components/GoalManager';
+import AdvancedCharts from '@/components/AdvancedCharts';
+import NotificationCenter from '@/components/NotificationCenter';
+import AIInsights from '@/components/AIInsights';
 import Navigation from '@/components/Navigation';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
@@ -19,6 +22,9 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
   const [selectedWalletFilter, setSelectedWalletFilter] = useState('All');
   const [wallets, setWallets] = useState<any[]>([]);
   const [goals, setGoals] = useState<any[]>([]);
+  const [budgets, setBudgets] = useState<any[]>([]);
+  const [recurringTemplates, setRecurringTemplates] = useState<any[]>([]);
+  const [showAdvancedCharts, setShowAdvancedCharts] = useState(false);
 
   const fetchData = async (user: User) => {
     setLoading(true);
@@ -54,6 +60,26 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
     
     if (gData) {
       setGoals(gData);
+    }
+
+    // Fetch Budgets
+    const { data: bData } = await supabase
+      .from('budgets')
+      .select('*')
+      .eq('user_id', user.id);
+    
+    if (bData) {
+      setBudgets(bData);
+    }
+
+    // Fetch Recurring Templates
+    const { data: rData } = await supabase
+      .from('recurring_templates')
+      .select('*')
+      .eq('user_id', user.id);
+    
+    if (rData) {
+      setRecurringTemplates(rData);
     }
 
     setLoading(false);
@@ -172,6 +198,14 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                   </svg>
                 )}
               </button>
+              <NotificationCenter 
+                transactions={filteredTransactions}
+                budgets={budgets}
+                goals={goals}
+                recurringTemplates={recurringTemplates}
+                wallets={wallets}
+                isDark={isDark}
+              />
               <button 
                 onClick={() => setShowGoalManager(true)}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20' : 'bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100'} hover:scale-105 active:scale-95`}
@@ -313,22 +347,57 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
           </div>
         </section>
 
-        <div className="space-y-16">
-          <section>
-            <div className="flex items-center gap-3 mb-8 px-1">
+        {/* Advanced Analytics Section */}
+        <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+          <div className="flex justify-between items-center mb-8 px-1">
+            <div className="flex items-center gap-3">
               <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
-              <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Data Intelligence</h2>
+              <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>
+                {showAdvancedCharts ? 'Advanced Analytics' : 'Data Intelligence'}
+              </h2>
             </div>
-            {loading ? (
-              <div className="p-20 text-center">
-                <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">Analyzing Financial Patterns...</p>
-              </div>
-            ) : (
-              <Insights transactions={filteredTransactions} isDark={isDark} wallets={wallets} />
-            )}
-          </section>
-          
+            <button 
+              onClick={() => setShowAdvancedCharts(!showAdvancedCharts)}
+              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                showAdvancedCharts 
+                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' 
+                  : isDark ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              {showAdvancedCharts ? '📊 Show Simple View' : '📈 Show Charts'}
+            </button>
+          </div>
+          {loading ? (
+            <div className="p-20 text-center">
+              <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">Analyzing Financial Patterns...</p>
+            </div>
+          ) : showAdvancedCharts ? (
+            <AdvancedCharts transactions={filteredTransactions} isDark={isDark} />
+          ) : (
+            <Insights transactions={filteredTransactions} isDark={isDark} wallets={wallets} />
+          )}
+        </section>
+
+        {/* AI Insights Section */}
+        <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+          <div className="flex items-center gap-3 mb-8 px-1">
+            <div className="w-1.5 h-6 bg-purple-500 rounded-full" />
+            <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>
+              AI-Powered Insights 🤖
+            </h2>
+          </div>
+          {loading ? (
+            <div className="p-20 text-center">
+              <div className="w-12 h-12 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">Analyzing Your Financial Behavior...</p>
+            </div>
+          ) : (
+            <AIInsights transactions={filteredTransactions} isDark={isDark} />
+          )}
+        </section>
+
+        <div className="space-y-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             <div className="lg:col-span-4">
               <section>
