@@ -6,6 +6,7 @@ import TransferForm from '@/components/TransferForm';
 import AuthWrapper from '@/components/AuthWrapper';
 import WalletManager from '@/components/WalletManager';
 import Navigation from '@/components/Navigation';
+import ConfirmationModal from '@/components/ConfirmationModal';
 import { User } from '@supabase/supabase-js';
 
 function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
@@ -20,6 +21,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
   const [isTransferMode, setIsTransferMode] = useState(false);
   const [selectedWalletFilter, setSelectedWalletFilter] = useState('All');
   const [wallets, setWallets] = useState<any[]>([]);
+  const [transactionToDelete, setTransactionToDelete] = useState<any>(null);
   const ITEMS_PER_PAGE = 15;
 
   const fetchData = async (user: User) => {
@@ -47,11 +49,12 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
 
   useEffect(() => { fetchData(user); }, [user]);
 
-  const handleDelete = async (id: any) => {
-    if (!confirm("Hapus transaksi ini?")) return;
-    const { error } = await supabase.from('transaction').delete().eq('id', id);
+  const confirmDelete = async () => {
+    if (!transactionToDelete) return;
+    const { error } = await supabase.from('transaction').delete().eq('id', transactionToDelete.id);
     if (!error) fetchData(user);
     else alert("Gagal menghapus: " + error.message);
+    setTransactionToDelete(null);
   };
 
   const handleEdit = (transaction: any) => {
@@ -180,7 +183,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                           <td className="p-6">
                             <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
                               <button onClick={() => handleEdit(t)} className="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-500/10 text-blue-500 hover:bg-blue-500 text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button>
-                              <button onClick={() => handleDelete(t.id)} className="w-8 h-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-500 hover:bg-red-500 text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
+                              <button onClick={() => setTransactionToDelete(t)} className="w-8 h-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-500 hover:bg-red-500 text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
                             </div>
                           </td>
                         </tr>
@@ -198,6 +201,16 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
       </main>
 
       {showWalletManager && <WalletManager user={user} isDark={isDark} onClose={() => { setShowWalletManager(false); fetchData(user); }} />}
+
+      <ConfirmationModal 
+        isOpen={!!transactionToDelete}
+        title="Hapus Transaksi"
+        message={`Apakah Anda yakin ingin menghapus "${transactionToDelete?.keterangan}"? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus Permanen"
+        onConfirm={confirmDelete}
+        onCancel={() => setTransactionToDelete(null)}
+        isDark={isDark}
+      />
     </div>
   );
 }
