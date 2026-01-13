@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useMemo } from 'react';
 import { format, differenceInDays, isAfter, isBefore } from 'date-fns';
+import { Bell, CircleAlert, Clock, Trophy, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 interface Notification {
   id: string;
@@ -41,7 +42,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `budget-${budget.id}-100`,
           type: 'budget_alert',
-          title: '🚨 Budget Exceeded!',
+          title: 'Budget Exceeded!',
           message: `You've exceeded your budget for "${budget.kategori}" by Rp ${(spent - budget.limit).toLocaleString('id-ID')}`,
           is_read: false,
           created_at: now.toISOString()
@@ -50,7 +51,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `budget-${budget.id}-90`,
           type: 'budget_alert',
-          title: '⚠️ Budget Warning',
+          title: 'Budget Warning',
           message: `You've used ${percentage.toFixed(0)}% of your "${budget.kategori}" budget`,
           is_read: false,
           created_at: now.toISOString()
@@ -59,7 +60,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `budget-${budget.id}-80`,
           type: 'budget_alert',
-          title: '💡 Budget Notice',
+          title: 'Budget Notice',
           message: `You've used ${percentage.toFixed(0)}% of your "${budget.kategori}" budget`,
           is_read: false,
           created_at: now.toISOString()
@@ -77,7 +78,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `goal-${goal.id}-100`,
           type: 'goal_milestone',
-          title: '🎉 Goal Achieved!',
+          title: 'Goal Achieved!',
           message: `Congratulations! You've reached your goal: "${goal.name}"!`,
           is_read: false,
           created_at: now.toISOString()
@@ -86,7 +87,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `goal-${goal.id}-75`,
           type: 'goal_milestone',
-          title: '🎯 Almost There!',
+          title: 'Almost There!',
           message: `You're 75% of the way to "${goal.name}"! Keep going!`,
           is_read: false,
           created_at: now.toISOString()
@@ -95,7 +96,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
         alerts.push({
           id: `goal-${goal.id}-50`,
           type: 'goal_milestone',
-          title: '🌟 Halfway Point!',
+          title: 'Halfway Point!',
           message: `You've reached 50% of your "${goal.name}" goal!`,
           is_read: false,
           created_at: now.toISOString()
@@ -151,7 +152,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
       alerts.push({
         id: `anomaly-${now.toISOString()}`,
         type: 'anomaly',
-        title: '📊 Unusual Spending Detected',
+        title: 'Unusual Spending Detected',
         message: `Today's spending (Rp ${todayTotal.toLocaleString('id-ID')}) is ${(todayTotal / avgDaily).toFixed(1)}x your daily average`,
         is_read: false,
         created_at: now.toISOString()
@@ -177,31 +178,25 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'budget_alert': return '💰';
-      case 'goal_milestone': return '🎯';
-      case 'recurring_reminder': return '🪄';
-      case 'anomaly': return '📊';
-      default: return '🔔';
+      case 'budget_alert': return <CircleAlert className="text-red-500" size={18} />;
+      case 'recurring_reminder': return <Clock className="text-blue-500" size={18} />;
+      case 'goal_milestone': return <Trophy className="text-yellow-500" size={18} />;
+      case 'anomaly': return <ShieldAlert className="text-orange-500" size={18} />;
+      default: return <Bell size={18} />;
     }
   };
 
   return (
     <div className="relative">
       {/* Bell Icon Button */}
-      <button
+      <button 
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-          isDark ? 'bg-slate-800 text-slate-400 border border-white/5 hover:text-white' : 'bg-slate-100 text-slate-500 border border-slate-200 hover:bg-slate-200'
-        } hover:scale-105`}
+        className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-slate-800 text-slate-400 border border-white/5' : 'bg-slate-100 text-slate-500 border border-slate-200'} hover:scale-105 active:scale-95`}
         title="Notifications"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
+        <Bell size={20} />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center">
-            {unreadCount > 9 ? '9+' : unreadCount}
-          </span>
+          <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-inherit rounded-full animate-pulse" />
         )}
       </button>
 

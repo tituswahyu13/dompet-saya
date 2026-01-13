@@ -1,6 +1,7 @@
 "use client"
 import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, subMonths, differenceInDays } from 'date-fns';
+import { Sparkles, Lightbulb, AlertCircle, TrendingUp, CheckCircle2 } from 'lucide-react';
 
 interface Transaction {
   id: string;
@@ -164,7 +165,9 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       {/* Spending Prediction */}
       <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-500/20' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200'}`}>
         <div className="flex items-start gap-4">
-          <div className="text-2xl sm:text-3xl">🔮</div>
+          <div className={`${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+            <Sparkles size={32} strokeWidth={2.5} className="sm:w-10 sm:h-10" />
+          </div>
           <div className="flex-1 min-w-0">
             <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
               Next Month Prediction
@@ -193,7 +196,9 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       {/* Saving Recommendations */}
       <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-white border-slate-200'}`}>
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-xl sm:text-2xl">💡</span>
+          <div className="text-blue-500">
+            <Lightbulb size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
+          </div>
           <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
             Smart Recommendations
           </h3>
@@ -206,7 +211,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
           <ul className="space-y-2 sm:space-y-3">
             {savingRecommendations.map((rec, i) => (
               <li key={i} className="flex gap-2 sm:gap-3">
-                <span className="text-green-500 font-bold flex-shrink-0 text-[10px] sm:text-sm">✓</span>
+                <CheckCircle2 size={14} className="text-green-500 mt-0.5 flex-shrink-0" strokeWidth={3} />
                 <span className={`text-[11px] sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{rec}</span>
               </li>
             ))}
@@ -218,7 +223,9 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       {anomalies.length > 0 && (
         <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-orange-900/20 border-orange-500/20' : 'bg-orange-50 border-orange-200'}`}>
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-xl sm:text-2xl">⚠️</span>
+            <div className="text-orange-500">
+              <AlertCircle size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
+            </div>
             <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-orange-300' : 'text-orange-700'}`}>
               Unusual Activity
             </h3>
@@ -239,7 +246,9 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       {/* Spending Pattern */}
       <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-purple-900/20 border-purple-500/20' : 'bg-purple-50 border-purple-200'}`}>
         <div className="flex items-start gap-4">
-          <div className="text-2xl sm:text-3xl">📊</div>
+          <div className="text-purple-500">
+            <TrendingUp size={28} strokeWidth={2.5} className="sm:w-8 sm:h-8" />
+          </div>
           <div>
             <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-purple-300' : 'text-purple-700'}`}>
               Spending Pattern

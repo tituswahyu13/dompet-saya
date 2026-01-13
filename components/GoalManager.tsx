@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import ConfirmationModal from './ConfirmationModal';
+import MinimalistIcon from './MinimalistIcon';
+import { Pencil, Trash2, Calendar } from 'lucide-react';
 
 interface Goal {
   id: string;
@@ -192,7 +194,9 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                       <div key={g.id} className={`p-6 rounded-[2rem] border transition-all hover:scale-[1.02] group relative overflow-hidden ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-slate-50 border-slate-200'}`}>
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex items-center gap-4">
-                            <div className="text-3xl p-3 bg-white/5 rounded-2xl border border-white/5">{g.icon}</div>
+                            <div className={`p-3 rounded-2xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-200'}`}>
+                              <MinimalistIcon icon={g.icon} size={32} style={{ color: g.color }} />
+                            </div>
                             <div>
                               <h4 className={`text-base font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{g.name}</h4>
                               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
@@ -214,10 +218,10 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                               });
                               setIsAdding(true); 
                             }} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                              <Pencil size={14} />
                             </button>
                             <button onClick={() => handleDelete(g)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                              <Trash2 size={14} />
                             </button>
                           </div>
                         </div>
@@ -246,8 +250,8 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
                         {g.deadline && (
                           <div className={`mt-4 pt-4 border-t flex items-center justify-between ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
-                            <p className="text-[8px] font-bold text-slate-500 uppercase tracking-wider">
-                              🗓️ Deadline: {new Date(g.deadline).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            <p className="text-[8px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                              <Calendar size={10} /> Deadline: {new Date(g.deadline).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
                             </p>
                           </div>
                         )}
@@ -287,7 +291,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                     <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Link to Wallet (Auto-track)</label>
                     <select value={formData.wallet_id || ''} onChange={(e) => setFormData({ ...formData, wallet_id: e.target.value })} className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`}>
                       <option value="">Manual Progress (No Link)</option>
-                      {wallets.map(w => <option key={w.id} value={w.id}>{w.icon} {w.name} (Rp {w.current_balance?.toLocaleString('id-ID')})</option>)}
+                      {wallets.map(w => <option key={w.id} value={w.id}>{w.name} (Rp {w.current_balance?.toLocaleString('id-ID')})</option>)}
                     </select>
                   </div>
                 </div>
@@ -300,9 +304,9 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                   <div>
                     <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Select Icon</label>
                     <div className="grid grid-cols-6 gap-2">
-                      {ICON_OPTIONS.map((icon) => (
-                        <button key={icon} type="button" onClick={() => setFormData({ ...formData, icon })} className={`p-3 rounded-xl border transition-all text-xl ${formData.icon === icon ? 'bg-blue-600 border-blue-600 scale-110' : isDark ? 'bg-slate-800 border-white/5' : 'bg-white border-slate-200'}`}>
-                          {icon}
+                      {ICON_OPTIONS.map((item) => (
+                        <button key={item} type="button" onClick={() => setFormData({ ...formData, icon: item })} className={`p-3 rounded-xl border transition-all flex items-center justify-center ${formData.icon === item ? 'bg-blue-600 border-blue-600 scale-110 text-white' : isDark ? 'bg-slate-800 border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
+                          <MinimalistIcon icon={item} size={24} />
                         </button>
                       ))}
                     </div>

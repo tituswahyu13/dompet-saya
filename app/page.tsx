@@ -12,6 +12,8 @@ import AIInsights from '@/components/AIInsights';
 import Navigation from '@/components/Navigation';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
+import { Wallet, Target, LogOut, Sun, Moon, CreditCard, ArrowUpRight, ArrowDownRight, PiggyBank, Percent, LayoutDashboard, ChevronRight, BarChart3, TrendingUp as TrendIcon, Bot, Building2, Smartphone, Coins } from 'lucide-react';
+import MinimalistIcon from '@/components/MinimalistIcon';
 
 function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -149,11 +151,11 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
   }, {});
 
   const typeLabels: any = {
-    cash: '💵 Cash',
-    bank: '🏦 Bank',
-    ewallet: '📱 E-Wallet',
-    investment: '📈 Investment',
-    other: '💰 Other'
+    cash: 'Cash',
+    bank: 'Bank',
+    ewallet: 'E-Wallet',
+    investment: 'Investment',
+    other: 'Other'
   };
 
   useEffect(() => {
@@ -166,36 +168,37 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       <div className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[160px] animate-float opacity-50" style={{ animationDelay: '-3s' }} />
       <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-purple-600/5 rounded-full blur-[120px] animate-pulse-slow" />
 
+      {/* Mobile Bottom Navigation */}
+      <div className="sm:hidden">
+        <Navigation isDark={isDark} variant="bottom" />
+      </div>
+
       <header className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-500 ${isDark ? 'bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20' : 'bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20'}`}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4 group cursor-pointer">
-            <div className="w-11 h-11 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
+          <div className="flex items-center gap-2 sm:gap-4 group cursor-pointer flex-shrink-0">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
+              <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-white" strokeWidth={2.5} />
             </div>
             <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">Financial Intelligence</p>
-              <h1 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'}`}>Dompet Saya</h1>
+              <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight hidden sm:block">Financial Intelligence</p>
+              <h1 className={`text-xs sm:text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'}`}>{isDark ? 'Pro' : 'Dompet'} <span className="hidden xs:inline">Saya</span></h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <Navigation isDark={isDark} />
-            <div className="h-8 w-px bg-slate-400/20 hidden md:block" />
-            <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-6 justify-end flex-1 min-w-0">
+            <div className="hidden sm:block">
+              <Navigation isDark={isDark} />
+            </div>
+            <div className="h-6 w-px bg-slate-400/20 hidden md:block" />
+            <div className="flex items-center gap-1.5 sm:gap-4">
               <button 
                 onClick={() => setIsDark(!isDark)}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-slate-800 text-amber-400 border border-white/5' : 'bg-slate-100 text-slate-500 border border-slate-200'} hover:scale-105 active:scale-95`}
               >
                 {isDark ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-                  </svg>
+                  <Sun size={20} className="sm:w-5 sm:h-5" />
                 ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                  </svg>
+                  <Moon size={20} className="sm:w-5 sm:h-5" />
                 )}
               </button>
               <NotificationCenter 
@@ -211,28 +214,24 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                 className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20' : 'bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100'} hover:scale-105 active:scale-95`}
                 title="Financial Goals"
               >
-                <span className="text-xl">🎯</span>
+                <Target size={20} className="sm:w-5 sm:h-5" />
               </button>
               <button 
                 onClick={() => setShowWalletManager(true)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100'} hover:scale-105 active:scale-95`}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'} hover:scale-105 active:scale-95`}
                 title="Manage Wallets"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
+                <Wallet size={20} className="sm:w-5 sm:h-5" />
               </button>
               <button 
                 onClick={async () => {
                   const { error } = await supabase.auth.signOut();
                   if (error) alert("Logout failed: " + error.message);
                 }}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20' : 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100'} hover:scale-105 active:scale-95`}
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20' : 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100'} hover:scale-105 active:scale-95`}
                 title="Logout Access"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
+                <LogOut size={18} className="sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
@@ -249,28 +248,40 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
             </div>
           </div>
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-            <p className="text-[9px] sm:text-[10px] font-black text-green-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Pemasukan</p>
+            <div className="flex justify-between items-start mb-3 sm:mb-4">
+              <p className="text-[9px] sm:text-[10px] font-black text-green-500 uppercase tracking-[0.2em]">Pemasukan</p>
+              <ArrowUpRight className="text-green-500 opacity-30" size={20} />
+            </div>
             <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
               <span className="text-[10px] sm:text-xs font-black text-green-600">IDR</span>
               <p className="text-2xl sm:text-3xl font-black text-green-600 tracking-tighter truncate">{stats.income.toLocaleString('id-ID')}</p>
             </div>
           </div>
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-            <p className="text-[9px] sm:text-[10px] font-black text-red-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Pengeluaran</p>
+            <div className="flex justify-between items-start mb-3 sm:mb-4">
+              <p className="text-[9px] sm:text-[10px] font-black text-red-500 uppercase tracking-[0.2em]">Pengeluaran</p>
+              <ArrowDownRight className="text-red-500 opacity-30" size={20} />
+            </div>
             <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
               <span className="text-[10px] sm:text-xs font-black text-red-600">IDR</span>
               <p className="text-2xl sm:text-3xl font-black text-red-600 tracking-tighter truncate">{stats.outcome.toLocaleString('id-ID')}</p>
             </div>
           </div>
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-blue-900/20' : 'bg-blue-50/50 border-blue-100'}`}>
-            <p className="text-[9px] sm:text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Tabungan</p>
+            <div className="flex justify-between items-start mb-3 sm:mb-4">
+              <p className="text-[9px] sm:text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">Tabungan</p>
+              <PiggyBank className="text-blue-500 opacity-30" size={20} />
+            </div>
             <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
               <span className="text-[10px] sm:text-xs font-black text-blue-500">IDR</span>
               <p className={`text-2xl sm:text-3xl font-black tracking-tighter truncate ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{stats.saving.toLocaleString('id-ID')}</p>
             </div>
           </div>
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-indigo-900/20' : 'bg-indigo-50/50 border-indigo-100'}`}>
-            <p className="text-[9px] sm:text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Saving Rate</p>
+            <div className="flex justify-between items-start mb-3 sm:mb-4">
+              <p className="text-[9px] sm:text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">Saving Rate</p>
+              <Percent className="text-indigo-500 opacity-30" size={18} />
+            </div>
             <p className="text-2xl sm:text-3xl font-black text-indigo-600 tracking-tighter">{stats.rate.toFixed(1)}<span className="text-sm ml-0.5">%</span></p>
           </div>
         </div>
@@ -282,17 +293,32 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
           </div>
           <div className="space-y-8">
             <div className="flex flex-wrap gap-2">
-              <button onClick={() => setSelectedWalletFilter('All')} className={`px-7 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border ${selectedWalletFilter === 'All' ? 'bg-blue-600 text-white border-blue-600 shadow-xl shadow-blue-500/20 scale-105' : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'}`}>🌐 Semua Dompet</button>
+              <button onClick={() => setSelectedWalletFilter('All')} className={`px-7 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-2 ${selectedWalletFilter === 'All' ? 'bg-blue-600 text-white border-blue-600 shadow-xl shadow-blue-500/20 scale-105' : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'}`}>
+                <LayoutDashboard size={14} /> Semua Dompet
+              </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {Object.keys(groupedWallets).sort().map(type => (
                 <div key={type} className="space-y-4">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] px-1 border-l-2 border-indigo-500/30 pl-3">{typeLabels[type] || type.toUpperCase()}</p>
+                <div className="flex items-center gap-2">
+                  <div className={`p-1.5 rounded-lg ${isDark ? 'bg-indigo-500/10' : 'bg-indigo-50'}`}>
+                    {type === 'cash' && <Coins size={14} className="text-indigo-500" />}
+                    {type === 'bank' && <Building2 size={14} className="text-indigo-500" />}
+                    {type === 'ewallet' && <Smartphone size={14} className="text-indigo-500" />}
+                    {type === 'investment' && <TrendIcon size={14} className="text-indigo-500" />}
+                    {type === 'other' && <Wallet size={14} className="text-indigo-500" />}
+                  </div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] pl-1 h-full flex items-center">
+                    {typeLabels[type] || type.toUpperCase()}
+                  </p>
+                </div>
                   <div className="flex flex-wrap gap-3">
                     {groupedWallets[type].map((w: any) => (
                       <button key={w.id} onClick={() => setSelectedWalletFilter(w.id)} className={`px-5 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-3 group relative overflow-hidden flex-1 min-w-[140px] ${selectedWalletFilter === w.id ? 'bg-slate-900 text-white border-transparent shadow-2xl scale-105' : isDark ? 'bg-slate-900/60 text-slate-500 border-white/5 hover:border-white/10 hover:bg-slate-900/80' : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300 hover:bg-slate-50' }`}>
                         <div className="absolute left-0 top-0 bottom-0 w-1 transition-all" style={{ backgroundColor: w.color }} />
-                        <span className="text-xl group-hover:scale-110 transition-transform">{w.icon}</span>
+                        <div className="group-hover:scale-110 transition-transform">
+                          <MinimalistIcon icon={w.icon} size={20} style={{ color: w.color }} />
+                        </div>
                         <div className="text-left">
                           <p className={`truncate max-w-[100px] ${selectedWalletFilter === w.id ? 'text-white' : isDark ? 'text-slate-200' : 'text-slate-800'}`}>{w.name}</p>
                           <p className="text-[9px] opacity-60 font-black tracking-tight">Rp {w.current_balance?.toLocaleString('id-ID')}</p>
@@ -313,7 +339,9 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               <div className="w-1.5 h-6 bg-blue-500 rounded-full" />
               <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Financial Goals</h2>
             </div>
-            <button onClick={() => setShowGoalManager(true)} className="text-xs font-black text-blue-500 uppercase tracking-widest hover:text-blue-400 transition-colors">Kelola Target →</button>
+            <button onClick={() => setShowGoalManager(true)} className="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-blue-400 transition-all flex items-center gap-1.5 group">
+              Kelola Target <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {goals.length === 0 ? (
@@ -327,7 +355,9 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                 return (
                   <div key={g.id} className={`p-6 rounded-3xl border transition-all hover:scale-[1.02] ${isDark ? 'bg-slate-900/40 border-white/5' : 'bg-slate-50 border-slate-200'}`}>
                     <div className="flex justify-between items-start mb-4">
-                      <div className="text-2xl">{g.icon}</div>
+                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-200'}`}>
+                        <MinimalistIcon icon={g.icon} size={24} style={{ color: g.color }} />
+                      </div>
                       <div className="text-right">
                         <p className="text-[10px] font-black text-blue-500">{progress.toFixed(0)}%</p>
                       </div>
@@ -358,13 +388,14 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
             </div>
             <button 
               onClick={() => setShowAdvancedCharts(!showAdvancedCharts)}
-              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
                 showAdvancedCharts 
                   ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' 
                   : isDark ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              {showAdvancedCharts ? '📊 Show Simple View' : '📈 Show Charts'}
+              {showAdvancedCharts ? <BarChart3 size={14} /> : <TrendIcon size={14} />}
+              {showAdvancedCharts ? 'Show Simple View' : 'Show Charts'}
             </button>
           </div>
           {loading ? (
@@ -383,8 +414,8 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
           <div className="flex items-center gap-3 mb-8 px-1">
             <div className="w-1.5 h-6 bg-purple-500 rounded-full" />
-            <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>
-              AI-Powered Insights 🤖
+            <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter flex items-center gap-2`}>
+              AI-Powered Insights <Bot size={20} className="text-purple-500" />
             </h2>
           </div>
           {loading ? (
@@ -414,7 +445,9 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                   <div className="w-1.5 h-6 bg-slate-400 rounded-full" />
                   <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Ledger Ringkasan</h2>
                 </div>
-                <Link href="/transactions" className="text-xs font-black text-blue-500 uppercase tracking-widest hover:text-blue-400 transition-colors">Lihat Semua →</Link>
+                <Link href="/transactions" className="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-blue-400 transition-all flex items-center gap-1.5 group">
+                  Lihat Semua <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
               <div className={`rounded-[2.5rem] border overflow-hidden backdrop-blur-sm transition-all duration-500 ${isDark ? 'glass-dark border-white/5 shadow-2xl shadow-black/40' : 'glass border-white shadow-xl shadow-slate-200/50'}`}>
                 {loading ? (

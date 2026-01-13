@@ -1,5 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { FileText, Sun, Moon, RefreshCw, Wallet } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import TransactionForm from '@/components/TransactionForm';
 import TransferForm from '@/components/TransferForm';
@@ -82,35 +84,42 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
       <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[160px] animate-float opacity-50" />
       <div className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[160px] animate-float opacity-50" style={{ animationDelay: '-3s' }} />
 
+      {/* Mobile Bottom Navigation */}
+      <div className="sm:hidden">
+        <Navigation isDark={isDark} variant="bottom" />
+      </div>
+
       <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${isDark ? 'bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20' : 'bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20'}`}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-           <div className="flex items-center gap-4 group cursor-pointer">
-            <div className="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-3">
+           <div className="flex items-center gap-2 sm:gap-4 group cursor-pointer flex-shrink-0">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-110 transition-transform duration-300">
+              <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-white" strokeWidth={2.5} />
             </div>
             <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">Data Management</p>
-              <h1 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'}`}>Transaction Ledger</h1>
+              <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight hidden sm:block">Data Management</p>
+              <h1 className={`text-xs sm:text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'}`}>{isDark ? 'Pro' : 'Ledger'} <span className="hidden xs:inline">Dana</span></h1>
             </div>
           </div>
-          <Navigation isDark={isDark} />
-          <div className="flex items-center gap-4">
-             <button onClick={() => setIsDark(!isDark)} className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? 'bg-slate-800 text-amber-400 border-white/5' : 'bg-slate-100 text-slate-500 border-slate-200'} hover:scale-105 transition-all`}>
-              {isDark ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>}
-            </button>
-            <button onClick={() => setShowRecurringManager(true)} className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-600/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-600/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'} hover:scale-105 transition-all`} title="Recurring Engine">
-              <span className="text-sm">🪄</span>
-            </button>
-            <button onClick={() => setShowWalletManager(true)} className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100'} hover:scale-105 transition-all`} title="Manage Wallets">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-            </button>
+          <div className="flex items-center gap-2 sm:gap-6 justify-end flex-1 min-w-0">
+            <div className="hidden sm:block">
+              <Navigation isDark={isDark} />
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-4">
+               <button onClick={() => setIsDark(!isDark)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-slate-800 text-amber-400 border-white/5' : 'bg-slate-100 text-slate-500 border-slate-200'} hover:scale-105 transition-all`}>
+                {isDark ? <Sun size={20} className="sm:w-5 sm:h-5" /> : <Moon size={20} className="sm:w-5 sm:h-5" />}
+              </button>
+              <button onClick={() => setShowRecurringManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-600/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-600/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'} hover:scale-105 transition-all`} title="Recurring Engine">
+                <RefreshCw size={18} className="sm:w-5 sm:h-5" />
+              </button>
+              <button onClick={() => setShowWalletManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100'} hover:scale-105 transition-all`} title="Manage Wallets">
+                <Wallet size={18} className="sm:w-5 sm:h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 space-y-12">
+      <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 space-y-12 pb-32 sm:pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           <div className="lg:col-span-4 lg:sticky lg:top-28 h-fit space-y-8">
             <section>

@@ -1,5 +1,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line, AreaChart, Area } from 'recharts';
 
+import { PieChart as PieChartIcon, TrendingUp, CheckCircle2, AlertTriangle, Activity } from 'lucide-react';
+
 interface Transaction {
   id: string;
   kategori: string;
@@ -110,8 +112,8 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
   const isHealthy = netFlow >= 0;
   
   const healthMessage = isHealthy 
-    ? `Status Keuangan: Sehat ✨ (Surplus Rp ${netFlow.toLocaleString('id-ID')})`
-    : `Perhatian: Kas menyusut Rp ${Math.abs(netFlow).toLocaleString('id-ID')} bulan ini! ⚠️`;
+    ? `Status Keuangan: Sehat (Surplus Rp ${netFlow.toLocaleString('id-ID')})`
+    : `Perhatian: Kas menyusut Rp ${Math.abs(netFlow).toLocaleString('id-ID')} bulan ini!`;
 
   const subMessage = totalSaving > 0 
     ? `Anda telah menyisihkan Rp ${totalSaving.toLocaleString('id-ID')} ke tabungan.`
@@ -135,13 +137,9 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
               : 'bg-gradient-to-br from-red-500 to-rose-600 text-white'
           }`}>
             {isHealthy ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <CheckCircle2 size={24} strokeWidth={2.5} />
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+              <AlertTriangle size={24} strokeWidth={2.5} />
             )}
           </div>
           <div className="relative z-10">
@@ -166,9 +164,7 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Sisa Saldo Kumulatif</p>
             </div>
             <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
+              <TrendingUp size={20} strokeWidth={2.5} />
             </div>
           </div>
           <div className="flex-1 w-full min-h-0">
@@ -229,10 +225,7 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Berdasarkan Kategori</p>
             </div>
             <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-              </svg>
+              <PieChartIcon size={20} strokeWidth={2.5} />
             </div>
           </div>
           <div className="flex-1 min-h-0">
