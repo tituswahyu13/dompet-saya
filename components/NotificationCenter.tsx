@@ -179,7 +179,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
   const getIcon = (type: string) => {
     switch (type) {
       case 'budget_alert': return <CircleAlert className="text-red-500" size={18} />;
-      case 'recurring_reminder': return <Clock className="text-blue-500" size={18} />;
+      case 'recurring_reminder': return <Clock className="text-rose-500" size={18} />;
       case 'goal_milestone': return <Trophy className="text-yellow-500" size={18} />;
       case 'anomaly': return <ShieldAlert className="text-orange-500" size={18} />;
       default: return <Bell size={18} />;
@@ -221,7 +221,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-blue-400"
+                  className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400"
                 >
                   Mark All Read
                 </button>
@@ -241,7 +241,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
                     className={`p-4 transition-all cursor-pointer ${
                       notif.is_read 
                         ? isDark ? 'bg-slate-900 opacity-60' : 'bg-white opacity-60'
-                        : isDark ? 'bg-slate-800/40 hover:bg-slate-800' : 'bg-blue-50/50 hover:bg-blue-50'
+                        : isDark ? 'bg-slate-800/40 hover:bg-slate-800' : 'bg-rose-50/50 hover:bg-blue-50'
                     }`}
                     onClick={() => {
                       markAsRead(notif.id);
@@ -264,7 +264,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
                         </p>
                       </div>
                       {!notif.is_read && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
+                        <div className="w-2 h-2 bg-rose-500 rounded-full flex-shrink-0 mt-2" />
                       )}
                     </div>
                   </div>

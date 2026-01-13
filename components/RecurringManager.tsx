@@ -213,7 +213,7 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
         }`}>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-               <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+               <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -236,12 +236,12 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
             <div className="space-y-8">
               <div className="flex justify-between items-center">
                  <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-6 bg-indigo-500 rounded-full" />
+                  <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
                   <h3 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                     Template Aktif ({templates.length})
                   </h3>
                 </div>
-                <button onClick={() => setIsAdding(true)} className="px-6 py-3 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/30 active:scale-95">
+                <button onClick={() => setIsAdding(true)} className="px-6 py-3 bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-500/30 active:scale-95">
                   + Signal Baru
                 </button>
               </div>
@@ -259,7 +259,7 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
                       <div className="flex justify-between items-start mb-4">
                         <div className="space-y-1">
                           <div className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full inline-block ${
-                            t.type === 'income' ? 'bg-green-500/10 text-green-500' : t.type === 'saving' ? 'bg-blue-500/10 text-blue-500' : t.type === 'transfer' ? 'bg-indigo-500/10 text-indigo-500' : 'bg-red-500/10 text-red-500'
+                            t.type === 'income' ? 'bg-green-500/10 text-green-500' : t.type === 'saving' ? 'bg-blue-500/10 text-blue-500' : t.type === 'transfer' ? 'bg-rose-500/10 text-rose-500' : 'bg-red-500/10 text-red-500'
                           }`}>
                             {t.type === 'transfer' ? 'TRANSFER' : t.kategori}
                           </div>
@@ -299,11 +299,11 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
                       <div className="flex items-center justify-between mt-6">
                         <div className="space-y-0.5">
                           <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Signal Value</p>
-                          <p className={`text-lg font-black tracking-tighter ${t.type === 'income' ? 'text-green-500' : t.type === 'saving' ? 'text-blue-500' : t.type === 'transfer' ? 'text-indigo-500' : isDark ? 'text-white' : 'text-slate-900'}`}>
+                          <p className={`text-lg font-black tracking-tighter ${t.type === 'income' ? 'text-green-500' : t.type === 'saving' ? 'text-blue-500' : t.type === 'transfer' ? 'text-rose-500' : isDark ? 'text-white' : 'text-slate-900'}`}>
                             Rp {t.amount?.toLocaleString('id-ID')}
                           </p>
                         </div>
-                        <button onClick={() => handleManualTrigger(t)} className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${isDark ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-600 hover:text-white'} active:scale-95`}>
+                        <button onClick={() => handleManualTrigger(t)} className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${isDark ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/20' : 'bg-indigo-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white'} active:scale-95`}>
                           🪄 Generate Now
                         </button>
                       </div>
@@ -351,7 +351,7 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
                           type: type as any,
                           kategori: type === 'income' ? 'Gaji' : type === 'saving' ? 'Tabungan Mandiri' : type === 'transfer' ? 'Transfer Rutin' : 'Tagihan'
                         })} 
-                        className={`py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border ${formData.type === type ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg' : isDark ? 'bg-slate-800 border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}
+                        className={`py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border ${formData.type === type ? 'bg-rose-600 text-white border-indigo-600 shadow-lg' : isDark ? 'bg-slate-800 border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}
                       >
                         {type === 'income' ? 'Pemasukan' : type === 'outcome' ? 'Pengeluaran' : type === 'saving' ? 'Simpan' : 'Transfer'}
                       </button>
@@ -404,7 +404,7 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
               </div>
 
               <div className="pt-8">
-                <button type="submit" disabled={loading} className="w-full py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-indigo-500/20 active:scale-95 transition-all">
+                <button type="submit" disabled={loading} className="w-full py-5 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-rose-500/20 active:scale-95 transition-all">
                   {loading ? 'Processing Pattern...' : editingId ? 'Simpan Perubahan' : 'Aktifkan Pattern Rutin'}
                 </button>
               </div>

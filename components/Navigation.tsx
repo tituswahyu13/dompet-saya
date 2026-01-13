@@ -24,14 +24,14 @@ export default function Navigation({ isDark, variant = 'header' }: { isDark: boo
               href={item.href}
               className={`flex flex-col items-center gap-1 transition-all px-6 py-2 rounded-2xl ${
                 isActive 
-                  ? 'text-blue-500 scale-110' 
+                  ? 'text-rose-500 scale-110' 
                   : isDark ? 'text-slate-500 hover:text-white' : 'text-slate-400 hover:text-slate-900'
               }`}
             >
               {item.icon}
               <span className="text-[9px] font-black uppercase tracking-widest">{item.name}</span>
               {isActive && (
-                <div className="w-1 h-1 bg-blue-500 rounded-full animate-pulse" />
+                <div className="w-1 h-1 bg-rose-500 rounded-full animate-pulse" />
               )}
             </Link>
           );
@@ -52,8 +52,8 @@ export default function Navigation({ isDark, variant = 'header' }: { isDark: boo
             href={item.href}
             className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 sm:gap-2 ${
               isActive
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20 scale-105'
-                : isDark ? 'text-slate-400 hover:text-white hover:bg-white/5' : 'text-slate-500 hover:text-blue-600 hover:bg-blue-50'
+                ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/20 scale-105'
+                : isDark ? 'text-slate-400 hover:text-white hover:bg-white/5' : 'text-slate-500 hover:text-rose-600 hover:bg-rose-50'
             }`}
           >
             {item.icon}

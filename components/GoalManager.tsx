@@ -36,7 +36,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
     wallet_id: '' as string | null,
     deadline: '',
     icon: '🎯',
-    color: '#3b82f6'
+    color: '#f43f5e'
   });
 
   useEffect(() => {
@@ -148,7 +148,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
         }`}>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+               <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20">
                 <span className="text-2xl">🎯</span>
               </div>
               <div>
@@ -169,12 +169,12 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
             <div className="space-y-8">
               <div className="flex justify-between items-center">
                  <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-6 bg-blue-500 rounded-full" />
+                  <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
                   <h3 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                     Active Goals ({goals.length})
                   </h3>
                 </div>
-                <button onClick={() => setIsAdding(true)} className="px-6 py-3 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 active:scale-95">
+                <button onClick={() => setIsAdding(true)} className="px-6 py-3 bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-500/30 active:scale-95">
                   + New Goal
                 </button>
               </div>
@@ -236,7 +236,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                             </div>
                             <div className="text-right">
                               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Status</p>
-                              <p className="text-sm font-black text-blue-500">{progress.toFixed(1)}%</p>
+                              <p className="text-sm font-black text-rose-500">{progress.toFixed(1)}%</p>
                             </div>
                           </div>
                           
@@ -305,7 +305,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                     <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Select Icon</label>
                     <div className="grid grid-cols-6 gap-2">
                       {ICON_OPTIONS.map((item) => (
-                        <button key={item} type="button" onClick={() => setFormData({ ...formData, icon: item })} className={`p-3 rounded-xl border transition-all flex items-center justify-center ${formData.icon === item ? 'bg-blue-600 border-blue-600 scale-110 text-white' : isDark ? 'bg-slate-800 border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
+                        <button key={item} type="button" onClick={() => setFormData({ ...formData, icon: item })} className={`p-3 rounded-xl border transition-all flex items-center justify-center ${formData.icon === item ? 'bg-rose-600 border-blue-600 scale-110 text-white' : isDark ? 'bg-slate-800 border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
                           <MinimalistIcon icon={item} size={24} />
                         </button>
                       ))}
@@ -323,7 +323,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
               </div>
 
               <div className="pt-8">
-                <button type="submit" disabled={loading} className="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-blue-500/20 active:scale-95 transition-all">
+                <button type="submit" disabled={loading} className="w-full py-5 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-rose-500/20 active:scale-95 transition-all">
                   {loading ? 'Processing Target...' : editingId ? 'Update Target' : 'Launch New Dream Target'}
                 </button>
               </div>

@@ -94,8 +94,8 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
 
   return (
     <div className={`min-h-screen transition-all duration-700 relative overflow-hidden ${isDark ? 'bg-[#020617] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[160px] animate-float opacity-50" />
-      <div className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[160px] animate-float opacity-50" style={{ animationDelay: '-3s' }} />
+      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-rose-600/10 rounded-full blur-[160px] animate-float opacity-50" />
+      <div className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[160px] animate-float opacity-50" style={{ animationDelay: '-3s' }} />
 
       {/* Mobile Bottom Navigation */}
       <div className="sm:hidden">
@@ -105,8 +105,8 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
       <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${isDark ? 'bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20' : 'bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-3">
            <div className="flex items-center gap-2 sm:gap-4 group cursor-pointer flex-shrink-0">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-110 transition-transform duration-300">
-              <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-white" strokeWidth={2.5} />
+            <div className="w-9 h-9 sm:w-11 sm:h-11 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 overflow-hidden border border-white/20">
+              <img src="/logoBabi.svg" alt="Dompet Saya Mascot" className="w-full h-full object-contain p-1" />
             </div>
             <div>
               <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight hidden sm:block">Data Management</p>
@@ -129,10 +129,10 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                 wallets={wallets}
                 isDark={isDark}
               />
-              <button onClick={() => setShowRecurringManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-600/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-600/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'} hover:scale-105 transition-all`} title="Recurring Engine">
+              <button onClick={() => setShowRecurringManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-rose-600/10 text-rose-400 border-rose-500/20 hover:bg-rose-600/20' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100'} hover:scale-105 transition-all`} title="Recurring Engine">
                 <RefreshCw size={18} className="sm:w-5 sm:h-5" />
               </button>
-              <button onClick={() => setShowWalletManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100'} hover:scale-105 transition-all`} title="Manage Wallets">
+              <button onClick={() => setShowWalletManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' : 'bg-pink-50 text-pink-600 border-pink-100'} hover:scale-105 transition-all`} title="Manage Wallets">
                 <Wallet size={18} className="sm:w-5 sm:h-5" />
               </button>
             </div>
@@ -146,11 +146,11 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
             <section>
               <div className="flex items-center justify-between mb-6 px-1">
                 <div className="flex items-center gap-2">
-                  <div className={`w-1.5 h-6 ${isTransferMode ? 'bg-indigo-600' : 'bg-blue-600'} rounded-full`} />
+                  <div className={`w-1.5 h-6 ${isTransferMode ? 'bg-pink-600' : 'bg-rose-600'} rounded-full`} />
                   <h2 className={`text-lg font-black uppercase tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>{editingTransaction ? 'Koreksi Data' : isTransferMode ? 'Transfer Dana' : 'Transaksi Baru'}</h2>
                 </div>
                 {!editingTransaction && (
-                  <button onClick={() => setIsTransferMode(!isTransferMode)} className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-blue-500/10 text-blue-500 border-blue-500/20">{isTransferMode ? 'Ke Transaksi' : 'Ke Transfer'}</button>
+                  <button onClick={() => setIsTransferMode(!isTransferMode)} className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-rose-500/10 text-rose-500 border-rose-500/20">{isTransferMode ? 'Ke Transaksi' : 'Ke Transfer'}</button>
                 )}
               </div>
               {isTransferMode && !editingTransaction ? (
@@ -181,7 +181,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                 </div>
                 <div className="flex flex-1 md:flex-none items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5">
                   <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex-1 md:w-32 p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none" />
-                  <button onClick={exportToCSV} className="p-2 px-4 text-[10px] font-black bg-blue-600/10 text-blue-500 uppercase tracking-widest rounded-xl hover:bg-blue-600 hover:text-white transition-all">CSV</button>
+                  <button onClick={exportToCSV} className="p-2 px-4 text-[10px] font-black bg-rose-600/10 text-rose-500 uppercase tracking-widest rounded-xl hover:bg-rose-600 hover:text-white transition-all">CSV</button>
                 </div>
               </div>
             </div>
@@ -214,12 +214,12 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                               <span className="text-sm font-bold">{t.keterangan}</span>
                               <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tight ${isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{wallets.find(w => w.id === t.wallet_id)?.name}</span>
                             </div>
-                            <span className={`text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-wider ${t.income > 0 ? 'bg-green-500/10 text-green-500' : t.saving > 0 ? 'bg-blue-500/10 text-blue-500' : 'bg-red-500/10 text-red-500'}`}>{t.kategori}</span>
+                            <span className={`text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-wider ${t.income > 0 ? 'bg-green-500/10 text-green-500' : t.saving > 0 ? 'bg-rose-500/10 text-rose-500' : 'bg-red-500/10 text-red-500'}`}>{t.kategori}</span>
                           </td>
-                          <td className={`p-6 text-right font-black tracking-tighter ${t.income > 0 ? 'text-green-500' : t.saving > 0 ? 'text-blue-500' : 'text-red-500'}`}>{(t.income || t.outcome || t.saving).toLocaleString('id-ID')}</td>
+                          <td className={`p-6 text-right font-black tracking-tighter ${t.income > 0 ? 'text-green-500' : t.saving > 0 ? 'text-rose-500' : 'text-red-500'}`}>{(t.income || t.outcome || t.saving).toLocaleString('id-ID')}</td>
                           <td className="p-6">
                             <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                              <button onClick={() => handleEdit(t)} className="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-500/10 text-blue-500 hover:bg-blue-500 text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button>
+                              <button onClick={() => handleEdit(t)} className="w-8 h-8 rounded-lg flex items-center justify-center bg-rose-500/10 text-rose-500 hover:bg-blue-500 text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button>
                               <button onClick={() => setTransactionToDelete(t)} className="w-8 h-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-500 hover:bg-red-500 text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
                             </div>
                           </td>

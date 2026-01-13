@@ -136,11 +136,11 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
       isDark ? 'glass-dark border-white/5' : 'glass border-white/50'
     }`}>
       {/* Decorative Glow */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[60px] opacity-20 bg-indigo-500" />
+      <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[60px] opacity-20 bg-pink-500" />
 
       <div className="flex justify-between items-center mb-8 relative z-10">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full animate-pulse bg-indigo-500" />
+          <div className="w-2 h-2 rounded-full animate-pulse bg-pink-500" />
           <label className={`text-xs font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
             Transfer Antar Wallet
           </label>
@@ -163,7 +163,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
                 value={fromWalletId}
                 onChange={(e) => setFromWalletId(e.target.value)}
                 className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-black appearance-none cursor-pointer ${
-                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-indigo-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-indigo-500'
+                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-pink-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-pink-500'
                 }`}
                 required
               >
@@ -182,8 +182,8 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
           </div>
 
           <div className="flex items-center justify-center md:pt-6">
-            <div className={`p-2 rounded-full ${isDark ? 'bg-indigo-500/10' : 'bg-indigo-50'}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className={`p-2 rounded-full ${isDark ? 'bg-pink-500/10' : 'bg-indigo-50'}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </div>
@@ -223,7 +223,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
-                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-indigo-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-indigo-500'
+                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-pink-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-pink-500'
               }`}
               required
             />
@@ -236,7 +236,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
               onChange={(e) => setNote(e.target.value)}
               placeholder="Misal: Top up GoPay"
               className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
-                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-indigo-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-indigo-500'
+                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-pink-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-pink-500'
               }`}
             />
           </div>
@@ -253,11 +253,11 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
                 placeholder="0" 
                 className={`w-full p-4 pl-12 border rounded-2xl outline-none transition-all text-lg font-black tracking-tighter ${
                   errorStatus && amount && Number(amount) <= 0 ? (isDark ? 'border-red-500/50 bg-red-500/5' : 'border-red-500 bg-red-50') :
-                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-indigo-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-indigo-500'
+                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-pink-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-pink-500'
                 }`}
                 required
               />
-              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-indigo-500/50">IDR</span>
+              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-pink-500/50">IDR</span>
             </div>
           </div>
           <div>
@@ -269,7 +269,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
                 onChange={(e) => setAdminFee(e.target.value)}
                 placeholder="0" 
                 className={`w-full p-4 pl-12 border rounded-2xl outline-none transition-all text-lg font-black tracking-tighter ${
-                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-indigo-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-indigo-500'
+                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-pink-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-pink-500'
                 }`}
               />
               <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400">FEES</span>
@@ -281,7 +281,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
 
         <button 
           disabled={loading || wallets.length < 1}
-          className={`w-full mt-4 p-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 shadow-indigo-500/20 hover:shadow-indigo-500/40 ${loading || wallets.length < 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`w-full mt-4 p-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 shadow-rose-500/20 hover:shadow-rose-500/40 ${loading || wallets.length < 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {loading ? (
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

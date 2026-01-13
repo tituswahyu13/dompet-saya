@@ -49,16 +49,16 @@ export default function Auth({ isDark }: AuthProps) {
       
       {/* Background Animated Blobs */}
       <div className="absolute top-0 left-0 w-full h-full -z-10">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-500/20 rounded-full blur-[120px] animate-pulse delay-1000" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-rose-500/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-orange-500/20 rounded-full blur-[120px] animate-pulse delay-1000" />
       </div>
 
       <div className={`w-full max-w-md p-10 rounded-[3rem] border transition-all duration-500 ${
         isDark ? 'glass-dark border-white/5 shadow-2xl shadow-black/40' : 'glass border-white shadow-xl shadow-slate-200/50'
       }`}>
         <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/20 overflow-hidden border-4 border-white/10">
-            <img src="/icon-192.png" alt="Dompet Saya Pro Logo" className="w-14 h-14 object-contain" />
+          <div className="w-40 h-40 bg-white/10 backdrop-blur-md rounded-[3rem] flex items-center justify-center mx-auto mb-8 shadow-2xl overflow-hidden border-2 border-white/20">
+            <img src="/logoBabi.svg" alt="Dompet Saya Mascot" className="w-32 h-32 object-contain p-2" />
           </div>
           <h2 className={`text-2xl font-black uppercase tracking-[0.2em] ${isDark ? 'text-white' : 'text-slate-900'}`}>
             {isSignUp ? 'New Account' : 'Gateway Access'}
@@ -86,7 +86,7 @@ export default function Auth({ isDark }: AuthProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`w-full p-4 rounded-2xl border outline-none transition-all font-bold text-sm ${
-                isDark ? 'bg-slate-900/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500/50'
+                isDark ? 'bg-slate-900/50 border-white/5 text-white focus:border-rose-500/50' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-rose-500/50'
               }`}
             />
           </div>
@@ -101,7 +101,7 @@ export default function Auth({ isDark }: AuthProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={`w-full p-4 pr-12 rounded-2xl border outline-none transition-all font-bold text-sm ${
-                  isDark ? 'bg-slate-900/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500/50'
+                  isDark ? 'bg-slate-900/50 border-white/5 text-white focus:border-rose-500/50' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-rose-500/50'
                 }`}
               />
               <button
@@ -128,7 +128,7 @@ export default function Auth({ isDark }: AuthProps) {
           <button 
             type="submit"
             disabled={loading}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-rose-500/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -142,7 +142,7 @@ export default function Auth({ isDark }: AuthProps) {
         <div className="mt-8 text-center">
           <button 
             onClick={() => { setIsSignUp(!isSignUp); setMessage(null); }}
-            className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-blue-600'} transition-all`}
+            className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-rose-400' : 'text-slate-500 hover:text-rose-500'} transition-all`}
           >
             {isSignUp ? 'Already have access? Back to Gateway' : "Don't have access? Create Identity"}
           </button>

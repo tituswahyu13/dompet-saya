@@ -163,13 +163,13 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       {/* Spending Prediction */}
-      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-500/20' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200'}`}>
+      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-gradient-to-br from-rose-900/20 to-pink-900/20 border-rose-500/20' : 'bg-gradient-to-br from-rose-50 to-pink-50 border-rose-200'}`}>
         <div className="flex items-start gap-4">
-          <div className={`${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+          <div className={`${isDark ? 'text-rose-400' : 'text-rose-600'}`}>
             <Sparkles size={32} strokeWidth={2.5} className="sm:w-10 sm:h-10" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
+            <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider mb-2 ${isDark ? 'text-rose-300' : 'text-rose-700'}`}>
               Next Month Prediction
             </h3>
             <p className={`text-xl sm:text-2xl font-black mb-2 ${isDark ? 'text-white' : 'text-slate-900'} truncate`}>
@@ -196,7 +196,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       {/* Saving Recommendations */}
       <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-white border-slate-200'}`}>
         <div className="flex items-center gap-3 mb-4">
-          <div className="text-blue-500">
+          <div className="text-rose-500">
             <Lightbulb size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
           </div>
           <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>

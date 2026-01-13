@@ -15,7 +15,7 @@ interface Transaction {
   transfer_to_wallet_id?: string;
 }
 
-const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#6366f1', '#ec4899', '#8b5cf6'];
+const COLORS = ['#f43f5e', '#fb7185', '#10b981', '#f59e0b', '#ec4899', '#f9a8d4', '#8b5cf6'];
 
 export default function Insights({ transactions, isDark, wallets }: { transactions: Transaction[], isDark: boolean, wallets: any[] }) {
   // 1. Process Data for Pie Chart (Outcome by Category)
@@ -163,7 +163,7 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
               <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Total Equity Value</h3>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Sisa Saldo Kumulatif</p>
             </div>
-            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+            <div className="w-10 h-10 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500">
               <TrendingUp size={20} strokeWidth={2.5} />
             </div>
           </div>

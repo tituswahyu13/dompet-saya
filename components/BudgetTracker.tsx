@@ -139,32 +139,32 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
 
       {loading && budgets[0].limit === 3000000 && budgets[3].limit === 300000 ? (
          <div className="absolute inset-0 z-20 bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 animate-pulse">Syncing Cloud...</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-pink-500 animate-pulse">Syncing Cloud...</p>
          </div>
       ) : null}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-4 mb-8 relative z-10">
         <div className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
-          isDark ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50/50 border-blue-100'
+          isDark ? 'bg-rose-500/5 border-rose-500/20' : 'bg-rose-50/50 border-rose-100'
         }`}>
-          <p className="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] mb-2">Total Saving</p>
+          <p className="text-[9px] font-black text-rose-500 uppercase tracking-[0.2em] mb-2">Total Saving</p>
           <div className="flex items-baseline gap-1 overflow-hidden">
-            <span className="text-[10px] font-bold text-blue-500 flex-shrink-0">Rp</span>
+            <span className="text-[10px] font-bold text-rose-500 flex-shrink-0">Rp</span>
             <p className={`text-base font-black tracking-tighter truncate ${
-              isDark ? 'text-blue-400' : 'text-blue-600'
+              isDark ? 'text-rose-400' : 'text-rose-600'
             }`}>{totalSaving.toLocaleString('id-ID')}</p>
           </div>
         </div>
 
         <div className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
-          isDark ? 'bg-indigo-500/5 border-indigo-500/20' : 'bg-indigo-50/50 border-indigo-100'
+          isDark ? 'bg-pink-500/5 border-pink-500/20' : 'bg-pink-50/50 border-pink-100'
         }`}>
-          <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-2">Total Anggaran</p>
+          <p className="text-[9px] font-black text-pink-500 uppercase tracking-[0.2em] mb-2">Total Anggaran</p>
           <div className="flex items-baseline gap-1 overflow-hidden">
-            <span className="text-[10px] font-bold text-indigo-500 flex-shrink-0">Rp</span>
+            <span className="text-[10px] font-bold text-pink-500 flex-shrink-0">Rp</span>
             <p className={`text-base font-black tracking-tighter truncate ${
-              isDark ? 'text-indigo-400' : 'text-indigo-600'
+              isDark ? 'text-pink-400' : 'text-pink-600'
             }`}>{totalBudgetLimit.toLocaleString('id-ID')}</p>
           </div>
         </div>
@@ -186,7 +186,7 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
                   <div className="flex items-baseline gap-1.5">
                     {isEditing ? (
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-black text-blue-500">Rp</span>
+                        <span className="text-[10px] font-black text-rose-500">Rp</span>
                         <input 
                           type="number"
                           value={budget.limit}
@@ -198,7 +198,7 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
                       </div>
                     ) : (
                       <>
-                        <span className="text-[10px] font-bold text-blue-500">Rp</span>
+                        <span className="text-[10px] font-bold text-rose-500">Rp</span>
                         <p className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{spent.toLocaleString('id-ID')}</p>
                         <span className="text-[10px] font-bold text-slate-400 ml-1">/ {(budget.limit / 1000).toFixed(0)}k</span>
                       </>
@@ -206,7 +206,7 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`text-sm font-black ${isOver ? 'text-red-500' : 'text-blue-500'}`}>
+                  <p className={`text-sm font-black ${isOver ? 'text-red-500' : 'text-rose-500'}`}>
                     {percent.toFixed(0)}%
                   </p>
                 </div>
@@ -217,7 +217,7 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
                   className={`h-full rounded-full transition-all duration-1000 relative ${
                     isOver ? 'bg-gradient-to-r from-red-500 to-rose-600 shadow-[0_0_12px_rgba(239,68,68,0.4)]' : 
                     percent > 80 ? 'bg-gradient-to-r from-amber-500 to-orange-600 shadow-[0_0_10px_rgba(245,158,11,0.3)]' :
-                    'bg-gradient-to-r from-blue-500 to-indigo-600 shadow-[0_0_12px_rgba(59,130,246,0.4)]'
+                    'bg-gradient-to-r from-rose-500 to-pink-600 shadow-[0_0_12px_rgba(244,63,94,0.4)]'
                   }`}
                   style={{ width: `${percent}%` }}
                 >

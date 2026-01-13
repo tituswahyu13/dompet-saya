@@ -148,13 +148,13 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
     }`}>
       {/* Decorative Glow */}
       <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[60px] opacity-20 ${
-        type === 'income' ? 'bg-green-500' : type === 'saving' ? 'bg-blue-500' : 'bg-red-500'
+        type === 'income' ? 'bg-green-500' : type === 'saving' ? 'bg-rose-500' : 'bg-red-500'
       }`} />
 
       <div className="flex justify-between items-center mb-8 relative z-10">
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full animate-pulse ${
-            type === 'income' ? 'bg-green-500' : type === 'saving' ? 'bg-blue-500' : 'bg-red-500'
+            type === 'income' ? 'bg-green-500' : type === 'saving' ? 'bg-rose-500' : 'bg-red-500'
           }`} />
           <label className={`text-xs font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
             {editData ? 'Mode Koreksi' : 'Kategori Input'}
@@ -176,7 +176,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
           {[
             { id: 'income', label: 'Masuk', color: 'green' },
             { id: 'outcome', label: 'Keluar', color: 'red' },
-            { id: 'saving', label: 'Simpan', color: 'blue' }
+            { id: 'saving', label: 'Simpan', color: 'rose' }
           ].map((t) => (
             <button
               key={t.id}
@@ -186,11 +186,11 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
                 type === t.id 
                   ? (t.color === 'green' ? 'bg-green-500/10 text-green-500 border-green-500/50' : 
                      t.color === 'red' ? 'bg-red-500/10 text-red-500 border-red-500/50' : 
-                     'bg-blue-500/10 text-blue-500 border-blue-500/50')
+                     'bg-rose-500/10 text-rose-500 border-rose-500/50')
                   : (isDark ? 'bg-slate-900/50 text-slate-500 border-transparent hover:bg-slate-800' : 'bg-slate-100/50 text-slate-400 border-transparent hover:bg-slate-200')
               }`}
             >
-              <div className={`w-1.5 h-1.5 rounded-full ${type === t.id ? (t.color === 'green' ? 'bg-green-500' : t.color === 'red' ? 'bg-red-500' : 'bg-blue-500') : 'bg-slate-400'}`} />
+              <div className={`w-1.5 h-1.5 rounded-full ${type === t.id ? (t.color === 'green' ? 'bg-green-500' : t.color === 'red' ? 'bg-red-500' : 'bg-rose-500') : 'bg-slate-400'}`} />
               {t.label}
             </button>
           ))}
@@ -205,7 +205,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
                   value={selectedWalletId}
                   onChange={(e) => setSelectedWalletId(e.target.value)}
                   className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-black appearance-none cursor-pointer ${
-                    isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
+                    isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-rose-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-rose-500'
                   }`}
                   required
                 >
@@ -230,7 +230,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium appearance-none cursor-pointer ${
-                    isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
+                    isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-rose-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-rose-500'
                   }`}
                 >
                   {CATEGORIES[type].map(cat => (
@@ -253,7 +253,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
               onChange={(e) => { setDesc(e.target.value); setErrorStatus(null); }}
               placeholder="Misal: Investasi Emas" 
               className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
-                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
+                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-rose-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-rose-500'
               }`}
               required
             />
@@ -266,7 +266,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
               value={date}
               onChange={(e) => { setDate(e.target.value); setErrorStatus(null); }}
               className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
-                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
+                isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-rose-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-rose-500'
               }`}
               required
             />
@@ -282,11 +282,11 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
                 placeholder="0" 
                 className={`w-full p-4 pl-12 border rounded-2xl outline-none transition-all text-lg font-black tracking-tighter ${
                   errorStatus && amount && Number(amount) <= 0 ? (isDark ? 'border-red-500/50 bg-red-500/5' : 'border-red-500 bg-red-50') :
-                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-blue-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-blue-500'
+                  isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-rose-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-rose-500'
                 }`}
                 required
               />
-              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-blue-500/50">IDR</span>
+              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-rose-500/50">IDR</span>
             </div>
             {errorStatus && <p className="text-[10px] text-red-500 mt-2 px-2 font-black uppercase tracking-widest">{errorStatus}</p>}
           </div>
@@ -297,7 +297,7 @@ export default function TransactionForm({ onRefresh, isDark, editData, onCancel,
           className={`w-full mt-4 p-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 ${
             editData ? 'bg-slate-900 hover:bg-black' :
             type === 'income' ? 'bg-gradient-to-r from-green-600 to-emerald-600 shadow-green-500/20 hover:shadow-green-500/40' :
-            type === 'saving' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 shadow-blue-500/20 hover:shadow-blue-500/40' :
+            type === 'saving' ? 'bg-gradient-to-r from-rose-600 to-pink-600 shadow-rose-500/20 hover:shadow-rose-500/40' :
             'bg-gradient-to-r from-red-600 to-rose-600 shadow-red-500/20 hover:shadow-red-500/40'
           } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >

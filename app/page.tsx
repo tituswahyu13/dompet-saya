@@ -164,8 +164,8 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
 
   return (
     <div className={`min-h-screen transition-all duration-700 relative overflow-hidden ${isDark ? 'bg-[#020617] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[160px] animate-float opacity-50" />
-      <div className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[160px] animate-float opacity-50" style={{ animationDelay: '-3s' }} />
+      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-rose-600/10 rounded-full blur-[160px] animate-float opacity-50" />
+      <div className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[160px] animate-float opacity-50" style={{ animationDelay: '-3s' }} />
       <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-purple-600/5 rounded-full blur-[120px] animate-pulse-slow" />
 
       {/* Mobile Bottom Navigation */}
@@ -176,8 +176,8 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       <header className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-500 ${isDark ? 'bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20' : 'bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20'}`}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2 sm:gap-4 group cursor-pointer flex-shrink-0">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
-              <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-white" strokeWidth={2.5} />
+            <div className="w-9 h-9 sm:w-11 sm:h-11 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 overflow-hidden border border-white/20">
+              <img src="/logoBabi.svg" alt="Dompet Saya Mascot" className="w-full h-full object-contain p-1" />
             </div>
             <div>
               <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight hidden sm:block">Financial Intelligence</p>
@@ -211,14 +211,14 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               />
               <button 
                 onClick={() => setShowGoalManager(true)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20' : 'bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100'} hover:scale-105 active:scale-95`}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20' : 'bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100'} hover:scale-105 active:scale-95`}
                 title="Financial Goals"
               >
                 <Target size={20} className="sm:w-5 sm:h-5" />
               </button>
               <button 
                 onClick={() => setShowWalletManager(true)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'} hover:scale-105 active:scale-95`}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-pink-500/10 text-pink-400 border border-pink-500/20 hover:bg-pink-500/20' : 'bg-pink-50 text-pink-600 border border-pink-100 hover:bg-pink-100'} hover:scale-105 active:scale-95`}
                 title="Manage Wallets"
               >
                 <Wallet size={20} className="sm:w-5 sm:h-5" />
@@ -243,7 +243,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] sm:col-span-2 lg:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
             <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 sm:mb-4">Total Saldo</p>
             <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
-              <span className="text-[10px] sm:text-xs font-black text-blue-500">IDR</span>
+              <span className="text-[10px] sm:text-xs font-black text-rose-500">IDR</span>
               <p className={`text-2xl sm:text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter truncate`}>{stats.balance.toLocaleString('id-ID')}</p>
             </div>
           </div>
@@ -267,33 +267,33 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               <p className="text-2xl sm:text-3xl font-black text-red-600 tracking-tighter truncate">{stats.outcome.toLocaleString('id-ID')}</p>
             </div>
           </div>
-          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-blue-900/20' : 'bg-blue-50/50 border-blue-100'}`}>
+          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-rose-900/20' : 'bg-rose-50/50 border-rose-100'}`}>
             <div className="flex justify-between items-start mb-3 sm:mb-4">
-              <p className="text-[9px] sm:text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">Tabungan</p>
-              <PiggyBank className="text-blue-500 opacity-30" size={20} />
+              <p className="text-[9px] sm:text-[10px] font-black text-rose-500 uppercase tracking-[0.2em]">Tabungan</p>
+              <PiggyBank className="text-rose-500 opacity-30" size={20} />
             </div>
             <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
-              <span className="text-[10px] sm:text-xs font-black text-blue-500">IDR</span>
-              <p className={`text-2xl sm:text-3xl font-black tracking-tighter truncate ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{stats.saving.toLocaleString('id-ID')}</p>
+              <span className="text-[10px] sm:text-xs font-black text-rose-500">IDR</span>
+              <p className={`text-2xl sm:text-3xl font-black tracking-tighter truncate ${isDark ? 'text-rose-400' : 'text-rose-600'}`}>{stats.saving.toLocaleString('id-ID')}</p>
             </div>
           </div>
-          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-indigo-900/20' : 'bg-indigo-50/50 border-indigo-100'}`}>
+          <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-pink-900/20' : 'bg-pink-50/50 border-pink-100'}`}>
             <div className="flex justify-between items-start mb-3 sm:mb-4">
-              <p className="text-[9px] sm:text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">Saving Rate</p>
-              <Percent className="text-indigo-500 opacity-30" size={18} />
+              <p className="text-[9px] sm:text-[10px] font-black text-pink-500 uppercase tracking-[0.2em]">Saving Rate</p>
+              <Percent className="text-pink-500 opacity-30" size={18} />
             </div>
-            <p className="text-2xl sm:text-3xl font-black text-indigo-600 tracking-tighter">{stats.rate.toFixed(1)}<span className="text-sm ml-0.5">%</span></p>
+            <p className="text-2xl sm:text-3xl font-black text-pink-600 tracking-tighter">{stats.rate.toFixed(1)}<span className="text-sm ml-0.5">%</span></p>
           </div>
         </div>
 
         <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
           <div className="flex items-center gap-3 mb-8 px-1">
-            <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
+            <div className="w-1.5 h-6 bg-rose-600 rounded-full" />
             <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Arsitektur Wallet</h2>
           </div>
           <div className="space-y-8">
             <div className="flex flex-wrap gap-2">
-              <button onClick={() => setSelectedWalletFilter('All')} className={`px-7 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-2 ${selectedWalletFilter === 'All' ? 'bg-blue-600 text-white border-blue-600 shadow-xl shadow-blue-500/20 scale-105' : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'}`}>
+              <button onClick={() => setSelectedWalletFilter('All')} className={`px-7 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-2 ${selectedWalletFilter === 'All' ? 'bg-rose-600 text-white border-rose-600 shadow-xl shadow-rose-500/20 scale-105' : isDark ? 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-white/10' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'}`}>
                 <LayoutDashboard size={14} /> Semua Dompet
               </button>
             </div>
@@ -301,12 +301,12 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               {Object.keys(groupedWallets).sort().map(type => (
                 <div key={type} className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <div className={`p-1.5 rounded-lg ${isDark ? 'bg-indigo-500/10' : 'bg-indigo-50'}`}>
-                    {type === 'cash' && <Coins size={14} className="text-indigo-500" />}
-                    {type === 'bank' && <Building2 size={14} className="text-indigo-500" />}
-                    {type === 'ewallet' && <Smartphone size={14} className="text-indigo-500" />}
-                    {type === 'investment' && <TrendIcon size={14} className="text-indigo-500" />}
-                    {type === 'other' && <Wallet size={14} className="text-indigo-500" />}
+                  <div className={`p-1.5 rounded-lg ${isDark ? 'bg-rose-500/10' : 'bg-rose-50'}`}>
+                    {type === 'cash' && <Coins size={14} className="text-rose-500" />}
+                    {type === 'bank' && <Building2 size={14} className="text-rose-500" />}
+                    {type === 'ewallet' && <Smartphone size={14} className="text-rose-500" />}
+                    {type === 'investment' && <TrendIcon size={14} className="text-rose-500" />}
+                    {type === 'other' && <Wallet size={14} className="text-rose-500" />}
                   </div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] pl-1 h-full flex items-center">
                     {typeLabels[type] || type.toUpperCase()}
@@ -336,10 +336,10 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
           <div className="flex justify-between items-center mb-8 px-1">
             <div className="flex items-center gap-3">
-              <div className="w-1.5 h-6 bg-blue-500 rounded-full" />
+              <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
               <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Financial Goals</h2>
             </div>
-            <button onClick={() => setShowGoalManager(true)} className="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-blue-400 transition-all flex items-center gap-1.5 group">
+            <button onClick={() => setShowGoalManager(true)} className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400 transition-all flex items-center gap-1.5 group">
               Kelola Target <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -359,7 +359,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                         <MinimalistIcon icon={g.icon} size={24} style={{ color: g.color }} />
                       </div>
                       <div className="text-right">
-                        <p className="text-[10px] font-black text-blue-500">{progress.toFixed(0)}%</p>
+                        <p className="text-[10px] font-black text-rose-500">{progress.toFixed(0)}%</p>
                       </div>
                     </div>
                     <h3 className={`text-sm font-black mb-1 truncate ${isDark ? 'text-white' : 'text-slate-900'}`}>{g.name}</h3>
@@ -433,7 +433,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
             <div className="lg:col-span-4">
               <section>
                 <div className="flex items-center gap-2 mb-6 px-1">
-                  <div className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+                  <div className="w-1.5 h-6 bg-rose-600 rounded-full" />
                   <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Target Anggaran</h2>
                 </div>
                 <BudgetTracker transactions={filteredTransactions} isDark={isDark} user={user} />
@@ -445,14 +445,14 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                   <div className="w-1.5 h-6 bg-slate-400 rounded-full" />
                   <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Ledger Ringkasan</h2>
                 </div>
-                <Link href="/transactions" className="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-blue-400 transition-all flex items-center gap-1.5 group">
+                <Link href="/transactions" className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400 transition-all flex items-center gap-1.5 group">
                   Lihat Semua <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
               <div className={`rounded-[2.5rem] border overflow-hidden backdrop-blur-sm transition-all duration-500 ${isDark ? 'glass-dark border-white/5 shadow-2xl shadow-black/40' : 'glass border-white shadow-xl shadow-slate-200/50'}`}>
                 {loading ? (
                   <div className="p-20 text-center">
-                    <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto mb-4" />
+                    <div className="w-12 h-12 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin mx-auto mb-4" />
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">Syncing Cloud Ledger...</p>
                   </div>
                 ) : transactions.length === 0 ? (
@@ -477,7 +477,8 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                               <div className="text-sm font-bold opacity-80">{t.keterangan}</div>
                               <div className="text-[9px] font-black opacity-50 uppercase tracking-widest">{t.kategori}</div>
                             </td>
-                            <td className={`p-6 text-right font-black tracking-tighter ${t.income > 0 ? 'text-green-500' : t.saving > 0 ? 'text-blue-500' : 'text-red-500'}`}>{(t.income || t.outcome || t.saving).toLocaleString('id-ID')}</td>
+                            <td className={`p-6 text-right font-black tracking-tighter ${t.income > 0 ? 'text-green-500' : t.saving > 0 ? 'text-rose-500' : 'text-red-500'}`}>
+{(t.income || t.outcome || t.saving).toLocaleString('id-ID')}</td>
                           </tr>
                         ))}
                       </tbody>

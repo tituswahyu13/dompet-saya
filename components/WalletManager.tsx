@@ -181,7 +181,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
                 </h3>
                 <button
                   onClick={() => setIsAdding(true)}
-                  className="px-4 py-2 bg-blue-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2"
+                  className="px-4 py-2 bg-rose-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-500/20 flex items-center gap-2"
                 >
                   <Plus size={14} /> Tambah Wallet
                 </button>
@@ -189,7 +189,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
 
               {loading ? (
                 <div className="text-center py-12">
-                  <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto" />
+                  <div className="w-12 h-12 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin mx-auto" />
                 </div>
               ) : wallets.length === 0 ? (
                 <div className={`text-center py-12 rounded-2xl border ${isDark ? 'border-white/5 bg-white/5' : 'border-slate-200 bg-slate-50'}`}>
@@ -228,7 +228,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
                           <button
                             onClick={() => handleEdit(wallet)}
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
-                              isDark ? 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                              isDark ? 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20' : 'bg-blue-50 text-rose-600 hover:bg-rose-100'
                             }`}
                           >
                             <Pencil size={14} />
@@ -306,8 +306,8 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
                         onClick={() => setFormData({ ...formData, type: type.value, icon: type.defaultIcon })}
                         className={`p-3 rounded-xl border text-xs font-bold transition-all ${
                           formData.type === type.value
-                            ? 'bg-blue-600 text-white border-blue-600'
-                            : isDark ? 'bg-slate-800 border-white/10 text-slate-300 hover:border-blue-500' : 'bg-white border-slate-200 text-slate-700 hover:border-blue-500'
+                            ? 'bg-rose-600 text-white border-blue-600'
+                            : isDark ? 'bg-slate-800 border-white/10 text-slate-300 hover:border-rose-500' : 'bg-white border-slate-200 text-slate-700 hover:border-rose-500'
                         }`}
                       >
                         {type.label}
@@ -329,8 +329,8 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
                         onClick={() => setFormData({ ...formData, icon })}
                         className={`p-3 rounded-xl border transition-all flex items-center justify-center ${
                           formData.icon === icon
-                            ? 'bg-blue-600 border-blue-600 scale-110 text-white'
-                            : isDark ? 'bg-slate-800 border-white/10 text-slate-400 hover:border-blue-500' : 'bg-white border-slate-200 text-slate-500 hover:border-blue-500'
+                            ? 'bg-rose-600 border-blue-600 scale-110 text-white'
+                            : isDark ? 'bg-slate-800 border-white/10 text-slate-400 hover:border-rose-500' : 'bg-white border-slate-200 text-slate-500 hover:border-rose-500'
                         }`}
                       >
                         <MinimalistIcon icon={icon} size={24} />
@@ -380,7 +380,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="w-full py-3 bg-blue-600 text-white text-sm font-black uppercase tracking-wider rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20"
+                  className="w-full py-3 bg-rose-600 text-white text-sm font-black uppercase tracking-wider rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-500/20"
                 >
                   {editingId ? 'Update Wallet' : 'Buat Wallet'}
                 </button>
