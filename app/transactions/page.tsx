@@ -6,6 +6,7 @@ import TransferForm from '@/components/TransferForm';
 import AuthWrapper from '@/components/AuthWrapper';
 import WalletManager from '@/components/WalletManager';
 import Navigation from '@/components/Navigation';
+import RecurringManager from '@/components/RecurringManager';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import { User } from '@supabase/supabase-js';
 
@@ -20,6 +21,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
   const [showWalletManager, setShowWalletManager] = useState(false);
   const [isTransferMode, setIsTransferMode] = useState(false);
   const [selectedWalletFilter, setSelectedWalletFilter] = useState('All');
+  const [showRecurringManager, setShowRecurringManager] = useState(false);
   const [wallets, setWallets] = useState<any[]>([]);
   const [transactionToDelete, setTransactionToDelete] = useState<any>(null);
   const ITEMS_PER_PAGE = 15;
@@ -95,6 +97,9 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
           <div className="flex items-center gap-4">
              <button onClick={() => setIsDark(!isDark)} className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? 'bg-slate-800 text-amber-400 border-white/5' : 'bg-slate-100 text-slate-500 border-slate-200'} hover:scale-105 transition-all`}>
               {isDark ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>}
+            </button>
+            <button onClick={() => setShowRecurringManager(true)} className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-600/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-600/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'} hover:scale-105 transition-all`} title="Recurring Engine">
+              <span className="text-sm">🪄</span>
             </button>
             <button onClick={() => setShowWalletManager(true)} className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100'} hover:scale-105 transition-all`} title="Manage Wallets">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
@@ -201,6 +206,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
       </main>
 
       {showWalletManager && <WalletManager user={user} isDark={isDark} onClose={() => { setShowWalletManager(false); fetchData(user); }} />}
+      {showRecurringManager && <RecurringManager user={user} isDark={isDark} onClose={() => { setShowRecurringManager(false); fetchData(user); }} />}
 
       <ConfirmationModal 
         isOpen={!!transactionToDelete}
