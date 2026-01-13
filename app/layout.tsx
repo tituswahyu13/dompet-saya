@@ -25,16 +25,16 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: [
-      {
-        url: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: [
-      { url: "/icon-192.png" },
-    ],
+    icon: "/icon-192.png",
+    apple: "/icon-192.png",
   },
+};
+
+export const viewport = {
+  themeColor: "#0f172a",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
