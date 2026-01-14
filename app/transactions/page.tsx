@@ -106,7 +106,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-3">
            <div className="flex items-center gap-2 sm:gap-4 group cursor-pointer flex-shrink-0">
             <div className="w-9 h-9 sm:w-11 sm:h-11 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 overflow-hidden border border-white/20">
-              <img src="/logoBabi.svg" alt="Dompet Saya Mascot" className="w-full h-full object-contain p-1" />
+              <img src="/DompetSaya.svg" alt="Dompet Saya Mascot" className="w-full h-full object-contain p-1" />
             </div>
             <div>
               <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight hidden sm:block">Data Management</p>

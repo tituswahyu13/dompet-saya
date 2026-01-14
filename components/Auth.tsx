@@ -58,7 +58,7 @@ export default function Auth({ isDark }: AuthProps) {
       }`}>
         <div className="text-center mb-10">
           <div className="w-40 h-40 bg-white/10 backdrop-blur-md rounded-[3rem] flex items-center justify-center mx-auto mb-8 shadow-2xl overflow-hidden border-2 border-white/20">
-            <img src="/logoBabi.svg" alt="Dompet Saya Mascot" className="w-32 h-32 object-contain p-2" />
+            <img src="/DompetSaya.svg" alt="Dompet Saya Mascot" className="w-32 h-32 object-contain p-2" />
           </div>
           <h2 className={`text-2xl font-black uppercase tracking-[0.2em] ${isDark ? 'text-white' : 'text-slate-900'}`}>
             {isSignUp ? 'New Account' : 'Gateway Access'}
