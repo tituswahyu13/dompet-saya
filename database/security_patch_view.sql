@@ -18,6 +18,7 @@ SELECT
     w.is_active,
     w.created_at,
     (
+        w.initial_balance +
         COALESCE((SELECT SUM(income) FROM public.transaction WHERE wallet_id = w.id), 0) -
         COALESCE((SELECT SUM(outcome) FROM public.transaction WHERE wallet_id = w.id), 0) -
         COALESCE((SELECT SUM(saving) FROM public.transaction WHERE wallet_id = w.id), 0)

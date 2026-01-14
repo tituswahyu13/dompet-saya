@@ -27,6 +27,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
   const [budgets, setBudgets] = useState<any[]>([]);
   const [recurringTemplates, setRecurringTemplates] = useState<any[]>([]);
   const [showAdvancedCharts, setShowAdvancedCharts] = useState(false);
+  const [balanceMode, setBalanceMode] = useState<'liquid' | 'all'>('all');
 
   const fetchData = async (user: User) => {
     setLoading(true);
@@ -130,18 +131,25 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
     const initialBalance = data.filter(t => t.kategori === 'Saldo Awal' && !t.is_transfer).reduce((acc, curr) => acc + (curr.income || 0), 0);
     const earnedIncome = totalInc - initialBalance;
 
-    const actualInc = data.reduce((acc, curr) => acc + (curr.income || 0), 0);
-    const actualOut = data.reduce((acc, curr) => acc + (curr.outcome || 0), 0);
-    const actualSav = data.reduce((acc, curr) => acc + (curr.saving || 0), 0);
+    // Calculate Total Balance from wallets (respecting filters)
+    let displayBalance = 0;
+    if (selectedWalletFilter !== 'All') {
+      const activeWallet = wallets.find(w => w.id === selectedWalletFilter);
+      displayBalance = activeWallet?.current_balance || 0;
+    } else {
+      displayBalance = wallets
+        .filter(w => balanceMode === 'all' || ['cash', 'bank', 'ewallet'].includes(w.type))
+        .reduce((acc, w) => acc + (w.current_balance || 0), 0);
+    }
 
     setStats({
       income: earnedIncome,
       outcome: totalOut,
       saving: totalSav,
-      balance: actualInc - actualOut - actualSav,
+      balance: displayBalance,
       rate: earnedIncome > 0 ? (totalSav / earnedIncome) * 100 : 0
     });
-  }, [transactions, wallets, selectedWalletFilter]);
+  }, [transactions, wallets, selectedWalletFilter, balanceMode]);
 
   const groupedWallets = wallets.reduce((acc: any, w) => {
     const type = w.type || 'other';
@@ -241,7 +249,22 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10 space-y-8 sm:y-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] sm:col-span-2 lg:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
-            <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 sm:mb-4">Total Saldo</p>
+            <div className="flex justify-between items-center mb-3 sm:mb-4">
+              <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Total Saldo</p>
+              {selectedWalletFilter === 'All' && (
+                <button 
+                  onClick={() => setBalanceMode(balanceMode === 'all' ? 'liquid' : 'all')}
+                  className={`px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all border ${
+                    balanceMode === 'all'
+                      ? 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+                      : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                  }`}
+                  title={balanceMode === 'all' ? "Tampilkan Saldo Likuid (Cash/Bank)" : "Tampilkan Semua Aset"}
+                >
+                  {balanceMode === 'all' ? 'Mode Aset' : 'Mode Likuid'}
+                </button>
+              )}
+            </div>
             <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
               <span className="text-[10px] sm:text-xs font-black text-rose-500">IDR</span>
               <p className={`text-2xl sm:text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter truncate`}>{stats.balance.toLocaleString('id-ID')}</p>
