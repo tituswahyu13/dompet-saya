@@ -24,11 +24,33 @@ interface NotificationCenterProps {
 export default function NotificationCenter({ transactions, budgets, goals, recurringTemplates, wallets, isDark }: NotificationCenterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [readIds, setReadIds] = useState<string[]>([]);
+
+  // Load readIds from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('read_notification_ids');
+    if (saved) {
+      try {
+        setReadIds(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse read notifications", e);
+      }
+    }
+  }, []);
+
+  // Save readIds to localStorage
+  const saveReadIds = (ids: string[]) => {
+    setReadIds(ids);
+    localStorage.setItem('read_notification_ids', JSON.stringify(ids));
+  };
 
   // Generate smart notifications based on data
   const generateNotifications = useMemo(() => {
     const alerts: Notification[] = [];
     const now = new Date();
+
+    // Helper to check if read
+    const isRead = (id: string) => readIds.includes(id);
 
     // Budget Alerts
     budgets.forEach(budget => {
@@ -39,30 +61,33 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
       const percentage = (spent / budget.limit) * 100;
       
       if (percentage >= 100) {
+        const id = `budget-${budget.id}-100`;
         alerts.push({
-          id: `budget-${budget.id}-100`,
+          id,
           type: 'budget_alert',
           title: 'Anggaran Terlampaui!',
           message: `Anda telah melebihi anggaran untuk "${budget.kategori}" sebesar Rp ${(spent - budget.limit).toLocaleString('id-ID')}`,
-          is_read: false,
+          is_read: isRead(id),
           created_at: now.toISOString()
         });
       } else if (percentage >= 90) {
+        const id = `budget-${budget.id}-90`;
         alerts.push({
-          id: `budget-${budget.id}-90`,
+          id,
           type: 'budget_alert',
           title: 'Peringatan Anggaran',
           message: `Anda telah menggunakan ${percentage.toFixed(0)}% dari anggaran "${budget.kategori}"`,
-          is_read: false,
+          is_read: isRead(id),
           created_at: now.toISOString()
         });
       } else if (percentage >= 80) {
+        const id = `budget-${budget.id}-80`;
         alerts.push({
-          id: `budget-${budget.id}-80`,
+          id,
           type: 'budget_alert',
           title: 'Info Anggaran',
           message: `Anda telah menggunakan ${percentage.toFixed(0)}% dari anggaran "${budget.kategori}"`,
-          is_read: false,
+          is_read: isRead(id),
           created_at: now.toISOString()
         });
       }
@@ -75,30 +100,33 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
       const percentage = (current / goal.target_amount) * 100;
       
       if (percentage >= 100) {
+        const id = `goal-${goal.id}-100`;
         alerts.push({
-          id: `goal-${goal.id}-100`,
+          id,
           type: 'goal_milestone',
           title: 'Target Tercapai!',
           message: `Selamat! Anda telah mencapai target: "${goal.name}"!`,
-          is_read: false,
+          is_read: isRead(id),
           created_at: now.toISOString()
         });
       } else if (percentage >= 75 && percentage < 80) {
+        const id = `goal-${goal.id}-75`;
         alerts.push({
-          id: `goal-${goal.id}-75`,
+          id,
           type: 'goal_milestone',
           title: 'Hampir Sampai!',
           message: `Anda sudah mencapai 75% dari target "${goal.name}"! Terus semangat!`,
-          is_read: false,
+          is_read: isRead(id),
           created_at: now.toISOString()
         });
       } else if (percentage >= 50 && percentage < 55) {
+        const id = `goal-${goal.id}-50`;
         alerts.push({
-          id: `goal-${goal.id}-50`,
+          id,
           type: 'goal_milestone',
           title: 'Titik Tengah!',
           message: `Anda telah mencapai 50% dari target "${goal.name}"!`,
-          is_read: false,
+          is_read: isRead(id),
           created_at: now.toISOString()
         });
       }
@@ -123,24 +151,25 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
       const daysUntil = differenceInDays(nextDue, now);
       
       if (daysUntil >= 0 && daysUntil <= 3) {
+        const id = `recurring-${template.id}`;
         alerts.push({
-          id: `recurring-${template.id}`,
+          id,
           type: 'recurring_reminder',
           title: '🪄 Transaksi Rutin Jatuh Tempo',
           message: `"${template.keterangan}" jatuh tempo dalam ${daysUntil} hari`,
-          is_read: false,
+          is_read: isRead(id),
           created_at: now.toISOString()
         });
       }
     });
 
     // Anomaly Detection (spending 2x above average)
-    const last30Days = transactions.filter(t => {
+    const past30Days = transactions.filter(t => {
       const txDate = new Date(t.tanggal);
-      return differenceInDays(now, txDate) <= 30 && t.outcome > 0;
+      return differenceInDays(now, txDate) <= 30 && differenceInDays(now, txDate) > 0 && t.outcome > 0;
     });
     
-    const avgDaily = last30Days.reduce((sum, t) => sum + t.outcome, 0) / 30;
+    const avgDaily = past30Days.reduce((sum, t) => sum + t.outcome, 0) / 30;
     const today = transactions.filter(t => {
       const txDate = new Date(t.tanggal);
       return differenceInDays(now, txDate) === 0 && t.outcome > 0;
@@ -148,32 +177,38 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
     
     const todayTotal = today.reduce((sum, t) => sum + t.outcome, 0);
     
-    if (todayTotal > avgDaily * 2 && todayTotal > 100000) {
+    if (todayTotal > avgDaily * 2 && todayTotal > 150000 && avgDaily > 0) {
+      const id = `anomaly-${now.toISOString().split('T')[0]}`; // Consistent ID per day
       alerts.push({
-        id: `anomaly-${now.toISOString()}`,
+        id,
         type: 'anomaly',
-        title: 'Unusual Spending Detected',
-        message: `Today's spending (Rp ${todayTotal.toLocaleString('id-ID')}) is ${(todayTotal / avgDaily).toFixed(1)}x your daily average`,
-        is_read: false,
+        title: 'Pengeluaran Tidak Biasa',
+        message: `Pengeluaran hari ini (Rp ${todayTotal.toLocaleString('id-ID')}) mencapai ${(todayTotal / avgDaily).toFixed(1)}x lipat rata-rata harian Anda`,
+        is_read: isRead(id),
         created_at: now.toISOString()
       });
     }
 
     return alerts;
-  }, [transactions, budgets, goals, recurringTemplates, wallets]);
+  }, [transactions, budgets, goals, recurringTemplates, wallets, readIds]);
 
-  useEffect(() => {
-    setNotifications(generateNotifications);
+  // Get active (unread) notifications
+  const activeNotifications = useMemo(() => {
+    return generateNotifications.filter(n => !n.is_read);
   }, [generateNotifications]);
 
-  const unreadCount = notifications.filter(n => !n.is_read).length;
+  const unreadCount = activeNotifications.length;
 
   const markAsRead = (id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
+    if (!readIds.includes(id)) {
+      saveReadIds([...readIds, id]);
+    }
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+    const allIds = activeNotifications.map(n => n.id);
+    const newReadIds = Array.from(new Set([...readIds, ...allIds]));
+    saveReadIds(newReadIds);
   };
 
   const getIcon = (type: string) => {
@@ -216,14 +251,14 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
             <div className={`p-4 border-b shrink-0 ${isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'}`}>
             <div className="flex justify-between items-center">
               <h3 className={`text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Notifications ({unreadCount})
+                Notifikasi ({unreadCount})
               </h3>
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
                   className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400"
                 >
-                  Mark All Read
+                  Tandai Semua Dibaca
                 </button>
               )}
             </div>
@@ -232,7 +267,7 @@ export default function NotificationCenter({ transactions, budgets, goals, recur
             <div className="flex-1 overflow-y-auto divide-y divide-slate-200 dark:divide-white/5">
               {notifications.length === 0 ? (
                 <div className="p-8 text-center">
-                  <p className="text-sm text-slate-400 italic">No notifications yet</p>
+                  <p className="text-sm text-slate-400 italic">Belum ada notifikasi baru</p>
                 </div>
               ) : (
                 notifications.map(notif => (
