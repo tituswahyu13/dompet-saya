@@ -50,9 +50,9 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
 
       return {
         month: format(month, 'MMM yyyy'),
-        income: Math.round(income / 1000000), // Convert to millions
-        outcome: Math.round(outcome / 1000000),
-        saving: Math.round(saving / 1000000)
+        income: Number((income / 1000000).toFixed(1)), // Convert to millions with 1 decimal
+        outcome: Number((outcome / 1000000).toFixed(1)),
+        saving: Number((saving / 1000000).toFixed(1))
       };
     });
   }, [transactions]);
@@ -71,7 +71,7 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
     return Array.from(categoryMap.entries())
       .map(([kategori, total]) => ({
         kategori,
-        total: Math.round(total / 1000000) // Convert to millions
+        total: Number((total / 1000000).toFixed(1)) // Convert to millions with 1 decimal
       }))
       .sort((a, b) => b.total - a.total)
       .slice(0, 8); // Top 8 categories

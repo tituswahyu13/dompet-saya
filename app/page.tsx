@@ -11,12 +11,16 @@ import NotificationCenter from '@/components/NotificationCenter';
 import AIInsights from '@/components/AIInsights';
 import Navigation from '@/components/Navigation';
 import TrialBanner from '@/components/TrialBanner';
+import { useSubscription } from '@/hooks/useSubscription';
+import UpgradeModal from '@/components/UpgradeModal';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Wallet, Target, LogOut, Sun, Moon, CreditCard, ArrowUpRight, ArrowDownRight, PiggyBank, Percent, LayoutDashboard, ChevronRight, BarChart3, TrendingUp as TrendIcon, Bot, Building2, Smartphone, Coins } from 'lucide-react';
 import MinimalistIcon from '@/components/MinimalistIcon';
 
 function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
+  const { subscription } = useSubscription();
+  const isPro = subscription?.is_pro;
   const [transactions, setTransactions] = useState<any[]>([]);
   const [stats, setStats] = useState({ income: 0, outcome: 0, saving: 0, rate: 0, balance: 0 });
   const [loading, setLoading] = useState(true);
@@ -28,6 +32,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
   const [budgets, setBudgets] = useState<any[]>([]);
   const [recurringTemplates, setRecurringTemplates] = useState<any[]>([]);
   const [showAdvancedCharts, setShowAdvancedCharts] = useState(false);
+  const [showUpgradeModalCharts, setShowUpgradeModalCharts] = useState(false);
   const [balanceMode, setBalanceMode] = useState<'liquid' | 'all'>('all');
 
   const fetchData = async (user: User) => {
@@ -412,7 +417,10 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               </h2>
             </div>
             <button 
-              onClick={() => setShowAdvancedCharts(!showAdvancedCharts)}
+              onClick={() => {
+                if (isPro) setShowAdvancedCharts(!showAdvancedCharts);
+                else setShowUpgradeModalCharts(true);
+              }}
               className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
                 showAdvancedCharts 
                   ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' 
@@ -421,6 +429,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
             >
               {showAdvancedCharts ? <BarChart3 size={14} /> : <TrendIcon size={14} />}
               {showAdvancedCharts ? 'Show Simple View' : 'Show Charts'}
+              {!isPro && <div className="px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-500 text-[8px]">PRO</div>}
             </button>
           </div>
           {loading ? (
@@ -522,6 +531,15 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       {showGoalManager && (
         <GoalManager user={user} isDark={isDark} onClose={() => { setShowGoalManager(false); fetchData(user); }} />
       )}
+
+      <UpgradeModal
+        isOpen={showUpgradeModalCharts}
+        onClose={() => setShowUpgradeModalCharts(false)}
+        isDark={isDark}
+        title="Advanced Financial Charts"
+        message="Akses visualisasi data yang mendalam dengan grafik tren 6 bulan dan analisis kategori yang lebih detail. Upgrade ke Pro untuk fitur ini!"
+        feature="Advanced Analytics"
+      />
     </div>
   );
 }
