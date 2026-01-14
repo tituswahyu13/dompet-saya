@@ -252,7 +252,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10 space-y-8 sm:y-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-32 sm:py-12 relative z-10 space-y-8 sm:y-12">
         <TrialBanner isDark={isDark} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] sm:col-span-2 lg:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>

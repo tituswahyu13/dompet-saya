@@ -149,8 +149,8 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-      <div className={`w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border shadow-2xl animate-in zoom-in-95 duration-300 ${
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[200] flex items-center justify-center p-4">
+      <div className={`w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border shadow-2xl animate-in zoom-in-95 duration-300 pb-20 sm:pb-0 ${
         isDark ? 'bg-slate-900/95 border-white/5 shadow-black/50' : 'bg-white/95 border-slate-200 shadow-slate-200/50'
       }`}>
         {/* Header */}

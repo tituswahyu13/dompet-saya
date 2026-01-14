@@ -44,7 +44,9 @@ CREATE TRIGGER on_auth_user_created_subscription
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user_subscription();
 
 -- 6. Helper View: Status Langganan yang mudah dibaca
-CREATE OR REPLACE VIEW public.vw_user_subscription_status AS
+-- Menggunakan security_invoker agar menghormati RLS tabel asal
+CREATE OR REPLACE VIEW public.vw_user_subscription_status 
+WITH (security_invoker = true) AS
 SELECT 
     user_id,
     tier,
