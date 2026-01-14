@@ -28,7 +28,7 @@ export default function Auth({ isDark }: AuthProps) {
           password,
         });
         if (error) throw error;
-        setMessage({ type: 'success', text: 'Registration successful! Please check your email for confirmation.' });
+        setMessage({ type: 'success', text: 'Pendaftaran berhasil! Silakan periksa email Anda untuk konfirmasi.' });
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -37,7 +37,7 @@ export default function Auth({ isDark }: AuthProps) {
         if (error) throw error;
       }
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'An error occurred' });
+      setMessage({ type: 'error', text: error.message || 'Terjadi kesalahan' });
     } finally {
       setLoading(false);
     }
@@ -61,9 +61,9 @@ export default function Auth({ isDark }: AuthProps) {
             <img src="/DompetSaya.svg" alt="Dompet Saya Mascot" className="w-32 h-32 object-contain p-2" />
           </div>
           <h2 className={`text-2xl font-black uppercase tracking-[0.2em] ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            {isSignUp ? 'New Account' : 'Gateway Access'}
+            {isSignUp ? 'Buat Akun' : 'Masuk Aplikasi'}
           </h2>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Dompet Saya Pro - Auth Protocol</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Dompet Saya Pro - Protokol Keamanan</p>
         </div>
 
         {message && (
@@ -78,11 +78,11 @@ export default function Auth({ isDark }: AuthProps) {
 
         <form onSubmit={handleAuth} className="space-y-6">
           <div className="space-y-2">
-            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Identity Marker (Email)</label>
+            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Identitas Pengguna (Email)</label>
             <input 
               type="email" 
               required
-              placeholder="user@nexus.io"
+              placeholder="nama@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`w-full p-4 rounded-2xl border outline-none transition-all font-bold text-sm ${
@@ -92,7 +92,7 @@ export default function Auth({ isDark }: AuthProps) {
           </div>
 
           <div className="space-y-2">
-            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Security Key (Password)</label>
+            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Kunci Keamanan (Password)</label>
             <div className="relative">
               <input 
                 type={showPassword ? "text" : "password"} 
@@ -133,9 +133,9 @@ export default function Auth({ isDark }: AuthProps) {
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                Processing...
+                Memproses...
               </span>
-            ) : isSignUp ? 'Initiate Register' : 'Execute Login'}
+            ) : isSignUp ? 'Daftar Sekarang' : 'Masuk Sekarang'}
           </button>
         </form>
 
@@ -144,7 +144,7 @@ export default function Auth({ isDark }: AuthProps) {
             onClick={() => { setIsSignUp(!isSignUp); setMessage(null); }}
             className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-rose-400' : 'text-slate-500 hover:text-rose-500'} transition-all`}
           >
-            {isSignUp ? 'Already have access? Back to Gateway' : "Don't have access? Create Identity"}
+            {isSignUp ? 'Sudah punya akses? Kembali ke Login' : "Belum punya akses? Buat Identitas Baru"}
           </button>
         </div>
       </div>
