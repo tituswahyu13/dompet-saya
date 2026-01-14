@@ -4,25 +4,26 @@
   "description": "Financial Intelligence Platform",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
+  "background_color": "#020617",
   "theme_color": "#f43f5e",
   "icons": [
     {
       "src": "/DompetSayaIcon.svg",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "/DompetSayaIcon.svg",
-      "sizes": "any",
+      "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
       "src": "/DompetSayaIcon.svg",
-      "sizes": "any",
+      "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "maskable"
+    },
+    {
+      "src": "/DompetSaya.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }
