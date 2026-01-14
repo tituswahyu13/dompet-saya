@@ -13,6 +13,7 @@ import Navigation from '@/components/Navigation';
 import TrialBanner from '@/components/TrialBanner';
 import { useSubscription } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
+import AppTour from '@/components/AppTour';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Wallet, Target, LogOut, Sun, Moon, CreditCard, ArrowUpRight, ArrowDownRight, PiggyBank, Percent, LayoutDashboard, ChevronRight, BarChart3, TrendingUp as TrendIcon, Bot, Building2, Smartphone, Coins } from 'lucide-react';
@@ -204,7 +205,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               <Navigation isDark={isDark} />
             </div>
             <div className="h-6 w-px bg-slate-400/20 hidden md:block" />
-            <div className="flex items-center gap-1.5 sm:gap-4">
+            <div id="tour-theme" className="flex items-center gap-1.5 sm:gap-4">
               <button 
                 onClick={() => setIsDark(!isDark)}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-slate-800 text-amber-400 border border-white/5' : 'bg-slate-100 text-slate-500 border border-slate-200'} hover:scale-105 active:scale-95`}
@@ -215,28 +216,32 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                   <Moon size={20} className="sm:w-5 sm:h-5" />
                 )}
               </button>
-              <NotificationCenter 
-                transactions={filteredTransactions}
-                budgets={budgets}
-                goals={goals}
-                recurringTemplates={recurringTemplates}
-                wallets={wallets}
-                isDark={isDark}
-              />
-              <button 
-                onClick={() => setShowGoalManager(true)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20' : 'bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100'} hover:scale-105 active:scale-95`}
-                title="Financial Goals"
-              >
-                <Target size={20} className="sm:w-5 sm:h-5" />
-              </button>
-              <button 
-                onClick={() => setShowWalletManager(true)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-pink-500/10 text-pink-400 border border-pink-500/20 hover:bg-pink-500/20' : 'bg-pink-50 text-pink-600 border border-pink-100 hover:bg-pink-100'} hover:scale-105 active:scale-95`}
-                title="Manage Wallets"
-              >
-                <Wallet size={20} className="sm:w-5 sm:h-5" />
-              </button>
+              <div id="tour-notifications">
+                <NotificationCenter 
+                  transactions={filteredTransactions}
+                  budgets={budgets}
+                  goals={goals}
+                  recurringTemplates={recurringTemplates}
+                  wallets={wallets}
+                  isDark={isDark}
+                />
+              </div>
+              <div id="tour-actions" className="flex items-center gap-1.5 sm:gap-4">
+                <button 
+                  onClick={() => setShowGoalManager(true)}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20' : 'bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100'} hover:scale-105 active:scale-95`}
+                  title="Financial Goals"
+                >
+                  <Target size={20} className="sm:w-5 sm:h-5" />
+                </button>
+                <button 
+                  onClick={() => setShowWalletManager(true)}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-pink-500/10 text-pink-400 border border-pink-500/20 hover:bg-pink-500/20' : 'bg-pink-50 text-pink-600 border border-pink-100 hover:bg-pink-100'} hover:scale-105 active:scale-95`}
+                  title="Manage Wallets"
+                >
+                  <Wallet size={20} className="sm:w-5 sm:h-5" />
+                </button>
+              </div>
               <button 
                 onClick={async () => {
                   const { error } = await supabase.auth.signOut();
@@ -254,7 +259,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-32 sm:py-12 relative z-10 space-y-8 sm:y-12">
         <TrialBanner isDark={isDark} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
+        <div id="tour-balance" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] sm:col-span-2 lg:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
             <div className="flex justify-between items-center mb-3 sm:mb-4">
               <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Total Saldo</p>
@@ -316,7 +321,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
           </div>
         </div>
 
-        <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <section id="tour-wallets" className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
           <div className="flex items-center gap-3 mb-8 px-1">
             <div className="w-1.5 h-6 bg-rose-600 rounded-full" />
             <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Arsitektur Wallet</h2>
@@ -363,7 +368,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         </section>
 
         {/* Goals Section */}
-        <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <section id="tour-goals" className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
           <div className="flex justify-between items-center mb-8 px-1">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
@@ -408,7 +413,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         </section>
 
         {/* Advanced Analytics Section */}
-        <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <section id="tour-intelligence" className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
           <div className="flex justify-between items-center mb-8 px-1">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
@@ -445,7 +450,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         </section>
 
         {/* AI Insights Section */}
-        <section className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <section id="tour-ai" className={`p-8 rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
           <div className="flex items-center gap-3 mb-8 px-1">
             <div className="w-1.5 h-6 bg-purple-500 rounded-full" />
             <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter flex items-center gap-2`}>
@@ -464,7 +469,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
 
         <div className="space-y-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <div className="lg:col-span-4">
+            <div id="tour-budget" className="lg:col-span-4">
               <section>
                 <div className="flex items-center gap-2 mb-6 px-1">
                   <div className="w-1.5 h-6 bg-rose-600 rounded-full" />
@@ -473,7 +478,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                 <BudgetTracker transactions={filteredTransactions} isDark={isDark} user={user} />
               </section>
             </div>
-            <div className="lg:col-span-8 space-y-8">
+            <div id="tour-ledger" className="lg:col-span-8 space-y-8">
               <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-3">
                   <div className="w-1.5 h-6 bg-slate-400 rounded-full" />
@@ -540,6 +545,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         message="Akses visualisasi data yang mendalam dengan grafik tren 6 bulan dan analisis kategori yang lebih detail. Upgrade ke Pro untuk fitur ini!"
         feature="Advanced Analytics"
       />
+      <AppTour isDark={isDark} />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import RecurringManager from '@/components/RecurringManager';
 import ExportManager from '@/components/ExportManager';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import NotificationCenter from '@/components/NotificationCenter';
+import AppTour from '@/components/AppTour';
 import { User } from '@supabase/supabase-js';
 import { useSubscription } from '@/hooks/useSubscription';
 import { subMonths } from 'date-fns';
@@ -151,7 +152,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
 
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 space-y-12 pb-32 sm:pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-4 lg:sticky lg:top-28 h-fit space-y-8">
+          <div id="tour-tx-form" className="lg:col-span-4 lg:sticky lg:top-28 h-fit space-y-8">
             <section>
               <div className="flex items-center justify-between mb-6 px-1">
                 <div className="flex items-center gap-2">
@@ -159,7 +160,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                   <h2 className={`text-lg font-black uppercase tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>{editingTransaction ? 'Koreksi Data' : isTransferMode ? 'Transfer Dana' : 'Transaksi Baru'}</h2>
                 </div>
                 {!editingTransaction && (
-                  <button onClick={() => setIsTransferMode(!isTransferMode)} className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-rose-500/10 text-rose-500 border-rose-500/20">{isTransferMode ? 'Ke Transaksi' : 'Ke Transfer'}</button>
+                  <button id="tour-tx-mode" onClick={() => setIsTransferMode(!isTransferMode)} className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-rose-500/10 text-rose-500 border-rose-500/20">{isTransferMode ? 'Ke Transaksi' : 'Ke Transfer'}</button>
                 )}
               </div>
               {isTransferMode && !editingTransaction ? (
@@ -178,7 +179,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
               </div>
               
               <div className="flex flex-wrap w-full md:w-auto items-center gap-3">
-                <div className="flex items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5">
+                <div id="tour-tx-filters" className="flex items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5">
                   <select value={filterMonth} onChange={(e) => setFilterMonth(e.target.value)} className="p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none">
                     <option value="All">Semua Bulan</option>
                     {['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((m, i) => <option key={m} value={(i + 1).toString()}>{m}</option>)}
@@ -190,12 +191,12 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                 </div>
                 <div className="flex flex-1 md:flex-none items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5">
                   <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex-1 md:w-32 p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none" />
-                  <button onClick={exportToCSV} className="p-2 px-4 text-[10px] font-black bg-rose-600/10 text-rose-500 uppercase tracking-widest rounded-xl hover:bg-rose-600 hover:text-white transition-all">CSV</button>
+                  <button id="tour-tx-export" onClick={exportToCSV} className="p-2 px-4 text-[10px] font-black bg-rose-600/10 text-rose-500 uppercase tracking-widest rounded-xl hover:bg-rose-600 hover:text-white transition-all">CSV</button>
                 </div>
               </div>
             </div>
 
-            <div className={`rounded-[2.5rem] border overflow-hidden backdrop-blur-sm transition-all duration-500 ${isDark ? 'glass-dark border-white/5 shadow-2xl shadow-black/40' : 'glass border-white shadow-xl shadow-slate-200/50'}`}>
+            <div id="tour-tx-list" className={`rounded-[2.5rem] border overflow-hidden backdrop-blur-sm transition-all duration-500 ${isDark ? 'glass-dark border-white/5 shadow-2xl shadow-black/40' : 'glass border-white shadow-xl shadow-slate-200/50'}`}>
               {loading ? (
                 <div className="p-20 text-center animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Syncing Cloud Ledger...</div>
               ) : filteredTransactions.length === 0 ? (
@@ -266,6 +267,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
           onClose={() => setShowExportManager(false)}
         />
       )}
+      <AppTour isDark={isDark} />
     </div>
   );
 }
