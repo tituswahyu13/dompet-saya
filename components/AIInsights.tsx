@@ -1,7 +1,9 @@
 "use client"
 import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, subMonths, differenceInDays } from 'date-fns';
-import { Sparkles, Lightbulb, AlertCircle, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Lightbulb, AlertCircle, TrendingUp, CheckCircle2, Lock, Bot } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
+import Link from 'next/link';
 
 interface Transaction {
   id: string;
@@ -20,6 +22,9 @@ interface AIInsightsProps {
 }
 
 export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
+  const { subscription } = useSubscription();
+  const isPro = subscription?.is_pro;
+
   // Spending Prediction (Next Month)
   const spendingPrediction = useMemo(() => {
     const last3Months = [0, 1, 2].map(i => {
@@ -39,7 +44,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
     const avgSpending = last3Months.reduce((sum, val) => sum + val, 0) / last3Months.length;
     
     // Trend analysis (is spending increasing or decreasing?)
-    const trend = (last3Months[0] - last3Months[2]) / last3Months[2];
+    const trend = (last3Months[0] - last3Months[2]) / (last3Months[2] || 1);
     const predictedSpending = avgSpending * (1 + trend);
     
     return {
@@ -98,25 +103,25 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
       const currentSaving = totalIncome - totalOutcome;
       const gap = targetSaving - currentSaving;
       recommendations.push(
-        `Targetkan rasio tabungan 20%. Anda perlu menabung tambahan Rp ${Math.round(gap / 1000)}rb/bulan.`
+        `Saving rate Anda ${savingRate.toFixed(0)}%. Tambah tabungan Rp ${Math.round(gap / 1000)}rb lagi untuk capai target ideal 20%.`
       );
     }
     
-    return recommendations.slice(0, 4); // Top 4 recommendations
+    return recommendations;
   }, [transactions]);
 
-  // Anomaly Detection
+  // Spend Anomalies
   const anomalies = useMemo(() => {
-    const detected: any[] = [];
     const last30Days = transactions.filter(t => {
       const txDate = new Date(t.tanggal);
       return differenceInDays(new Date(), txDate) <= 30 && !t.is_transfer && t.outcome > 0;
     });
     
-    // Calculate average and standard deviation
-    const amounts = last30Days.map(t => t.outcome);
-    const avg = amounts.reduce((sum, val) => sum + val, 0) / amounts.length;
-    const variance = amounts.reduce((sum, val) => sum + Math.pow(val - avg, 2), 0) / amounts.length;
+    const avg = last30Days.reduce((sum, t) => sum + t.outcome, 0) / (last30Days.length || 1);
+    const detected: any[] = [];
+    
+    // Standard deviation for anomaly detection
+    const variance = last30Days.reduce((sum, t) => sum + Math.pow(t.outcome - avg, 2), 0) / (last30Days.length || 1);
     const stdDev = Math.sqrt(variance);
     
     // Find outliers (more than 2 standard deviations from mean)
@@ -126,7 +131,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
           date: format(new Date(t.tanggal), 'dd MMM'),
           description: t.keterangan || t.kategori,
           amount: t.outcome,
-          deviation: ((t.outcome - avg) / avg * 100).toFixed(0)
+          deviation: ((t.outcome - avg) / (avg || 1) * 100).toFixed(0)
         });
       }
     });
@@ -163,8 +168,17 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       {/* Spending Prediction */}
-      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-gradient-to-br from-rose-900/20 to-pink-900/20 border-rose-500/20' : 'bg-gradient-to-br from-rose-50 to-pink-50 border-rose-200'}`}>
-        <div className="flex items-start gap-4">
+      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border relative overflow-hidden group ${isDark ? 'bg-gradient-to-br from-rose-900/20 to-pink-900/20 border-rose-500/20' : 'bg-gradient-to-br from-rose-50 to-pink-50 border-rose-200'}`}>
+        {!isPro && (
+          <div className="absolute top-4 right-4 z-20">
+             <div className="px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-full flex items-center gap-1">
+                <Lock size={10} className="text-rose-500" />
+                <span className="text-[8px] font-black text-rose-500 uppercase tracking-widest">PRO</span>
+              </div>
+          </div>
+        )}
+        
+        <div className={`flex items-start gap-4 ${!isPro ? 'blur-sm select-none pointer-events-none opacity-40' : ''}`}>
           <div className={`${isDark ? 'text-rose-400' : 'text-rose-600'}`}>
             <Sparkles size={32} strokeWidth={2.5} className="sm:w-10 sm:h-10" />
           </div>
@@ -191,34 +205,62 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Saving Recommendations */}
-      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-white border-slate-200'}`}>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="text-rose-500">
-            <Lightbulb size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
-          </div>
-          <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            Rekomendasi Pintar
-          </h3>
-        </div>
-        {savingRecommendations.length === 0 ? (
-          <p className={`text-[11px] sm:text-sm italic ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-            Bagus sekali! Pengeluaran Anda terlihat optimal.
-          </p>
-        ) : (
-          <ul className="space-y-2 sm:space-y-3">
-            {savingRecommendations.map((rec, i) => (
-              <li key={i} className="flex gap-2 sm:gap-3">
-                <CheckCircle2 size={14} className="text-green-500 mt-0.5 flex-shrink-0" strokeWidth={3} />
-                <span className={`text-[11px] sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{rec}</span>
-              </li>
-            ))}
-          </ul>
+        {!isPro && (
+          <Link href="/pricing" className="absolute inset-0 z-30 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-black/5 transition-colors">
+            <Bot className="text-rose-500 mb-2 animate-bounce" size={24} />
+            <h4 className="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-1">Fitur Prediksi Pro</h4>
+            <p className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">Upgrade untuk melihat proyeksi keuangan bulan depan.</p>
+          </Link>
         )}
       </div>
 
+      {/* Saving Recommendations */}
+      <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border relative overflow-hidden group ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-white border-slate-200'}`}>
+        {!isPro && (
+          <div className="absolute top-4 right-4 z-20">
+             <div className="px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-full flex items-center gap-1">
+                <Lock size={10} className="text-rose-500" />
+                <span className="text-[8px] font-black text-rose-500 uppercase tracking-widest">PRO</span>
+              </div>
+          </div>
+        )}
+
+        <div className={`flex flex-col h-full ${!isPro ? 'blur-[3px] select-none pointer-events-none opacity-40' : ''}`}>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="text-rose-500">
+              <Lightbulb size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
+            </div>
+            <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              Rekomendasi Pintar
+            </h3>
+          </div>
+          {savingRecommendations.length === 0 ? (
+            <p className={`text-[11px] sm:text-sm italic ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              Bagus sekali! Pengeluaran Anda terlihat optimal.
+            </p>
+          ) : (
+            <ul className="space-y-2 sm:space-y-3">
+              {savingRecommendations.map((rec, i) => (
+                <li key={i} className="flex gap-2 sm:gap-3">
+                  <CheckCircle2 size={14} className="text-green-500 mt-0.5 flex-shrink-0" strokeWidth={3} />
+                  <span className={`text-[11px] sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{rec}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {!isPro && (
+          <Link href="/pricing" className="absolute inset-0 z-30 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-black/5 transition-colors">
+            <Sparkles className="text-yellow-500 mb-2 animate-pulse" size={24} />
+            <h4 className="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-1">Saran Penghematan AI</h4>
+            <p className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">Gunakan Pro untuk rekomendasi hemat yang dipersonalisasi.</p>
+          </Link>
+        )}
+      </div>
+
+      {/* Anomalies and Patterns are still free in this demo for better UX balance */}
       {/* Anomalies */}
       {anomalies.length > 0 && (
         <div className={`p-5 sm:p-6 rounded-2xl sm:rounded-[2.5rem] border ${isDark ? 'bg-orange-900/20 border-orange-500/20' : 'bg-orange-50 border-orange-200'}`}>

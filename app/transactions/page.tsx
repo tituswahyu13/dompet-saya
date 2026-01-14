@@ -13,8 +13,12 @@ import ExportManager from '@/components/ExportManager';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import NotificationCenter from '@/components/NotificationCenter';
 import { User } from '@supabase/supabase-js';
+import { useSubscription } from '@/hooks/useSubscription';
+import { subMonths } from 'date-fns';
 
 function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
+  const { subscription } = useSubscription();
+  const isPro = subscription?.is_pro;
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,13 +57,18 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
   };
 
   const getFilteredTransactions = () => {
+    // Historical data limit: 2 months for free users
+    const twoMonthsAgo = subMonths(new Date(), 2);
+    
     return transactions.filter(t => {
       const date = new Date(t.tanggal);
       const matchesSearch = t.keterangan.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesMonth = filterMonth === 'All' || (date.getMonth() + 1).toString() === filterMonth;
       const matchesYear = filterYear === 'All' || date.getFullYear().toString() === filterYear;
       const matchesWallet = selectedWalletFilter === 'All' || t.wallet_id === selectedWalletFilter;
-      return matchesSearch && matchesMonth && matchesYear && matchesWallet;
+      const matchesHistoricalLimit = isPro || date >= twoMonthsAgo; // Free users can only see last 2 months
+      
+      return matchesSearch && matchesMonth && matchesYear && matchesWallet && matchesHistoricalLimit;
     });
   };
 

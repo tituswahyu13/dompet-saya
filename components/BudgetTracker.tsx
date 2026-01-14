@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-import { Check, Settings, AlertTriangle } from 'lucide-react';
+import { Check, Settings, AlertTriangle, Lock } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
+import Link from 'next/link';
 
 interface Transaction {
   kategori: string;
@@ -23,6 +25,8 @@ const DEFAULT_BUDGETS = [
 ];
 
 export default function BudgetTracker({ transactions, isDark, user }: { transactions: Transaction[], isDark: boolean, user: User }) {
+  const { subscription } = useSubscription();
+  const isPro = subscription?.is_pro;
   const [budgets, setBudgets] = useState<Budget[]>(DEFAULT_BUDGETS);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -177,9 +181,18 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
           const spent = spendingByCategory[budget.kategori] || 0;
           const percent = Math.min((spent / budget.limit) * 100, 100);
           const isOver = spent > budget.limit;
+          const isLocked = !isPro && index >= 2; // Lock categories beyond index 1 (3rd category onwards)
 
           return (
-            <div key={budget.kategori} className="group">
+            <div key={budget.kategori} className={`group relative ${isLocked ? 'opacity-40' : ''}`}>
+              {isLocked && (
+                <Link href="/pricing" className="absolute inset-0 z-10 flex items-center justify-center bg-black/5 rounded-xl backdrop-blur-[1px] cursor-pointer hover:bg-black/10 transition-colors">
+                  <div className="flex items-center gap-2 px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-full">
+                    <Lock size={10} className="text-rose-500" />
+                    <span className="text-[8px] font-black text-rose-500 uppercase tracking-widest">PRO</span>
+                  </div>
+                </Link>
+              )}
               <div className="flex justify-between items-start mb-2.5 px-0.5">
                 <div className="flex-1">
                   <h4 className={`text-[11px] font-black uppercase tracking-[0.15em] mb-1.5 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{budget.kategori}</h4>

@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import MinimalistIcon from './MinimalistIcon';
-import { X, Pencil, Trash2, Plus, CreditCard as CardIcon } from 'lucide-react';
+import { X, Pencil, Trash2, Plus, CreditCard as CardIcon, Sparkles } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
+import UpgradeModal from './UpgradeModal';
 
 interface Wallet {
   id: string;
@@ -28,10 +30,12 @@ const ICON_OPTIONS = ['💵', '🏦', '📱', '💳', '💰', '📈', '🏪', '�
 const COLOR_OPTIONS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#14b8a6', '#6366f1'];
 
 export default function WalletManager({ user, isDark, onClose }: { user: User, isDark: boolean, onClose: () => void }) {
+  const { subscription } = useSubscription();
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -61,6 +65,12 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Restriction: Max 3 wallets for free users
+    if (!editingId && !subscription?.is_pro && wallets.length >= 3) {
+      setShowUpgradeModal(true);
+      return;
+    }
     
     if (editingId) {
       // Update existing wallet
@@ -389,6 +399,15 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
           )}
         </div>
       </div>
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        isDark={isDark}
+        title="Batas Dompet Tercapai"
+        message="Pengguna Free hanya dapat memiliki maksimal 3 dompet. Upgrade ke Pro untuk membuat dompet tanpa batas dan kelola keuangan lebih fleksibel!"
+        feature="Unlimited Wallets"
+      />
     </div>
   );
 }

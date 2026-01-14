@@ -7,12 +7,18 @@ import { User } from '@supabase/supabase-js';
 
 interface AuthWrapperProps {
   children: (user: User) => React.ReactNode;
-  isDark: boolean;
+  isDark?: boolean;
 }
 
-export default function AuthWrapper({ children, isDark }: AuthWrapperProps) {
+export default function AuthWrapper({ children, isDark: isDarkProp }: AuthWrapperProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    setIsDark(isDarkProp !== undefined ? isDarkProp : savedTheme === 'dark');
+  }, [isDarkProp]);
 
   useEffect(() => {
     // Check active session

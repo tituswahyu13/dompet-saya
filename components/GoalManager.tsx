@@ -4,7 +4,9 @@ import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import ConfirmationModal from './ConfirmationModal';
 import MinimalistIcon from './MinimalistIcon';
-import { Pencil, Trash2, Calendar } from 'lucide-react';
+import { Pencil, Trash2, Calendar, Sparkles } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
+import UpgradeModal from './UpgradeModal';
 
 interface Goal {
   id: string;
@@ -22,12 +24,14 @@ const ICON_OPTIONS = ['🎯', '🏠', '🚗', '🏖️', '💍', '🎓', '💻',
 const COLOR_OPTIONS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
 
 export default function GoalManager({ user, isDark, onClose }: { user: User, isDark: boolean, onClose: () => void }) {
+  const { subscription } = useSubscription();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [wallets, setWallets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState<Goal | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -68,6 +72,13 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Restriction: Max 2 goals for free users
+    if (!editingId && !subscription?.is_pro && goals.length >= 2) {
+      setShowUpgradeModal(true);
+      return;
+    }
+
     setLoading(true);
 
     const payload = {
@@ -343,6 +354,15 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
         onCancel={() => setConfirmingDelete(null)}
         isDark={isDark}
         type="danger"
+      />
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        isDark={isDark}
+        title="Batas Target Tercapai"
+        message="Pengguna Free hanya dapat memiliki maksimal 2 target keuangan. Upgrade ke Pro untuk membuat target tanpa batas dan raih semua impian finansial Anda!"
+        feature="Unlimited Goals"
       />
     </div>
   );

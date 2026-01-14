@@ -10,6 +10,7 @@ import AdvancedCharts from '@/components/AdvancedCharts';
 import NotificationCenter from '@/components/NotificationCenter';
 import AIInsights from '@/components/AIInsights';
 import Navigation from '@/components/Navigation';
+import TrialBanner from '@/components/TrialBanner';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Wallet, Target, LogOut, Sun, Moon, CreditCard, ArrowUpRight, ArrowDownRight, PiggyBank, Percent, LayoutDashboard, ChevronRight, BarChart3, TrendingUp as TrendIcon, Bot, Building2, Smartphone, Coins } from 'lucide-react';
@@ -247,6 +248,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10 space-y-8 sm:y-12">
+        <TrialBanner isDark={isDark} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
           <div className={`p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] sm:col-span-2 lg:col-span-1 shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-slate-200'}`}>
             <div className="flex justify-between items-center mb-3 sm:mb-4">

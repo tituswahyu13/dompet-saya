@@ -4,6 +4,9 @@ import { parse, unparse } from 'papaparse';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
+import { Lock } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
+import UpgradeModal from './UpgradeModal';
 
 interface Transaction {
   id: string;
@@ -25,10 +28,14 @@ interface ExportManagerProps {
 }
 
 export default function ExportManager({ transactions, wallets, isDark, onClose }: ExportManagerProps) {
+  const { subscription } = useSubscription();
+  const isPro = subscription?.is_pro;
+  
   const [exportType, setExportType] = useState<'csv' | 'pdf'>('csv');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [selectedWallet, setSelectedWallet] = useState('all');
   const [includeTransfers, setIncludeTransfers] = useState(true);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const getFilteredTransactions = () => {
     return transactions.filter(t => {
@@ -167,6 +174,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
     pdf.text('Dompet Saya - Your Financial Intelligence Partner', pageWidth / 2, pageHeight - 10, { align: 'center' });
     
     pdf.save(`laporan_keuangan_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+    pdf.save(`laporan_keuangan_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
     alert('✅ PDF berhasil di-download!');
   };
 
@@ -198,7 +206,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
               </div>
             </div>
             <button onClick={onClose} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
             </button>
           </div>
         </div>
@@ -221,15 +229,26 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
                 <div className="text-[8px] opacity-60 mt-1">Spreadsheet format</div>
               </button>
               <button
-                onClick={() => setExportType('pdf')}
-                className={`p-4 rounded-2xl border transition-all ${
+                onClick={() => {
+                  if (isPro) setExportType('pdf');
+                  else setShowUpgradeModal(true);
+                }}
+                className={`p-4 rounded-2xl border transition-all relative overflow-hidden ${
                   exportType === 'pdf'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-lg'
+                    ? 'bg-rose-600 text-white border-rose-600 shadow-lg'
                     : isDark ? 'bg-slate-800 border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-500'
-                }`}
+                } ${!isPro ? 'opacity-70' : ''}`}
               >
+                {!isPro && (
+                  <div className="absolute top-2 right-2">
+                    <Lock size={12} className="text-rose-500" />
+                  </div>
+                )}
                 <div className="text-2xl mb-2">📄</div>
-                <div className="text-xs font-black uppercase">PDF Report</div>
+                <div className="text-xs font-black uppercase flex items-center justify-center gap-1">
+                  PDF Report
+                  {!isPro && <span className="text-[8px] bg-rose-500 text-white px-1 rounded">PRO</span>}
+                </div>
                 <div className="text-[8px] opacity-60 mt-1">Professional format</div>
               </button>
             </div>
@@ -298,12 +317,23 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
           <button
             onClick={handleExport}
             disabled={getFilteredTransactions().length === 0}
-            className="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-emerald-500/20 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`w-full py-4 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+              exportType === 'pdf' ? 'bg-gradient-to-r from-rose-600 to-pink-600 shadow-rose-500/20' : 'bg-gradient-to-r from-emerald-600 to-teal-600 shadow-emerald-500/20'
+            }`}
           >
             {exportType === 'csv' ? '📊 Download CSV' : '📄 Generate PDF Report'}
           </button>
         </div>
       </div>
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        isDark={isDark}
+        title="Fitur PDF Professional"
+        message="Export laporan keuangan dalam format PDF yang profesional hanya tersedia untuk pengguna Pro. Dapatkan laporan lengkap dengan visualisasi data yang menarik!"
+        feature="PDF Export"
+      />
     </div>
   );
 }

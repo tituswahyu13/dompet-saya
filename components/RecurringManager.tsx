@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import ConfirmationModal from './ConfirmationModal';
+import { Sparkles } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
+import UpgradeModal from './UpgradeModal';
 
 interface RecurringTemplate {
   id: string;
@@ -26,12 +29,15 @@ const CATEGORIES = {
 };
 
 export default function RecurringManager({ user, isDark, onClose }: { user: User, isDark: boolean, onClose: () => void }) {
+  const { subscription } = useSubscription();
+  const isPro = subscription?.is_pro;
   const [templates, setTemplates] = useState<RecurringTemplate[]>([]);
   const [wallets, setWallets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmingAction, setConfirmingAction] = useState<{ type: 'generate' | 'delete', template: RecurringTemplate } | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   
   const [formData, setFormData] = useState({
     keterangan: '',
@@ -77,6 +83,13 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Restriction: Max 1 recurring transaction for free users
+    if (!editingId && !isPro && templates.length >= 1) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    
     setLoading(true);
 
     const payload = {
@@ -431,6 +444,15 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
         onCancel={() => setConfirmingAction(null)}
         isDark={isDark}
         type={confirmingAction?.type === 'generate' ? 'info' : 'danger'}
+      />
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        isDark={isDark}
+        title="Batas Transaksi Berulang Tercapai"
+        message="Pengguna Free hanya dapat memiliki maksimal 1 transaksi berulang. Upgrade ke Pro untuk membuat transaksi berulang tanpa batas dan otomatisasi keuangan Anda!"
+        feature="Unlimited Recurring"
       />
     </div>
   );
