@@ -49,25 +49,25 @@ export default function PWAInstallPrompt({ isDark }: { isDark: boolean }) {
       <div className={`p-6 rounded-[2.5rem] border shadow-2xl flex items-center gap-4 ${
         isDark ? 'glass-dark border-white/10 shadow-black/50' : 'glass border-white shadow-slate-200/50'
       }`}>
-        <div className="w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-lg shadow-blue-500/20">
-          <img src="/icon-192.png" alt="Logo" className="w-10 h-10 object-contain" />
+        <div className="w-14 h-14 bg-gradient-to-tr from-rose-500 to-pink-600 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-lg shadow-rose-500/20">
+          <img src="/DompetSayaIcon.svg" alt="Logo" className="w-10 h-10 object-contain" />
         </div>
         
         <div className="flex-1">
           <h3 className={`text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            Install Dompet Saya Pro
+            Install Aplikasi
           </h3>
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-            Access your finances faster!
+            Akses keuangan lebih cepat & aman!
           </p>
         </div>
 
         <div className="flex flex-col gap-2">
           <button 
             onClick={handleInstall}
-            className="px-4 py-2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30"
+            className="px-4 py-2 bg-rose-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-500/30"
           >
-            Install
+            Instal
           </button>
           <button 
             onClick={() => setShowPrompt(false)}
