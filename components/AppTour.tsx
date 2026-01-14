@@ -33,17 +33,17 @@ const DASHBOARD_STEPS: TourStep[] = [
     position: 'bottom'
   },
   {
+    id: 'actions',
+    targetId: 'tour-actions',
+    title: 'Kendali Cepat',
+    content: 'Kelola semua Dompet/Rekening dan Target Keuangan Anda secara terpusat melalui baris menu ini.',
+    position: 'bottom'
+  },
+  {
     id: 'balance',
     targetId: 'tour-balance',
     title: 'Monitor Arus Kas',
     content: 'Lihat ringkasan Saldo, Pemasukan, dan Pengeluaran Anda secara instan. Gunakan toggle "Mode Aset" untuk melihat total kekayaan Anda.',
-    position: 'bottom'
-  },
-  {
-    id: 'actions',
-    targetId: 'tour-actions',
-    title: 'Kendali Cepat',
-    content: 'Kelola Dompet, Target Keuangan, Transaksi Berulang, dan Ekspor Laporan PDF dalam satu baris menu yang efisien.',
     position: 'bottom'
   },
   {
@@ -61,13 +61,6 @@ const DASHBOARD_STEPS: TourStep[] = [
     position: 'top'
   },
   {
-    id: 'budget',
-    targetId: 'tour-budget',
-    title: 'Analisis Anggaran',
-    content: 'Monitor sisa dana Anda di berbagai kategori pengeluaran secara visual agar tidak "boncos" di akhir bulan.',
-    position: 'top'
-  },
-  {
     id: 'intelligence',
     targetId: 'tour-intelligence',
     title: 'Data Intelligence',
@@ -82,10 +75,24 @@ const DASHBOARD_STEPS: TourStep[] = [
     position: 'top'
   },
   {
+    id: 'budget',
+    targetId: 'tour-budget',
+    title: 'Analisis Anggaran',
+    content: 'Monitor sisa dana Anda di berbagai kategori pengeluaran secara visual agar tidak "boncos" di akhir bulan.',
+    position: 'top'
+  },
+  {
     id: 'ledger',
     targetId: 'tour-ledger',
     title: 'Cloud Ledger',
     content: 'Catatan ringkasan transaksi terbaru Anda. Klik "Lihat Semua" untuk masuk ke manajemen transaksi yang lebih lengkap.',
+    position: 'top'
+  },
+  {
+    id: 'goto-transactions',
+    targetId: 'tour-goto-transactions',
+    title: 'Pusat Kendali Ledger',
+    content: 'Ingin mengelola data lebih detail? Klik di sini untuk masuk ke halaman Ledger lengkap dengan fitur filter dan ekspor.',
     position: 'top'
   }
 ];
@@ -97,6 +104,13 @@ const TRANSACTION_STEPS: TourStep[] = [
     title: 'Manajemen Transaksi 📝',
     content: 'Selamat datang di pusat kendali data. Di sini Anda bisa mengelola setiap rupiah yang masuk dan keluar dengan detail.',
     position: 'center'
+  },
+  {
+    id: 'tx-recurring',
+    targetId: 'tour-tx-recurring',
+    title: 'Mesin Transaksi Otomatis',
+    content: 'Buat template untuk transaksi rutin seperti tagihan bulanan atau tabungan otomatis agar Anda tidak perlu mencatat manual setiap saat.',
+    position: 'bottom'
   },
   {
     id: 'tx-form',
@@ -262,14 +276,31 @@ export default function AppTour({ isDark }: { isDark: boolean }) {
           !targetRect ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm' : ''
         }`}
         style={targetRect ? {
-          top: step.position === 'bottom' 
-            ? targetRect.bottom + 12 
-            : step.position === 'top' 
-              ? targetRect.top - (window.innerWidth < 640 ? 260 : 220)
-              : targetRect.top,
+          top: (() => {
+            const viewportHeight = window.innerHeight;
+            const tooltipHeight = window.innerWidth < 640 ? 260 : 220;
+            const gap = 12;
+            
+            if (step.position === 'bottom') {
+              const pos = targetRect.bottom + gap;
+              // If too close to bottom, try to push up
+              if (pos + tooltipHeight > viewportHeight - 80) { // 80px for mobile nav
+                return Math.max(20, targetRect.top - tooltipHeight - gap);
+              }
+              return pos;
+            } else if (step.position === 'top') {
+              const pos = targetRect.top - tooltipHeight - gap;
+              // If too close to top, push down
+              if (pos < 20) {
+                return targetRect.bottom + gap;
+              }
+              return pos;
+            }
+            return targetRect.top;
+          })(),
           left: window.innerWidth < 640 
             ? '50%' 
-            : Math.max(160, Math.min(window.innerWidth - 160, targetRect.left + (targetRect.width / 2))),
+            : Math.max(180, Math.min(window.innerWidth - 180, targetRect.left + (targetRect.width / 2))),
           transform: 'translateX(-50%)',
           width: window.innerWidth < 640 ? 'calc(100vw - 32px)' : '320px',
           maxWidth: '320px',

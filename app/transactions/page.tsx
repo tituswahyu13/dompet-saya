@@ -139,7 +139,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                 wallets={wallets}
                 isDark={isDark}
               />
-              <button onClick={() => setShowRecurringManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-rose-600/10 text-rose-400 border-rose-500/20 hover:bg-rose-600/20' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100'} hover:scale-105 transition-all`} title="Recurring Engine">
+              <button id="tour-tx-recurring" onClick={() => setShowRecurringManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-rose-600/10 text-rose-400 border-rose-500/20 hover:bg-rose-600/20' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100'} hover:scale-105 transition-all`} title="Recurring Engine">
                 <RefreshCw size={18} className="sm:w-5 sm:h-5" />
               </button>
               <button onClick={() => setShowWalletManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' : 'bg-pink-50 text-pink-600 border-pink-100'} hover:scale-105 transition-all`} title="Manage Wallets">

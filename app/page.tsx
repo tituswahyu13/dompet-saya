@@ -205,8 +205,9 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               <Navigation isDark={isDark} />
             </div>
             <div className="h-6 w-px bg-slate-400/20 hidden md:block" />
-            <div id="tour-theme" className="flex items-center gap-1.5 sm:gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-4">
               <button 
+                id="tour-theme"
                 onClick={() => setIsDark(!isDark)}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-slate-800 text-amber-400 border border-white/5' : 'bg-slate-100 text-slate-500 border border-slate-200'} hover:scale-105 active:scale-95`}
               >
@@ -484,7 +485,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                   <div className="w-1.5 h-6 bg-slate-400 rounded-full" />
                   <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Ledger Ringkasan</h2>
                 </div>
-                <Link href="/transactions" className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400 transition-all flex items-center gap-1.5 group">
+                <Link id="tour-goto-transactions" href="/transactions" className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400 transition-all flex items-center gap-1.5 group">
                   Lihat Semua <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
