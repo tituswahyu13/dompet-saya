@@ -186,7 +186,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                   </select>
                   <div className="w-px h-4 bg-slate-400/20" />
                   <select value={filterYear} onChange={(e) => setFilterYear(e.target.value)} className="p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none">
-                    {['2024', '2025', '2026'].map(y => <option key={y} value={y}>{y}</option>)}
+                    {['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'].map(y => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>
                 <div className="flex flex-1 md:flex-none items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5">
