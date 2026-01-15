@@ -23,13 +23,9 @@ export default function Auth({ isDark }: AuthProps) {
 
     try {
       if (mode === 'forgot') {
-        // Send password reset email with full URL including any base path
-        // Extract base path from current URL (e.g., /p9ihk7b02f-ssr-functions-a36579b2ebdcf569)
-        const currentPath = window.location.pathname;
-        const basePath = currentPath.includes('/p9ihk7b02f') 
-          ? currentPath.substring(0, currentPath.indexOf('/p9ihk7b02f') + '/p9ihk7b02f-ssr-functions-a36579b2ebdcf569'.length)
-          : '';
-        const resetUrl = `${window.location.origin}${basePath}/reset-password`;
+        // Send password reset email
+        // Use root domain for reset password (EdgeOne function path causes issues)
+        const resetUrl = `${window.location.origin}/reset-password`;
         
         const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: resetUrl,
