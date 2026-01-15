@@ -552,11 +552,27 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
 }
 
 export default function Dashboard() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    // Initialize from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme');
+      return saved === 'dark';
+    }
+    return false;
+  });
+
+  const handleThemeChange = (newIsDark: boolean) => {
+    setIsDark(newIsDark);
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newIsDark ? 'dark' : 'light');
+    }
+  };
+
   return (
     <AuthWrapper isDark={isDark}>
       {(user) => (
-        <DashboardContent user={user} isDark={isDark} setIsDark={setIsDark} />
+        <DashboardContent user={user} isDark={isDark} setIsDark={handleThemeChange} />
       )}
     </AuthWrapper>
   );

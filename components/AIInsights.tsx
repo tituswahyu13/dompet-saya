@@ -27,7 +27,8 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
 
   // Spending Prediction (Next Month)
   const spendingPrediction = useMemo(() => {
-    const last3Months = [0, 1, 2].map(i => {
+    // Get last 3 COMPLETE months (excluding current month)
+    const last3Months = [1, 2, 3].map(i => {
       const month = subMonths(new Date(), i);
       const monthStart = startOfMonth(month);
       const monthEnd = endOfMonth(month);
@@ -40,16 +41,39 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
         .reduce((sum, t) => sum + (t.outcome || 0), 0);
     });
 
-    // Simple moving average
-    const avgSpending = last3Months.reduce((sum, val) => sum + val, 0) / last3Months.length;
+    // Check if we have enough data
+    if (last3Months.every(val => val === 0)) {
+      return {
+        amount: 0,
+        confidence: 'Rendah',
+        trend: 'stabil'
+      };
+    }
+
+    // Weighted moving average (give more weight to recent months)
+    // Weights: 50% for last month, 30% for 2 months ago, 20% for 3 months ago
+    const weightedAvg = (last3Months[0] * 0.5) + (last3Months[1] * 0.3) + (last3Months[2] * 0.2);
     
-    // Trend analysis (is spending increasing or decreasing?)
-    const trend = (last3Months[0] - last3Months[2]) / (last3Months[2] || 1);
-    const predictedSpending = avgSpending * (1 + trend);
+    // Trend analysis: compare most recent complete month with oldest month
+    const trend = last3Months[2] > 0 
+      ? (last3Months[0] - last3Months[2]) / last3Months[2]
+      : 0;
+    
+    // Prediction: use weighted average + trend adjustment (capped at ±30% for stability)
+    const trendAdjustment = Math.max(-0.3, Math.min(0.3, trend));
+    const predictedSpending = weightedAvg * (1 + (trendAdjustment * 0.5)); // 50% of trend impact
+    
+    // Calculate confidence based on variance
+    const variance = last3Months.reduce((sum, val) => {
+      const diff = val - (last3Months.reduce((a, b) => a + b, 0) / 3);
+      return sum + (diff * diff);
+    }, 0) / 3;
+    const stdDev = Math.sqrt(variance);
+    const coefficientOfVariation = weightedAvg > 0 ? stdDev / weightedAvg : 0;
     
     return {
       amount: Math.round(predictedSpending),
-      confidence: Math.abs(trend) < 0.2 ? 'Tinggi' : Math.abs(trend) < 0.5 ? 'Sedang' : 'Rendah',
+      confidence: coefficientOfVariation < 0.15 ? 'Tinggi' : coefficientOfVariation < 0.35 ? 'Sedang' : 'Rendah',
       trend: trend > 0.1 ? 'meningkat' : trend < -0.1 ? 'menurun' : 'stabil'
     };
   }, [transactions]);

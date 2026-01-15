@@ -11,12 +11,22 @@ import Link from 'next/link';
 function PricingContent() {
   const router = useRouter();
   const { subscription, loading } = useSubscription();
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    // Initialize from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme');
+      return saved === 'dark';
+    }
+    return false;
+  });
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    setIsDark(savedTheme === 'dark');
-  }, []);
+  const handleThemeChange = (newIsDark: boolean) => {
+    setIsDark(newIsDark);
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newIsDark ? 'dark' : 'light');
+    }
+  };
 
   const features = [
     { name: 'Jumlah Dompet', free: '3 Dompet', pro: 'Unlimited' },

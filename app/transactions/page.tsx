@@ -273,10 +273,26 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
 }
 
 export default function TransactionsPage() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    // Initialize from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme');
+      return saved === 'dark';
+    }
+    return false;
+  });
+
+  const handleThemeChange = (newIsDark: boolean) => {
+    setIsDark(newIsDark);
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newIsDark ? 'dark' : 'light');
+    }
+  };
+
   return (
     <AuthWrapper isDark={isDark}>
-      {(user) => <TransactionsContent user={user} isDark={isDark} setIsDark={setIsDark} />}
+      {(user) => <TransactionsContent user={user} isDark={isDark} setIsDark={handleThemeChange} />}
     </AuthWrapper>
   );
 }
