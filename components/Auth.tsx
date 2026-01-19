@@ -74,7 +74,7 @@ export default function Auth({ isDark }: AuthProps) {
     switch (mode) {
       case 'signup': return 'Buat Akun';
       case 'forgot': return 'Reset Password';
-      default: return 'Masuk Aplikasi';
+      default: return 'Dompet Saya';
     }
   };
 
@@ -99,29 +99,29 @@ export default function Auth({ isDark }: AuthProps) {
             {getTitle()}
           </h2>
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">
-            {mode === 'forgot' ? 'Pemulihan Akses Keamanan' : 'Dompet Saya Pro - Protokol Keamanan'}
+            {mode === 'forgot' ? 'Pemulihan Akses Keamanan' : 'Protokol Keamanan'}
           </p>
         </div>
 
         {message && (
-          <div className={`mb-6 p-4 rounded-2xl text-xs font-bold uppercase tracking-wider text-center border ${
+          <div className={`mb-6 p-4 rounded-2xl text-xs font-bold uppercase tracking-wider text-center border animate-in fade-in slide-in-from-top-4 duration-300 ${
             message.type === 'error' 
-              ? 'bg-red-500/10 text-red-500 border-red-500/20' 
-              : 'bg-green-500/10 text-green-500 border-green-500/20'
+              ? (isDark ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-red-50 text-red-600 border-red-100')
+              : (isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-700 border-emerald-200')
           }`}>
-            {message.type === 'error' ? '⚠️ ' : '✅ '} {message.text}
+            {message.type === 'error' ? '⚠️' : '✅'} {message.text}
           </div>
         )}
 
         <form onSubmit={handleAuth} className="space-y-6">
           <div className="space-y-2">
             <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              Identitas Pengguna (Email)
+              EMAIL
             </label>
             <input 
               type="email" 
               required
-              placeholder="nama@email.com"
+              placeholder="contoh@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`w-full p-4 rounded-2xl border outline-none transition-all font-bold text-sm ${
@@ -133,7 +133,7 @@ export default function Auth({ isDark }: AuthProps) {
           {mode !== 'forgot' && (
             <div className="space-y-2">
               <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Kunci Keamanan (Password)
+                Kata Sandi
               </label>
               <div className="relative">
                 <input 
@@ -208,7 +208,7 @@ export default function Auth({ isDark }: AuthProps) {
                 onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setMessage(null); }}
                 className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-rose-400' : 'text-slate-500 hover:text-rose-500'} transition-all`}
               >
-                {mode === 'signup' ? 'Sudah punya akses? Kembali ke Login' : "Belum punya akses? Buat Identitas Baru"}
+                {mode === 'signup' ? 'Sudah punya akses? Kembali ke Login' : "Belum punya akses? Buat Akun Baru"}
               </button>
             </>
           )}
