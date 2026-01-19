@@ -202,6 +202,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
           <div className="flex items-center gap-2 sm:gap-6 justify-end flex-1 min-w-0">
             <div className="flex items-center gap-4">
             <button 
+              id="tour-theme"
               onClick={() => setIsDark(!isDark)}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-slate-800 text-amber-400 border border-white/5' : 'bg-slate-100 text-slate-500 border border-slate-200'} hover:scale-105 active:scale-95`}
             >
@@ -214,14 +215,16 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
               <Plus size={20} />
             </Link>
           </div>
-            <NotificationCenter 
-              transactions={filteredTransactions}
-              budgets={budgets}
-              goals={goals}
-              recurringTemplates={recurringTemplates}
-              wallets={wallets}
-              isDark={isDark}
-            />
+            <div id="tour-notifications">
+              <NotificationCenter 
+                transactions={filteredTransactions}
+                budgets={budgets}
+                goals={goals}
+                recurringTemplates={recurringTemplates}
+                wallets={wallets}
+                isDark={isDark}
+              />
+            </div>
             <button 
               onClick={async () => {
                 const { error } = await supabase.auth.signOut();
@@ -274,7 +277,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                 <p className="text-2xl sm:text-3xl font-black text-red-600 tracking-tighter truncate">{stats.outcome.toLocaleString('id-ID')}</p>
               </div>
             </div>
-            <div className={`p-5 sm:p-7 rounded-[2rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-blue-900/20' : 'bg-blue-50/50 border-blue-100'}`}>
+            <div id="tour-saving" className={`p-5 sm:p-7 rounded-[2rem] border transition-all hover:scale-[1.02] shadow-sm relative overflow-hidden group ${isDark ? 'glass-dark border-blue-900/20' : 'bg-blue-50/50 border-blue-100'}`}>
               <p className="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] mb-3">Tabungan</p>
               <div className="flex items-baseline gap-1 overflow-hidden">
                 <span className="text-[10px] sm:text-xs font-black text-blue-500">IDR</span>
@@ -290,7 +293,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
 
         {/* Quick Access Grid */}
         <section className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-           <Link href="/wallets" className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? 'glass-dark border-white/5 hover:bg-white/5' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
+           <Link id="tour-wallets" href="/wallets" className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? 'glass-dark border-white/5 hover:bg-white/5' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
               <div className="flex justify-between items-center mb-4 sm:mb-6">
                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                     <Wallet size={16} className="sm:w-5 sm:h-5" />
@@ -301,7 +304,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                <p className="text-[8px] sm:text-[10px] font-bold opacity-50 uppercase tracking-widest truncate">{wallets.length} Akun</p>
            </Link>
 
-           <Link href="/analytics" className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? 'glass-dark border-white/5 hover:bg-white/5' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
+                <Link id="tour-intelligence" href="/analytics" className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? 'glass-dark border-white/5 hover:bg-white/5' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
               <div className="flex justify-between items-center mb-4 sm:mb-6">
                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500">
                     <Bot size={16} className="sm:w-5 sm:h-5" />
@@ -312,7 +315,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                <p className="text-[8px] sm:text-[10px] font-bold opacity-50 uppercase tracking-widest truncate">Analisis Prediktif</p>
            </Link>
 
-           <Link href="/budgets" className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? 'glass-dark border-white/5 hover:bg-white/5' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
+                <Link id="tour-budget" href="/budgets" className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? 'glass-dark border-white/5 hover:bg-white/5' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
               <div className="flex justify-between items-center mb-4 sm:mb-6">
                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
                     <Percent size={16} className="sm:w-5 sm:h-5" />
@@ -323,7 +326,7 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
                <p className="text-[8px] sm:text-[10px] font-bold opacity-50 uppercase tracking-widest truncate">{budgets.length} Target</p>
            </Link>
 
-           <Link href="/goals" className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? 'glass-dark border-white/5 hover:bg-white/5' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
+                <Link id="tour-goals" href="/goals" className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? 'glass-dark border-white/5 hover:bg-white/5' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
               <div className="flex justify-between items-center mb-4 sm:mb-6">
                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                     <Target size={16} className="sm:w-5 sm:h-5" />

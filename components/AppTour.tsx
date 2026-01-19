@@ -15,84 +15,63 @@ const DASHBOARD_STEPS: TourStep[] = [
     id: 'welcome',
     targetId: '',
     title: 'Selamat Datang di Dompet Saya Pro! 🐷✨',
-    content: 'Mari berkeliling sejenak untuk mengenal bagaimana aplikasi ini membantu Anda menguasai takdir keuangan Anda.',
+    content: 'Mari berkeliling sejenak untuk mengenal fitur-fitur tercanggih yang akan membantu Anda menguasai keuangan pribadi.',
     position: 'center'
   },
   {
     id: 'theme',
     targetId: 'tour-theme',
-    title: 'Tema Visual',
-    content: 'Sesuaikan kenyamanan mata Anda dengan beralih antara Mode Gelap (Pro) yang mewah atau Mode Terang yang bersih.',
+    title: 'Personalisasi Visual',
+    content: 'Pilih antara Mode Gelap (Pro) yang elegan atau Mode Terang yang bersih sesuai kenyamanan Anda.',
     position: 'bottom'
   },
   {
     id: 'notifications',
     targetId: 'tour-notifications',
-    title: 'Pusat Notifikasi',
-    content: 'Dapatkan peringatan jika pengeluaran melebihi budget atau ada transaksi berulang yang perlu diproses.',
-    position: 'bottom'
-  },
-  {
-    id: 'actions',
-    targetId: 'tour-actions',
-    title: 'Kendali Cepat',
-    content: 'Kelola semua Dompet/Rekening dan Target Keuangan Anda secara terpusat melalui baris menu ini.',
+    title: 'Pusat Komando Notifikasi',
+    content: 'Pantau pengeluaran budget, target impian, dan tagihan rutin Anda di sini. Jangan biarkan ada transaksi yang terlewat!',
     position: 'bottom'
   },
   {
     id: 'balance',
     targetId: 'tour-balance',
-    title: 'Monitor Arus Kas',
-    content: 'Lihat ringkasan Saldo, Pemasukan, dan Pengeluaran Anda secara instan. Gunakan toggle "Mode Aset" untuk melihat total kekayaan Anda.',
+    title: 'Dashboard Keuangan Utama',
+    content: 'Monitor total saldo, pemasukan, dan pengeluaran Anda. Gunakan tombol "Mode Aset" untuk melihat kekayaan likuid atau total aset.',
+    position: 'bottom'
+  },
+  {
+    id: 'saving',
+    targetId: 'tour-saving',
+    title: 'Lacak Tabungan & Investasi',
+    content: 'Kartu biru ini merangkum seluruh dana yang Anda alokasikan ke produk investasi. Semua transaksi "Simpan" akan terkumpul di sini.',
     position: 'bottom'
   },
   {
     id: 'wallets',
     targetId: 'tour-wallets',
-    title: 'Arsitektur Wallet',
-    content: 'Atur semua akun bank, dompet digital, dan investasi Anda di sini. Berikan warna unik untuk setiap kategori!',
-    position: 'top'
-  },
-  {
-    id: 'goals',
-    targetId: 'tour-goals',
-    title: 'Target Keuangan',
-    content: 'Wujudkan impian Anda dengan fitur Target. Hubungkan target ke wallet tertentu untuk pelacakan otomatis.',
+    title: 'Manajemen Dompet & Sync',
+    content: 'Atur semua rekening bank dan e-wallet Anda. Sekarang Anda bisa melakukan "Sync Saldo" untuk menyamakan saldo aplikasi dengan uang nyata.',
     position: 'top'
   },
   {
     id: 'intelligence',
     targetId: 'tour-intelligence',
-    title: 'Data Intelligence',
-    content: 'Visualisasikan tren keuangan Anda dengan grafik canggih. Pelajari pola pengeluaran bulanan Anda di sini.',
-    position: 'top'
-  },
-  {
-    id: 'ai',
-    targetId: 'tour-ai',
-    title: 'AI Insights',
-    content: 'Teknologi AI kami akan menganalisis data Anda untuk memberikan saran penghematan dan prediksi saldo di masa depan.',
-    position: 'top'
-  },
-  {
-    id: 'budget',
-    targetId: 'tour-budget',
-    title: 'Analisis Anggaran',
-    content: 'Monitor sisa dana Anda di berbagai kategori pengeluaran secara visual agar tidak "boncos" di akhir bulan.',
+    title: 'Analisis Kecerdasan AI',
+    content: 'Visualisasikan tren pengeluaran Anda dengan grafik interaktif dan biarkan AI memberikan saran penghematan terbaik untuk Anda.',
     position: 'top'
   },
   {
     id: 'ledger',
     targetId: 'tour-ledger',
-    title: 'Cloud Ledger',
-    content: 'Catatan ringkasan transaksi terbaru Anda. Klik "Lihat Semua" untuk masuk ke manajemen transaksi yang lebih lengkap.',
+    title: 'Cloud Ledger Terbaru',
+    content: 'Daftar transaksi terakhir Anda. Segala aktivitas masuk, keluar, maupun simpan akan tercatat rapi di sini.',
     position: 'top'
   },
   {
     id: 'goto-transactions',
     targetId: 'tour-goto-transactions',
-    title: 'Pusat Kendali Ledger',
-    content: 'Ingin mengelola data lebih detail? Klik di sini untuk masuk ke halaman Ledger lengkap dengan fitur filter dan ekspor.',
+    title: 'Kendali Penuh Transaksi',
+    content: 'Ingin mengelola data lebih detail? Klik "Lihat Semua" untuk masuk ke halaman manajemen transaksi yang lebih lengkap.',
     position: 'top'
   }
 ];
@@ -101,51 +80,44 @@ const TRANSACTION_STEPS: TourStep[] = [
   {
     id: 'tx-welcome',
     targetId: '',
-    title: 'Manajemen Transaksi 📝',
-    content: 'Selamat datang di pusat kendali data. Di sini Anda bisa mengelola setiap rupiah yang masuk dan keluar dengan detail.',
+    title: 'Buku Besar Cloud 📝',
+    content: 'Selamat datang di pusat kendali data. Di sini Anda bisa mengelola setiap transaksi dengan akurasi maksimal.',
     position: 'center'
-  },
-  {
-    id: 'tx-recurring',
-    targetId: 'tour-tx-recurring',
-    title: 'Mesin Transaksi Otomatis',
-    content: 'Buat template untuk transaksi rutin seperti tagihan bulanan atau tabungan otomatis agar Anda tidak perlu mencatat manual setiap saat.',
-    position: 'bottom'
   },
   {
     id: 'tx-form',
     targetId: 'tour-tx-form',
-    title: 'Input Transaksi Pintar',
-    content: 'Gunakan form ini untuk mencatat pengeluaran atau pemasukan baru. Anda juga bisa mengoreksi data yang sudah ada di sini.',
-    position: 'bottom'
+    title: 'Form Transaksi Pintar',
+    content: 'Gunakan mode "Simpan" (Biru) untuk mencatat tabungan. Sekarang, setiap tabungan wajib memiliki wallet asal untuk memotong saldo secara otomatis.',
+    position: 'right'
   },
   {
     id: 'tx-mode',
     targetId: 'tour-tx-mode',
-    title: 'Mode Transfer',
-    content: 'Butuh memindahkan uang antar rekening? Klik tombol ini untuk beralih ke form Transfer antar dompet.',
-    position: 'bottom'
-  },
-  {
-    id: 'tx-filters',
-    targetId: 'tour-tx-filters',
-    title: 'Penyaringan Data',
-    content: 'Cari transaksi spesifik dengan mudah menggunakan filter bulan, tahun, atau fitur pencarian teks.',
-    position: 'bottom'
-  },
-  {
-    id: 'tx-export',
-    targetId: 'tour-tx-export',
-    title: 'Ekspor CSV',
-    content: 'Unduh semua riwayat transaksi Anda dalam format CSV untuk keperluan audit atau analisis di Excel/Sheets.',
+    title: 'Beralih ke Transfer',
+    content: 'Gunakan tombol ini jika Anda hanya ingin memindahkan uang antar rekening tanpa mencatat sebagai pengeluaran atau tabungan.',
     position: 'bottom'
   },
   {
     id: 'tx-list',
     targetId: 'tour-tx-list',
-    title: 'Cloud Ledger Table',
-    content: 'Daftar transaksi lengkap Anda. Untuk pengguna Pro, Anda bisa melihat seluruh riwayat tanpa batas waktu.',
+    title: 'Kontrol Transaksi Cepat',
+    content: 'Tombol Edit dan Hapus kini selalu terlihat untuk memudahkan Anda mengelola data tanpa perlu repot mengarahkan kursor.',
     position: 'top'
+  },
+  {
+    id: 'tx-recurring',
+    targetId: 'tour-tx-recurring',
+    title: 'Penjadwalan Rutin',
+    content: 'Otomatisasi transaksi bulanan Anda di sini. Hemat waktu dengan membiarkan sistem mencatat pengeluaran rutin Anda.',
+    position: 'bottom'
+  },
+  {
+    id: 'tx-export',
+    targetId: 'tour-tx-export',
+    title: 'Ekspor Data CSV',
+    content: 'Butuh data untuk Excel atau Sheets? Klik di sini untuk mengunduh laporan transaksi lengkap Anda kapan saja.',
+    position: 'bottom'
   }
 ];
 
@@ -265,7 +237,7 @@ export default function AppTour({ isDark }: { isDark: boolean }) {
         style={{
           position: 'fixed',
           clipPath: targetRect 
-            ? `polygon(0% 0%, 0% 100%, ${targetRect.left}px 100%, ${targetRect.left}px ${targetRect.top}px, ${targetRect.right}px ${targetRect.top}px, ${targetRect.right}px ${targetRect.bottom}px, ${targetRect.left}px ${targetRect.bottom}px, ${targetRect.left}px 100%, 100% 100%, 100% 0%)`
+            ? `polygon(0% 0%, 0% 100%, ${targetRect.left - 8}px 100%, ${targetRect.left - 8}px ${targetRect.top - 8}px, ${targetRect.right + 8}px ${targetRect.top - 8}px, ${targetRect.right + 8}px ${targetRect.bottom + 8}px, ${targetRect.left - 8}px ${targetRect.bottom + 8}px, ${targetRect.left - 8}px 100%, 100% 100%, 100% 0%)`
             : 'none'
         }}
       />
@@ -279,29 +251,31 @@ export default function AppTour({ isDark }: { isDark: boolean }) {
           top: (() => {
             const viewportHeight = window.innerHeight;
             const tooltipHeight = window.innerWidth < 640 ? 260 : 220;
-            const gap = 12;
+            const gap = 20;
             
             if (step.position === 'bottom') {
               const pos = targetRect.bottom + gap;
-              // If too close to bottom, try to push up
-              if (pos + tooltipHeight > viewportHeight - 80) { // 80px for mobile nav
+              if (pos + tooltipHeight > viewportHeight - 80) {
                 return Math.max(20, targetRect.top - tooltipHeight - gap);
               }
               return pos;
             } else if (step.position === 'top') {
               const pos = targetRect.top - tooltipHeight - gap;
-              // If too close to top, push down
               if (pos < 20) {
                 return targetRect.bottom + gap;
               }
               return pos;
+            } else if (step.position === 'right') {
+                return targetRect.top;
             }
             return targetRect.top;
           })(),
-          left: window.innerWidth < 640 
-            ? '50%' 
-            : Math.max(180, Math.min(window.innerWidth - 180, targetRect.left + (targetRect.width / 2))),
-          transform: 'translateX(-50%)',
+          left: (() => {
+            if (window.innerWidth < 640) return '50%';
+            if (step.position === 'right') return targetRect.right + 340 > window.innerWidth ? targetRect.left - 20 : targetRect.right + 20;
+            return Math.max(180, Math.min(window.innerWidth - 180, targetRect.left + (targetRect.width / 2)));
+          })(),
+          transform: window.innerWidth < 640 ? 'translateX(-50%)' : (step.position === 'right' && targetRect.right + 340 > window.innerWidth ? 'translateX(-100%)' : (step.position === 'right' ? 'none' : 'translateX(-50%)')),
           width: window.innerWidth < 640 ? 'calc(100vw - 32px)' : '320px',
           maxWidth: '320px',
           zIndex: 310
@@ -315,25 +289,27 @@ export default function AppTour({ isDark }: { isDark: boolean }) {
           borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
         }}>
           <div className="flex justify-between items-start mb-4">
-            <div className="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center text-rose-500">
+            <div className="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center text-rose-500 shadow-inner">
               <Sparkles size={20} />
             </div>
-            <button onClick={handleClose} className="p-2 hover:bg-slate-500/10 rounded-lg transition-colors">
-              <X size={16} className="text-slate-400" />
+            <button onClick={handleClose} className="p-2 hover:bg-slate-500/10 rounded-lg transition-colors group">
+              <X size={16} className="text-slate-400 group-hover:text-red-500 transition-colors" />
             </button>
           </div>
 
           <h3 className={`text-lg font-black uppercase tracking-tight mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
             {step?.title}
           </h3>
-          <p className={`text-sm leading-relaxed mb-6 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+          <p className={`text-sm leading-relaxed mb-6 font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
             {step?.content}
           </p>
 
           <div className="flex justify-between items-center">
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-              {currentStep + 1} / {steps.length}
-            </p>
+            <div className="flex gap-1">
+                {steps.map((_, i) => (
+                    <div key={i} className={`w-1 h-1 rounded-full transition-all duration-300 ${i === currentStep ? 'w-4 bg-rose-500' : 'bg-slate-300'}`} />
+                ))}
+            </div>
             <div className="flex gap-2">
               {currentStep > 0 && (
                 <button 
@@ -342,12 +318,12 @@ export default function AppTour({ isDark }: { isDark: boolean }) {
                     isDark ? 'border-white/5 text-slate-400 hover:text-white' : 'border-slate-200 text-slate-500 hover:bg-slate-50'
                   }`}
                 >
-                  <ChevronLeft size={14} className="inline mr-1" /> Sebelumnya
+                   Kembali
                 </button>
               )}
               <button 
                 onClick={handleNext}
-                className="px-6 py-2 bg-rose-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-500/20 hover:bg-rose-700 transition-all flex items-center gap-2"
+                className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 transition-all flex items-center gap-2 active:scale-95"
               >
                 {currentStep === steps.length - 1 ? 'Selesai' : 'Lanjut'} <ChevronRight size={14} />
               </button>
