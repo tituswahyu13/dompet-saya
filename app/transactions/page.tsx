@@ -46,7 +46,6 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
     const { data: wData } = await supabase.from('wallet_balances').select('*').eq('user_id', user.id).eq('is_active', true);
     if (wData) setWallets(wData);
     // Fetch budgets, goals, recurringTemplates if needed for NotificationCenter
-    // For now, just initialize them as empty arrays or fetch if there's a specific instruction
     const { data: budgetData } = await supabase.from('budgets').select('*').eq('user_id', user.id);
     if (budgetData) setBudgets(budgetData);
     const { data: goalData } = await supabase.from('goals').select('*').eq('user_id', user.id);
@@ -119,14 +118,11 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
               <img src="/DompetSaya.svg" alt="Dompet Saya Mascot" className="w-full h-full object-contain p-1" />
             </div>
             <div>
-              <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight hidden sm:block">Data Management</p>
-              <h1 className={`text-xs sm:text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'}`}>{isDark ? 'Pro' : 'Ledger'} <span className="hidden xs:inline">Dana</span></h1>
+              <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight hidden sm:block">Manajemen Data</p>
+              <h1 className={`text-xs sm:text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'}`}>{isDark ? 'Pro' : 'Buku Besar'} <span className="hidden xs:inline">Dana</span></h1>
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-6 justify-end flex-1 min-w-0">
-            <div className="hidden sm:block">
-              <Navigation isDark={isDark} />
-            </div>
             <div className="flex items-center gap-1.5 sm:gap-4">
                <button onClick={() => setIsDark(!isDark)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-slate-800 text-amber-400 border-white/5' : 'bg-slate-100 text-slate-500 border-slate-200'} hover:scale-105 transition-all`}>
                 {isDark ? <Sun size={20} className="sm:w-5 sm:h-5" /> : <Moon size={20} className="sm:w-5 sm:h-5" />}
@@ -139,10 +135,10 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                 wallets={wallets}
                 isDark={isDark}
               />
-              <button id="tour-tx-recurring" onClick={() => setShowRecurringManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-rose-600/10 text-rose-400 border-rose-500/20 hover:bg-rose-600/20' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100'} hover:scale-105 transition-all`} title="Recurring Engine">
+              <button id="tour-tx-recurring" onClick={() => setShowRecurringManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-rose-600/10 text-rose-400 border-rose-500/20 hover:bg-rose-600/20' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100'} hover:scale-105 transition-all`} title="Penjadwalan Rutin">
                 <RefreshCw size={18} className="sm:w-5 sm:h-5" />
               </button>
-              <button onClick={() => setShowWalletManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' : 'bg-pink-50 text-pink-600 border-pink-100'} hover:scale-105 transition-all`} title="Manage Wallets">
+              <button onClick={() => setShowWalletManager(true)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center border ${isDark ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' : 'bg-pink-50 text-pink-600 border-pink-100'} hover:scale-105 transition-all`} title="Kelola Dompet">
                 <Wallet size={18} className="sm:w-5 sm:h-5" />
               </button>
             </div>
@@ -175,7 +171,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 px-1">
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-6 bg-slate-400 rounded-full" />
-                <h2 className={`text-lg font-black uppercase tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>Full Cloud Ledger</h2>
+                <h2 className={`text-lg font-black uppercase tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>Buku Besar Cloud</h2>
               </div>
               
               <div className="flex flex-wrap w-full md:w-auto items-center gap-3">
@@ -190,7 +186,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                   </select>
                 </div>
                 <div className="flex flex-1 md:flex-none items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5">
-                  <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex-1 md:w-32 p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none" />
+                  <input type="text" placeholder="Cari..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex-1 md:w-32 p-2 px-3 text-[10px] font-black uppercase tracking-widest bg-transparent outline-none" />
                   <button id="tour-tx-export" onClick={exportToCSV} className="p-2 px-4 text-[10px] font-black bg-rose-600/10 text-rose-500 uppercase tracking-widest rounded-xl hover:bg-rose-600 hover:text-white transition-all">CSV</button>
                 </div>
               </div>
@@ -198,18 +194,18 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
 
             <div id="tour-tx-list" className={`rounded-[2.5rem] border overflow-hidden backdrop-blur-sm transition-all duration-500 ${isDark ? 'glass-dark border-white/5 shadow-2xl shadow-black/40' : 'glass border-white shadow-xl shadow-slate-200/50'}`}>
               {loading ? (
-                <div className="p-20 text-center animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Syncing Cloud Ledger...</div>
+                <div className="p-20 text-center animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Sinkronisasi Data...</div>
               ) : filteredTransactions.length === 0 ? (
-                <div className="p-20 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">No transaction signals discovered.</div>
+                <div className="p-20 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">Tidak ada catatan transaksi ditemukan.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left">
                     <thead>
                       <tr className={`${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-100'} border-b`}>
-                        <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Timeline</th>
-                        <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Activity</th>
-                        <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Value</th>
-                        <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center w-32">Control</th>
+                        <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Garis Waktu</th>
+                        <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Aktivitas</th>
+                        <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Nilai</th>
+                        <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center w-32">Kontrol</th>
                       </tr>
                     </thead>
                     <tbody className={`divide-y ${isDark ? 'divide-white/5' : 'divide-slate-100'}`}>
@@ -224,11 +220,11 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                               <span className="text-sm font-bold">{t.keterangan}</span>
                               <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tight ${isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{wallets.find(w => w.id === t.wallet_id)?.name}</span>
                             </div>
-                            <span className={`text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-wider ${t.income > 0 ? 'bg-green-500/10 text-green-500' : t.saving > 0 ? 'bg-rose-500/10 text-rose-500' : 'bg-red-500/10 text-red-500'}`}>{t.kategori}</span>
+                            <span className={`text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-wider ${t.income > 0 ? 'bg-green-500/10 text-green-500' : t.saving > 0 ? 'bg-blue-500/10 text-blue-500' : 'bg-red-500/10 text-red-500'}`}>{t.kategori}</span>
                           </td>
-                          <td className={`p-6 text-right font-black tracking-tighter ${t.income > 0 ? 'text-green-500' : t.saving > 0 ? 'text-rose-500' : 'text-red-500'}`}>{(t.income || t.outcome || t.saving).toLocaleString('id-ID')}</td>
+                          <td className={`p-6 text-right font-black tracking-tighter ${t.income > 0 ? 'text-green-500' : t.saving > 0 ? 'text-blue-500' : 'text-red-500'}`}>{(t.income || t.outcome || t.saving).toLocaleString('id-ID')}</td>
                           <td className="p-6">
-                            <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            <div className="flex justify-center gap-2 transition-all">
                               <button onClick={() => handleEdit(t)} className="w-8 h-8 rounded-lg flex items-center justify-center bg-rose-500/10 text-rose-500 hover:bg-blue-500 text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button>
                               <button onClick={() => setTransactionToDelete(t)} className="w-8 h-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-500 hover:bg-red-500 text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
                             </div>
@@ -238,7 +234,7 @@ function TransactionsContent({ user, isDark, setIsDark }: { user: User, isDark: 
                     </tbody>
                   </table>
                   {filteredTransactions.length > paginatedTransactions.length && (
-                    <div className="p-8 text-center border-t border-white/5"><button onClick={() => setPage(page + 1)} className="px-10 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition-all">Load More Signals</button></div>
+                    <div className="p-8 text-center border-t border-white/5"><button onClick={() => setPage(page + 1)} className="px-10 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition-all">Muat Lebih Banyak</button></div>
                   )}
                 </div>
               )}

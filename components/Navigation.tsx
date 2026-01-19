@@ -1,38 +1,41 @@
 "use client"
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, ArrowRightLeft } from 'lucide-react';
+import { LayoutDashboard, ArrowRightLeft, Wallet, BarChart3, Target, Percent } from 'lucide-react';
 
 export default function Navigation({ isDark, variant = 'header' }: { isDark: boolean; variant?: 'header' | 'bottom' }) {
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Dashboard', href: '/', icon: <LayoutDashboard size={variant === 'bottom' ? 24 : 16} /> },
-    { name: 'Transaksi', href: '/transactions', icon: <ArrowRightLeft size={variant === 'bottom' ? 24 : 16} /> },
+    { name: 'Beranda', href: '/', icon: <LayoutDashboard size={variant === 'bottom' ? 22 : 16} /> },
+    { name: 'Dompet', href: '/wallets', icon: <Wallet size={variant === 'bottom' ? 22 : 16} /> },
+    { name: 'Analitik', href: '/analytics', icon: <BarChart3 size={variant === 'bottom' ? 22 : 16} /> },
+    { name: 'Transaksi', href: '/transactions', icon: <ArrowRightLeft size={variant === 'bottom' ? 22 : 16} /> },
+    { name: 'Anggaran', href: '/budgets', icon: <Percent size={variant === 'bottom' ? 22 : 16} /> },
+    { name: 'Target', href: '/goals', icon: <Target size={variant === 'bottom' ? 22 : 16} /> },
   ];
 
   if (variant === 'bottom') {
     return (
-      <nav className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-sm p-2 rounded-[2rem] border shadow-2xl backdrop-blur-2xl flex items-center justify-around ${
+      <nav className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[100] w-[96%] max-w-md p-1 rounded-[2rem] border shadow-2xl backdrop-blur-2xl flex items-center justify-around ${
         isDark ? 'glass-dark border-white/10 shadow-black/50' : 'glass border-white shadow-slate-200/50'
       }`}>
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
-            <Link
-              key={item.href}
+            <Link 
+              key={item.name} 
               href={item.href}
-              className={`flex flex-col items-center gap-1 transition-all px-6 py-2 rounded-2xl ${
+              className={`flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all duration-300 flex-1 ${
                 isActive 
-                  ? 'text-rose-500 scale-110' 
-                  : isDark ? 'text-slate-500 hover:text-white' : 'text-slate-400 hover:text-slate-900'
+                  ? (isDark ? 'bg-white/10 text-rose-400' : 'bg-rose-50 text-rose-600') 
+                  : 'text-slate-400 hover:text-rose-500'
               }`}
             >
-              {item.icon}
-              <span className="text-[9px] font-black uppercase tracking-widest">{item.name}</span>
-              {isActive && (
-                <div className="w-1 h-1 bg-rose-500 rounded-full animate-pulse" />
-              )}
+              <div className={`${isActive ? 'scale-110' : 'scale-100'} transition-transform`}>
+                {item.icon}
+              </div>
+              <span className="text-[8px] font-black uppercase tracking-tighter mt-1 opacity-80">{item.name === 'Transactions' ? 'Tx' : item.name}</span>
             </Link>
           );
         })}

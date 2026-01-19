@@ -100,7 +100,7 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
         <div className="flex items-center gap-3 mb-4 sm:mb-6">
           <div className="w-1.2 sm:w-1.5 h-5 sm:h-6 bg-blue-500 rounded-full" />
           <h3 className={`text-base sm:text-lg font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            6-Month Financial Trend
+            Tren Keuangan 6 Bulan
           </h3>
         </div>
         <ResponsiveContainer width="100%" height={300}>
@@ -115,8 +115,8 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
                 <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="colorSaving" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#e2e8f0'} />
@@ -158,7 +158,7 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
             <Area 
               type="monotone" 
               dataKey="saving" 
-              stroke="#3b82f6" 
+              stroke="#6366f1" 
               fillOpacity={1}
               fill="url(#colorSaving)"
               strokeWidth={3}
@@ -173,7 +173,7 @@ export default function AdvancedCharts({ transactions, isDark }: AdvancedChartsP
         <div className="flex items-center gap-3 mb-4 sm:mb-6">
           <div className="w-1.2 sm:w-1.5 h-5 sm:h-6 bg-purple-500 rounded-full" />
           <h3 className={`text-base sm:text-lg font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            Top Spending Categories
+            Kategori Pengeluaran Teratas
           </h3>
         </div>
         <ResponsiveContainer width="100%" height={400}>

@@ -76,7 +76,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
     link.click();
     document.body.removeChild(link);
     
-    alert('✅ CSV berhasil di-download!');
+    alert('✅ CSV berhasil diunduh!');
   };
 
   const exportToPDF = async () => {
@@ -175,7 +175,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
     
     pdf.save(`laporan_keuangan_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
     pdf.save(`laporan_keuangan_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
-    alert('✅ PDF berhasil di-download!');
+    alert('✅ PDF berhasil diunduh!');
   };
 
   const handleExport = () => {
@@ -200,9 +200,9 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
               </div>
               <div>
                 <h2 className={`text-xl font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  Export Data
+                  Ekspor Data
                 </h2>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Download Your Financial Records</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Unduh Catatan Keuangan Anda</p>
               </div>
             </div>
             <button onClick={onClose} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
@@ -214,7 +214,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
         <div className="p-8 space-y-6">
           {/* Export Type Selection */}
           <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Export Format</label>
+            <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Format Ekspor</label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => setExportType('csv')}
@@ -226,7 +226,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
               >
                 <div className="text-2xl mb-2">📊</div>
                 <div className="text-xs font-black uppercase">CSV / Excel</div>
-                <div className="text-[8px] opacity-60 mt-1">Spreadsheet format</div>
+                <div className="text-[8px] opacity-60 mt-1">Format spreadsheet</div>
               </button>
               <button
                 onClick={() => {
@@ -249,7 +249,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
                   PDF Report
                   {!isPro && <span className="text-[8px] bg-rose-500 text-white px-1 rounded">PRO</span>}
                 </div>
-                <div className="text-[8px] opacity-60 mt-1">Professional format</div>
+                <div className="text-[8px] opacity-60 mt-1">Format profesional</div>
               </button>
             </div>
           </div>
@@ -257,7 +257,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
           {/* Date Range */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Start Date</label>
+              <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Tanggal Mulai</label>
               <input
                 type="date"
                 value={dateRange.start}
@@ -266,7 +266,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">End Date</label>
+              <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Tanggal Selesai</label>
               <input
                 type="date"
                 value={dateRange.end}
@@ -278,13 +278,13 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
 
           {/* Wallet Filter */}
           <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Filter by Wallet</label>
+            <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Filter berdasarkan Dompet</label>
             <select
               value={selectedWallet}
               onChange={(e) => setSelectedWallet(e.target.value)}
               className={`w-full px-4 py-3 rounded-xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`}
             >
-              <option value="all">All Wallets</option>
+              <option value="all">Semua Dompet</option>
               {wallets.map(w => (
                 <option key={w.id} value={w.id}>{w.icon} {w.name}</option>
               ))}
@@ -301,15 +301,15 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
               className="w-5 h-5 rounded border-2 accent-emerald-600"
             />
             <label htmlFor="includeTransfers" className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              Include internal transfers
+              Termasuk transfer internal
             </label>
           </div>
 
           {/* Summary */}
           <div className={`p-4 rounded-xl border ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-slate-50 border-slate-200'}`}>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Export Summary</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Ringkasan Ekspor</p>
             <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              {getFilteredTransactions().length} transactions will be exported
+              {getFilteredTransactions().length} transaksi akan diekspor
             </p>
           </div>
 
@@ -321,7 +321,7 @@ export default function ExportManager({ transactions, wallets, isDark, onClose }
               exportType === 'pdf' ? 'bg-gradient-to-r from-rose-600 to-pink-600 shadow-rose-500/20' : 'bg-gradient-to-r from-emerald-600 to-teal-600 shadow-emerald-500/20'
             }`}
           >
-            {exportType === 'csv' ? '📊 Download CSV' : '📄 Generate PDF Report'}
+            {exportType === 'csv' ? '📊 Unduh CSV' : '📄 Buat Laporan PDF'}
           </button>
         </div>
       </div>

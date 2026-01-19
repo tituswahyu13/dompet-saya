@@ -1,7 +1,7 @@
 {
   "name": "Dompet Saya Pro",
   "short_name": "DompetSaya",
-  "description": "Financial Intelligence Platform",
+  "description": "Platform Kecerdasan Finansial",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020617",

@@ -233,9 +233,9 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
               </div>
               <div>
                 <h2 className={`text-xl font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  Recurring Engine
+                  Mesin Berulang
                 </h2>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Automated Financial Signals</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Sinyal Finansial Otomatis</p>
               </div>
             </div>
             <button onClick={onClose} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
@@ -260,7 +260,7 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
               </div>
 
               {loading && templates.length === 0 ? (
-                <div className="text-center py-20 animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Scanning recurring patterns...</div>
+                <div className="text-center py-20 animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Memindai pola berulang...</div>
               ) : templates.length === 0 ? (
                 <div className={`p-16 text-center rounded-[2.5rem] border border-dashed ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
                   <p className="text-sm font-bold opacity-40 uppercase tracking-widest">Belum ada template rutin terdeteksi.</p>
@@ -311,13 +311,13 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
                       </div>
                       <div className="flex items-center justify-between mt-6">
                         <div className="space-y-0.5">
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Signal Value</p>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Nilai Sinyal</p>
                           <p className={`text-lg font-black tracking-tighter ${t.type === 'income' ? 'text-green-500' : t.type === 'saving' ? 'text-blue-500' : t.type === 'transfer' ? 'text-rose-500' : isDark ? 'text-white' : 'text-slate-900'}`}>
                             Rp {t.amount?.toLocaleString('id-ID')}
                           </p>
                         </div>
                         <button onClick={() => handleManualTrigger(t)} className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${isDark ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/20' : 'bg-indigo-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white'} active:scale-95`}>
-                          🪄 Generate Now
+                          🪄 Generate Sekarang
                         </button>
                       </div>
                       <div className={`mt-4 pt-4 border-t flex items-center justify-between ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
@@ -347,7 +347,7 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Keterangan Signal</label>
+                     <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Keterangan Sinyal</label>
                     <input type="text" value={formData.keterangan} onChange={(e) => setFormData({ ...formData, keterangan: e.target.value })} required className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} placeholder="Contoh: Tagihan Listrik" />
                   </div>
                   <div>
@@ -418,7 +418,7 @@ export default function RecurringManager({ user, isDark, onClose }: { user: User
 
               <div className="pt-8">
                 <button type="submit" disabled={loading} className="w-full py-5 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-rose-500/20 active:scale-95 transition-all">
-                  {loading ? 'Processing Pattern...' : editingId ? 'Simpan Perubahan' : 'Aktifkan Pattern Rutin'}
+                   {loading ? 'Memproses Pola...' : editingId ? 'Simpan Perubahan' : 'Aktifkan Pola Rutin'}
                 </button>
               </div>
             </form>

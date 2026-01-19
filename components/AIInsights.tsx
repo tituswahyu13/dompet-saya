@@ -215,9 +215,9 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
             </p>
             <div className="flex flex-wrap items-center gap-2 text-[9px] sm:text-xs">
               <span className={`px-2 py-0.5 rounded-full font-bold ${
-                spendingPrediction.confidence === 'High' 
+                spendingPrediction.confidence === 'Tinggi' 
                   ? 'bg-green-500/20 text-green-400' 
-                  : spendingPrediction.confidence === 'Medium'
+                  : spendingPrediction.confidence === 'Sedang'
                   ? 'bg-yellow-500/20 text-yellow-400'
                   : 'bg-red-500/20 text-red-400'
               }`}>
@@ -252,7 +252,7 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
 
         <div className={`flex flex-col h-full ${!isPro ? 'blur-[3px] select-none pointer-events-none opacity-40' : ''}`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="text-rose-500">
+            <div className="text-indigo-500">
               <Lightbulb size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
             </div>
             <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
@@ -277,8 +277,8 @@ export default function AIInsights({ transactions, isDark }: AIInsightsProps) {
 
         {!isPro && (
           <Link href="/pricing" className="absolute inset-0 z-30 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-black/5 transition-colors">
-            <Sparkles className="text-yellow-500 mb-2 animate-pulse" size={24} />
-            <h4 className="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-1">Saran Penghematan AI</h4>
+            <Sparkles className="text-cyan-500 mb-2 animate-pulse" size={24} />
+            <h4 className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Saran Penghematan AI</h4>
             <p className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">Gunakan Pro untuk rekomendasi hemat yang dipersonalisasi.</p>
           </Link>
         )}

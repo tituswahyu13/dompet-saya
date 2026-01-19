@@ -142,7 +142,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full animate-pulse bg-pink-500" />
           <label className={`text-xs font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-            Transfer Antar Wallet
+            Transfer Antar Dompet
           </label>
         </div>
         <button 
@@ -157,7 +157,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
       <div className="space-y-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Dari Wallet (Asal)</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Dari Dompet (Asal)</label>
             <div className="relative">
               <select 
                 value={fromWalletId}
@@ -190,7 +190,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Ke Wallet (Tujuan)</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Ke Dompet (Tujuan)</label>
             <div className="relative">
               <select 
                 value={toWalletId}
@@ -234,7 +234,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Misal: Top up GoPay"
+              placeholder="Misal: Isi saldo GoPay"
               className={`w-full p-4 border rounded-2xl outline-none transition-all text-sm font-medium ${
                 isDark ? 'bg-slate-950/50 border-white/5 text-white focus:border-pink-500/50' : 'bg-white/50 border-slate-200 text-slate-900 focus:border-pink-500'
               }`}
@@ -244,7 +244,7 @@ export default function TransferForm({ onRefresh, isDark, onCancel, user }: {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Nominal (Rp)</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Jumlah (Rp)</label>
             <div className="relative">
               <input 
                 type="number"

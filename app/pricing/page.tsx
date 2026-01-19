@@ -29,10 +29,10 @@ function PricingContent() {
   };
 
   const features = [
-    { name: 'Jumlah Dompet', free: '3 Dompet', pro: 'Unlimited' },
-    { name: 'Target Keuangan', free: '2 Target', pro: 'Unlimited' },
-    { name: 'Transaksi Berulang', free: '1 Transaksi', pro: 'Unlimited' },
-    { name: 'Budget Categories', free: '2 Kategori', pro: 'Unlimited' },
+    { name: 'Jumlah Dompet', free: '3 Dompet', pro: 'Tanpa Batas' },
+    { name: 'Target Keuangan', free: '2 Target', pro: 'Tanpa Batas' },
+    { name: 'Transaksi Berulang', free: '1 Transaksi', pro: 'Tanpa Batas' },
+    { name: 'Kategori Anggaran', free: '2 Kategori', pro: 'Tanpa Batas' },
     { name: 'Akses Data Historis', free: '2 Bulan', pro: 'Selamanya' },
     { name: 'AI Insights Dasar', free: true, pro: true },
     { name: 'AI Advanced Prediction', free: false, pro: true },
@@ -75,8 +75,6 @@ function PricingContent() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-rose-600/10 rounded-full blur-[120px] animate-pulse" />
       <div className="absolute bottom-[10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[160px] animate-float opacity-50" />
       <div className="absolute top-[30%] right-[10%] w-[20%] h-[20%] bg-pink-600/5 rounded-full blur-[100px] animate-pulse-slow" />
-
-      <Navigation isDark={isDark} />
       
       {/* Mobile Bottom Navigation */}
       <div className="sm:hidden">
@@ -87,20 +85,20 @@ function PricingContent() {
         {/* Back Button */}
         <Link href="/" className={`inline-flex items-center gap-2 mb-12 text-xs font-black uppercase tracking-[0.3em] ${isDark ? 'text-slate-500 hover:text-rose-400' : 'text-slate-400 hover:text-rose-600'} transition-all group`}>
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-          Back to Terminal
+          Kembali ke Dasbor
         </Link>
 
         {/* Header Section */}
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-rose-500/10 border border-rose-500/20 mb-8 backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <Crown className="text-rose-500" size={18} />
-            <span className="text-[10px] font-black text-rose-500 uppercase tracking-[0.4em]">Elite Membership</span>
+            <span className="text-[10px] font-black text-rose-500 uppercase tracking-[0.4em]">Keanggotaan Elite</span>
           </div>
           <h1 className={`text-4xl sm:text-7xl font-black uppercase tracking-tighter mb-8 max-w-4xl mx-auto leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            Master Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-purple-600">Financial Destiny</span>
+            Kuasai <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-purple-600">Takdir Finansial</span> Anda
           </h1>
           <p className={`text-base sm:text-xl font-bold max-w-2xl mx-auto opacity-70 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-            Unlock the world's most intelligent financial framework. Driven by AI, built for accuracy, designed for exclusivity.
+            Buka kerangka kerja finansial tercanggih di dunia. Didukung AI, dibangun untuk akurasi, dirancang untuk eksklusivitas.
           </p>
         </div>
 
@@ -113,7 +111,7 @@ function PricingContent() {
               <h3 className={`text-3xl font-black uppercase tracking-tight mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>Free Tier</h3>
               <div className="flex items-baseline gap-2">
                 <span className={`text-5xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>Rp 0</span>
-                <span className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>/ Monthly</span>
+                <span className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>/ Bulan</span>
               </div>
             </div>
             
@@ -131,7 +129,7 @@ function PricingContent() {
             </div>
 
             <button disabled className={`w-full py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] transition-all border ${isDark ? 'bg-white/5 text-slate-600 border-white/5' : 'bg-slate-100 text-slate-400 border-transparent'} cursor-not-allowed`}>
-              Current Framework
+              Paket Saat Ini
             </button>
           </div>
 
@@ -148,16 +146,16 @@ function PricingContent() {
 
               <div className="mb-10">
                 <div className="flex justify-between items-start mb-4">
-                  <p className="text-[10px] font-black text-rose-500 uppercase tracking-[0.4em]">Elite Intelligence</p>
-                  <div className="px-3 py-1 bg-rose-500 text-[8px] font-black text-white uppercase tracking-[0.2em] rounded-full shadow-lg shadow-rose-500/40">Highly Coveted</div>
+                  <p className="text-[10px] font-black text-rose-500 uppercase tracking-[0.4em]">Kecerdasan Elite</p>
+                  <div className="px-3 py-1 bg-rose-500 text-[8px] font-black text-white uppercase tracking-[0.2em] rounded-full shadow-lg shadow-rose-500/40">Paling Dicari</div>
                 </div>
                 <h3 className={`text-3xl font-black uppercase tracking-tight mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>Pro Edition</h3>
                 <div className="flex items-baseline gap-2">
-                  <span className={`text-5xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>Rp 19K</span>
-                  <span className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>/ Monthly</span>
+                  <span className={`text-5xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>Rp 19rb</span>
+                  <span className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>/ Bulan</span>
                 </div>
                 <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mt-4 flex items-center gap-2">
-                  <Sparkles size={12} /> Introductory Price
+                  <Sparkles size={12} /> Harga Pengenalan
                 </p>
               </div>
 
@@ -168,7 +166,7 @@ function PricingContent() {
                       <Check size={14} strokeWidth={3} />
                     </div>
                     <p className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'} group-hover/item:translate-x-1 transition-transform`}>
-                      {f.name} <span className="opacity-40 font-bold ml-1">─ {typeof f.pro === 'string' ? f.pro : 'Full Access'}</span>
+                      {f.name} <span className="opacity-40 font-bold ml-1">─ {typeof f.pro === 'string' ? f.pro : 'Akses Penuh'}</span>
                     </p>
                   </div>
                 ))}
@@ -176,11 +174,11 @@ function PricingContent() {
 
               {subscription?.status === 'trialing' ? (
                 <div className="w-full py-5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-2xl text-center text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm">
-                  Trial Active: {subscription.days_left} Days Remaining
+                  Uji Coba Aktif: Sisa {subscription.days_left} Hari
                 </div>
               ) : subscription?.is_pro ? (
                 <div className="w-full py-5 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-center text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm">
-                  Elite Access Granted
+                  Akses Elite Diberikan
                 </div>
               ) : (
                 <button
@@ -188,7 +186,7 @@ function PricingContent() {
                   className="w-full py-5 bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:scale-[1.03] active:scale-95 transition-all shadow-[0_20px_40px_-15px_rgba(225,29,72,0.4)] flex items-center justify-center gap-3 group/btn"
                 >
                   <Sparkles size={16} className="group-hover:rotate-12 transition-transform" />
-                  Try elite pro ─ 60 Days Free
+                  Coba Elite Pro ─ Gratis 60 Hari
                 </button>
               )}
             </div>
@@ -199,7 +197,7 @@ function PricingContent() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-4 mb-12">
             <div className="w-12 h-px bg-slate-500/20" />
-            <h3 className={`text-sm font-black uppercase tracking-[0.4em] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Financial Transparency</h3>
+            <h3 className={`text-sm font-black uppercase tracking-[0.4em] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Transparansi Finansial</h3>
             <div className="w-12 h-px bg-slate-500/20" />
           </div>
           

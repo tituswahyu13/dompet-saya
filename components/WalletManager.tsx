@@ -19,11 +19,11 @@ interface Wallet {
 }
 
 const WALLET_TYPES = [
-  { value: 'cash', label: 'Cash', defaultIcon: '💵' },
+  { value: 'cash', label: 'Tunai', defaultIcon: '💵' },
   { value: 'bank', label: 'Bank', defaultIcon: '🏦' },
-  { value: 'ewallet', label: 'E-Wallet', defaultIcon: '📱' },
-  { value: 'investment', label: 'Investment', defaultIcon: '📈' },
-  { value: 'other', label: 'Other', defaultIcon: '💰' },
+  { value: 'ewallet', label: 'Dompet Digital', defaultIcon: '📱' },
+  { value: 'investment', label: 'Investasi', defaultIcon: '📈' },
+  { value: 'other', label: 'Lainnya', defaultIcon: '💰' },
 ];
 
 const ICON_OPTIONS = ['💵', '🏦', '📱', '💳', '💰', '📈', '🏪', '🎯', '💎', '🔐'];
@@ -165,7 +165,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
           <div className="flex justify-between items-center">
             <div>
               <h2 className={`text-xl font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Wallet Management
+                Manajemen Dompet
               </h2>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Kelola Dompet Anda</p>
             </div>
@@ -254,7 +254,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
                         </div>
                       </div>
                       <div className={`pt-3 border-t ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Current Balance</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Saldo Saat Ini</p>
                         <div className="flex items-baseline gap-1">
                           <span className="text-xs font-bold" style={{ color: wallet.color }}>Rp</span>
                           <p className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
@@ -274,7 +274,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="flex justify-between items-center">
                 <h3 className={`text-sm font-black uppercase tracking-wider ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                  {editingId ? 'Edit Wallet' : 'Tambah Wallet Baru'}
+                  {editingId ? 'Edit Dompet' : 'Tambah Dompet Baru'}
                 </h3>
                 <button
                   type="button"
@@ -392,7 +392,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
                   type="submit"
                   className="w-full py-3 bg-rose-600 text-white text-sm font-black uppercase tracking-wider rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-500/20"
                 >
-                  {editingId ? 'Update Wallet' : 'Buat Wallet'}
+                  {editingId ? 'Perbarui Dompet' : 'Buat Dompet'}
                 </button>
               </div>
             </form>

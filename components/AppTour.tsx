@@ -342,7 +342,7 @@ export default function AppTour({ isDark }: { isDark: boolean }) {
                     isDark ? 'border-white/5 text-slate-400 hover:text-white' : 'border-slate-200 text-slate-500 hover:bg-slate-50'
                   }`}
                 >
-                  <ChevronLeft size={14} className="inline mr-1" /> Prev
+                  <ChevronLeft size={14} className="inline mr-1" /> Sebelumnya
                 </button>
               )}
               <button 

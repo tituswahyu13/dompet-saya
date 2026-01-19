@@ -164,9 +164,9 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
               </div>
               <div>
                 <h2 className={`text-xl font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  Financial Goals
+                  Target Finansial
                 </h2>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Set Your Saving Targets</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Atur Target Menabung Anda</p>
               </div>
             </div>
             <button onClick={onClose} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
@@ -182,19 +182,19 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                  <div className="flex items-center gap-3">
                   <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
                   <h3 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                    Active Goals ({goals.length})
+                    Target Aktif ({goals.length})
                   </h3>
                 </div>
                 <button onClick={() => setIsAdding(true)} className="px-6 py-3 bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-500/30 active:scale-95">
-                  + New Goal
+                  + Target Baru
                 </button>
               </div>
 
               {loading && goals.length === 0 ? (
-                <div className="text-center py-20 animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Loading your dreams...</div>
+                <div className="text-center py-20 animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Memuat impian Anda...</div>
               ) : goals.length === 0 ? (
                 <div className={`p-16 text-center rounded-[2.5rem] border border-dashed ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
-                  <p className="text-sm font-bold opacity-40 uppercase tracking-widest">You haven't set any goals yet.</p>
+                  <p className="text-sm font-bold opacity-40 uppercase tracking-widest">Anda belum membuat target apa pun.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -211,7 +211,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                             <div>
                               <h4 className={`text-base font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{g.name}</h4>
                               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                                {g.wallet_id ? `Linked to: ${wallets.find(w => w.id === g.wallet_id)?.name}` : 'Manual Progress'}
+                                {g.wallet_id ? `Terhubung ke: ${wallets.find(w => w.id === g.wallet_id)?.name}` : 'Progres Manual'}
                               </p>
                             </div>
                           </div>
@@ -276,32 +276,32 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
             <form onSubmit={handleSubmit} className="space-y-8 animate-in slide-in-from-right-4 duration-500">
                <div className="flex justify-between items-center mb-4">
                 <h3 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                  {editingId ? 'Edit Dream Target' : 'Configure New Target'}
+                  {editingId ? 'Edit Target Impian' : 'Konfigurasi Target Baru'}
                 </h3>
-                <button type="button" onClick={resetForm} className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'}`}>Cancel</button>
+                <button type="button" onClick={resetForm} className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'}`}>Batal</button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Goal Name</label>
-                    <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} placeholder="e.g., Dream House, New Car" />
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Nama Target</label>
+                    <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} placeholder="Misal: Rumah Impian, Mobil Baru" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Target Amount (IDR)</label>
+                     <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Jumlah Target (IDR)</label>
                       <input type="number" value={formData.target_amount} onChange={(e) => setFormData({ ...formData, target_amount: Number(e.target.value) })} required className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Manual Deposit (IDR)</label>
+                      <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Setoran Manual (IDR)</label>
                       <input type="number" value={formData.current_amount} onChange={(e) => setFormData({ ...formData, current_amount: Number(e.target.value) })} className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} />
-                      <p className="text-[8px] mt-1 opacity-50">Only used if no wallet is linked.</p>
+                      <p className="text-[8px] mt-1 opacity-50">Hanya jika tidak ada dompet yang terhubung.</p>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Link to Wallet (Auto-track)</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Hubungkan ke Wallet (Auto-track)</label>
                     <select value={formData.wallet_id || ''} onChange={(e) => setFormData({ ...formData, wallet_id: e.target.value })} className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`}>
-                      <option value="">Manual Progress (No Link)</option>
+                      <option value="">Progres Manual (Tanpa Link)</option>
                       {wallets.map(w => <option key={w.id} value={w.id}>{w.name} (Rp {w.current_balance?.toLocaleString('id-ID')})</option>)}
                     </select>
                   </div>
@@ -309,11 +309,11 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Target Deadline</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Batas Waktu Target</label>
                     <input type="date" value={formData.deadline} onChange={(e) => setFormData({ ...formData, deadline: e.target.value })} className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Select Icon</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Pilih Ikon</label>
                     <div className="grid grid-cols-6 gap-2">
                       {ICON_OPTIONS.map((item) => (
                         <button key={item} type="button" onClick={() => setFormData({ ...formData, icon: item })} className={`p-3 rounded-xl border transition-all flex items-center justify-center ${formData.icon === item ? 'bg-rose-600 border-blue-600 scale-110 text-white' : isDark ? 'bg-slate-800 border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
@@ -323,7 +323,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Theme Color</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Warna Tema</label>
                     <div className="grid grid-cols-8 gap-2">
                       {COLOR_OPTIONS.map((color) => (
                         <button key={color} type="button" onClick={() => setFormData({ ...formData, color })} className={`w-full h-8 rounded-lg border-2 transition-all ${formData.color === color ? 'border-white scale-110' : 'border-transparent'}`} style={{ backgroundColor: color }} />
@@ -335,7 +335,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
               <div className="pt-8">
                 <button type="submit" disabled={loading} className="w-full py-5 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-rose-500/20 active:scale-95 transition-all">
-                  {loading ? 'Processing Target...' : editingId ? 'Update Target' : 'Launch New Dream Target'}
+                  {loading ? 'Memproses Target...' : editingId ? 'Perbarui Target' : 'Simpan Target Baru'}
                 </button>
               </div>
             </form>

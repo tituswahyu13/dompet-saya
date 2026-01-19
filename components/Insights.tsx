@@ -144,7 +144,7 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
           </div>
           <div className="relative z-10">
             <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${isHealthy ? (isDark ? 'text-green-400/70' : 'text-green-600/70') : (isDark ? 'text-red-400/70' : 'text-red-600/70')}`}>
-              Economic Insight
+              Wawasan Ekonomi
             </p>
             <p className={`text-md md:text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-800'}`}>{healthMessage}</p>
             <p className={`text-[10px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} mt-1`}>{subMessage}</p>
@@ -160,10 +160,10 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
         }`}>
           <div className="flex justify-between items-center mb-10 shrink-0">
             <div>
-              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Total Equity Value</h3>
+              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Total Nilai Ekuitas</h3>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Sisa Saldo Kumulatif</p>
             </div>
-            <div className="w-10 h-10 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
               <TrendingUp size={20} strokeWidth={2.5} />
             </div>
           </div>
@@ -173,8 +173,8 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
                 <AreaChart data={balanceTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartTheme.grid} opacity={0.5} />
@@ -192,13 +192,13 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
                   />
                   <Tooltip 
                     contentStyle={chartTheme.tooltip as any} 
-                    cursor={{ stroke: '#3b82f6', strokeWidth: 1, strokeDasharray: '5 5' }}
+                    cursor={{ stroke: '#6366f1', strokeWidth: 1, strokeDasharray: '5 5' }}
                     formatter={(val: any) => [`Rp ${val?.toLocaleString('id-ID')}`, 'Saldo']}
                   />
                   <Area 
                     type="monotone" 
                     dataKey="balance" 
-                    stroke="#3b82f6" 
+                    stroke="#6366f1" 
                     strokeWidth={4} 
                     fillOpacity={1} 
                     fill="url(#colorBalance)" 
@@ -209,7 +209,7 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
             ) : (
               <div className="h-full flex flex-col items-center justify-center space-y-3">
                 <div className="w-12 h-12 rounded-full border-2 border-dashed border-slate-300 animate-spin" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 animate-pulse">Waiting for synchronization...</p>
+                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 animate-pulse">Menunggu sinkronisasi...</p>
               </div>
             )}
           </div>
@@ -221,7 +221,7 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
         }`}>
           <div className="flex justify-between items-center mb-2 shrink-0">
             <div>
-              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Outcome Proportion</h3>
+              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Proporsi Pengeluaran</h3>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Berdasarkan Kategori</p>
             </div>
             <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500">
@@ -270,17 +270,17 @@ export default function Insights({ transactions, isDark, wallets }: { transactio
         }`}>
           <div className="flex justify-between items-center mb-8 shrink-0">
             <div>
-              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Daily Financial Workflow</h3>
+              <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Alur Kas Finansial Harian</h3>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Arus Kas 7 Hari Terakhir</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-500" />
-                <span className="text-[10px] font-black uppercase text-slate-400 tracking-tighter">Income</span>
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-tighter">Pemasukan</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span className="text-[10px] font-black uppercase text-slate-400 tracking-tighter">Outcome</span>
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-tighter">Pengeluaran</span>
               </div>
             </div>
           </div>

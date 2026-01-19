@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dompet Saya Pro - Financial Intelligence Platform",
-  description: "Your smart personal finance manager with AI-powered insights, budget tracking, and financial goal management",
+  title: "Dompet Saya Pro - Platform Kecerdasan Finansial",
+  description: "Manajer keuangan pribadi cerdas Anda dengan wawasan berbasis AI, pelacakan anggaran, dan manajemen target finansial",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -43,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="id">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
