@@ -1,12 +1,12 @@
-"use client"
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
-import ConfirmationModal from './ConfirmationModal';
-import MinimalistIcon from './MinimalistIcon';
-import { Pencil, Trash2, Calendar, Sparkles } from 'lucide-react';
-import { useSubscription } from '@/hooks/useSubscription';
-import UpgradeModal from './UpgradeModal';
+"use client";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
+import ConfirmationModal from "./ConfirmationModal";
+import MinimalistIcon from "./MinimalistIcon";
+import { Pencil, Trash2, Calendar, Sparkles } from "lucide-react";
+import { useSubscription } from "@/hooks/useSubscription";
+import UpgradeModal from "./UpgradeModal";
 
 interface Goal {
   id: string;
@@ -20,10 +20,40 @@ interface Goal {
   is_completed: boolean;
 }
 
-const ICON_OPTIONS = ['🎯', '🏠', '🚗', '🏖️', '💍', '🎓', '💻', '🚲', '👶', '🏥', '💰', '💎'];
-const COLOR_OPTIONS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+const ICON_OPTIONS = [
+  "🎯",
+  "🏠",
+  "🚗",
+  "🏖️",
+  "💍",
+  "🎓",
+  "💻",
+  "🚲",
+  "👶",
+  "🏥",
+  "💰",
+  "💎",
+];
+const COLOR_OPTIONS = [
+  "#3b82f6",
+  "#10b981",
+  "#f59e0b",
+  "#ef4444",
+  "#8b5cf6",
+  "#ec4899",
+  "#14b8a6",
+  "#f97316",
+];
 
-export default function GoalManager({ user, isDark, onClose }: { user: User, isDark: boolean, onClose: () => void }) {
+export default function GoalManager({
+  user,
+  isDark,
+  onClose,
+}: {
+  user: User;
+  isDark: boolean;
+  onClose: () => void;
+}) {
   const { subscription } = useSubscription();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [wallets, setWallets] = useState<any[]>([]);
@@ -34,13 +64,13 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: '',
+    name: "",
     target_amount: 0,
     current_amount: 0,
-    wallet_id: '' as string | null,
-    deadline: '',
-    icon: '🎯',
-    color: '#f43f5e'
+    wallet_id: "" as string | null,
+    deadline: "",
+    icon: "🎯",
+    color: "#4f46e5",
   });
 
   useEffect(() => {
@@ -49,30 +79,30 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
   const fetchData = async () => {
     setLoading(true);
-    
+
     // Fetch Goals
     const { data: gData } = await supabase
-      .from('financial_goals')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      .from("financial_goals")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
 
     // Fetch Wallets (for linking)
     const { data: wData } = await supabase
-      .from('wallet_balances')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('is_active', true);
+      .from("wallet_balances")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("is_active", true);
 
     if (gData) setGoals(gData);
     if (wData) setWallets(wData);
-    
+
     setLoading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Restriction: Max 2 goals for free users
     if (!editingId && !subscription?.is_pro && goals.length >= 2) {
       setShowUpgradeModal(true);
@@ -85,14 +115,17 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
       ...formData,
       user_id: user.id,
       deadline: formData.deadline || null,
-      wallet_id: formData.wallet_id || null
+      wallet_id: formData.wallet_id || null,
     };
 
     if (editingId) {
-      const { error } = await supabase.from('financial_goals').update(payload).eq('id', editingId);
+      const { error } = await supabase
+        .from("financial_goals")
+        .update(payload)
+        .eq("id", editingId);
       if (error) alert(error.message);
     } else {
-      const { error } = await supabase.from('financial_goals').insert(payload);
+      const { error } = await supabase.from("financial_goals").insert(payload);
       if (error) alert(error.message);
     }
 
@@ -107,19 +140,22 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
   const executeDelete = async (goal: Goal) => {
     setConfirmingDelete(null);
-    const { error } = await supabase.from('financial_goals').delete().eq('id', goal.id);
+    const { error } = await supabase
+      .from("financial_goals")
+      .delete()
+      .eq("id", goal.id);
     if (!error) fetchData();
   };
 
   const resetForm = () => {
     setFormData({
-      name: '',
+      name: "",
       target_amount: 0,
       current_amount: 0,
-      wallet_id: '',
-      deadline: '',
-      icon: '🎯',
-      color: '#3b82f6'
+      wallet_id: "",
+      deadline: "",
+      icon: "🎯",
+      color: "#4f46e5",
     });
     setEditingId(null);
     setIsAdding(false);
@@ -127,10 +163,10 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
   const calculateProgress = (goal: Goal) => {
     let current = goal.current_amount;
-    
+
     // If linked to a wallet, use the wallet's balance
     if (goal.wallet_id) {
-      const wallet = wallets.find(w => w.id === goal.wallet_id);
+      const wallet = wallets.find((w) => w.id === goal.wallet_id);
       if (wallet) {
         current = wallet.current_balance || 0;
       }
@@ -142,7 +178,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
   const getCurrentDisplayAmount = (goal: Goal) => {
     if (goal.wallet_id) {
-      const wallet = wallets.find(w => w.id === goal.wallet_id);
+      const wallet = wallets.find((w) => w.id === goal.wallet_id);
       return wallet?.current_balance || 0;
     }
     return goal.current_amount;
@@ -150,27 +186,53 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[200] flex items-center justify-center p-4">
-      <div className={`w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border shadow-2xl animate-in zoom-in-95 duration-300 pb-20 sm:pb-0 ${
-        isDark ? 'bg-slate-900/95 border-white/5 shadow-black/50' : 'bg-white/95 border-slate-200 shadow-slate-200/50'
-      }`}>
+      <div
+        className={`w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border shadow-2xl animate-in zoom-in-95 duration-300 pb-20 sm:pb-0 ${
+          isDark
+            ? "bg-slate-900/95 border-white/5 shadow-black/50"
+            : "bg-white/95 border-slate-200 shadow-slate-200/50"
+        }`}
+      >
         {/* Header */}
-        <div className={`sticky top-0 p-8 border-b backdrop-blur-md z-10 ${
-          isDark ? 'bg-slate-900/80 border-white/5' : 'bg-white/80 border-slate-200'
-        }`}>
+        <div
+          className={`sticky top-0 p-8 border-b backdrop-blur-md z-10 ${
+            isDark
+              ? "bg-slate-900/80 border-white/5"
+              : "bg-white/80 border-slate-200"
+          }`}
+        >
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-               <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20">
+              <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
                 <span className="text-2xl">🎯</span>
               </div>
               <div>
-                <h2 className={`text-xl font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                <h2
+                  className={`text-xl font-black uppercase tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+                >
                   Target Finansial
                 </h2>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Atur Target Menabung Anda</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">
+                  Atur Target Menabung Anda
+                </p>
               </div>
             </div>
-            <button onClick={onClose} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+            <button
+              onClick={onClose}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? "bg-white/5 text-slate-400 hover:text-white" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
             </button>
           </div>
         </div>
@@ -179,22 +241,33 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
           {!isAdding ? (
             <div className="space-y-8">
               <div className="flex justify-between items-center">
-                 <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
-                  <h3 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                <div className="flex items-center gap-3">
+                  <div className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+                  <h3
+                    className={`text-sm font-black uppercase tracking-widest ${isDark ? "text-slate-300" : "text-slate-700"}`}
+                  >
                     Target Aktif ({goals.length})
                   </h3>
                 </div>
-                <button onClick={() => setIsAdding(true)} className="px-6 py-3 bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-500/30 active:scale-95">
+                <button
+                  onClick={() => setIsAdding(true)}
+                  className="px-6 py-3 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/30 active:scale-95"
+                >
                   + Target Baru
                 </button>
               </div>
 
               {loading && goals.length === 0 ? (
-                <div className="text-center py-20 animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Memuat impian Anda...</div>
+                <div className="text-center py-20 animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                  Memuat impian Anda...
+                </div>
               ) : goals.length === 0 ? (
-                <div className={`p-16 text-center rounded-[2.5rem] border border-dashed ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
-                  <p className="text-sm font-bold opacity-40 uppercase tracking-widest">Anda belum membuat target apa pun.</p>
+                <div
+                  className={`p-16 text-center rounded-[2.5rem] border border-dashed ${isDark ? "border-white/10" : "border-slate-200"}`}
+                >
+                  <p className="text-sm font-bold opacity-40 uppercase tracking-widest">
+                    Anda belum membuat target apa pun.
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -202,36 +275,57 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                     const progress = calculateProgress(g);
                     const current = getCurrentDisplayAmount(g);
                     return (
-                      <div key={g.id} className={`p-6 rounded-[2rem] border transition-all hover:scale-[1.02] group relative overflow-hidden ${isDark ? 'bg-slate-800/40 border-white/5' : 'bg-slate-50 border-slate-200'}`}>
+                      <div
+                        key={g.id}
+                        className={`p-6 rounded-[2rem] border transition-all hover:scale-[1.02] group relative overflow-hidden ${isDark ? "bg-slate-800/40 border-white/5" : "bg-slate-50 border-slate-200"}`}
+                      >
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex items-center gap-4">
-                            <div className={`p-3 rounded-2xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-200'}`}>
-                              <MinimalistIcon icon={g.icon} size={32} style={{ color: g.color }} />
+                            <div
+                              className={`p-3 rounded-2xl border ${isDark ? "bg-white/5 border-white/5" : "bg-white border-slate-200"}`}
+                            >
+                              <MinimalistIcon
+                                icon={g.icon}
+                                size={32}
+                                style={{ color: g.color }}
+                              />
                             </div>
                             <div>
-                              <h4 className={`text-base font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{g.name}</h4>
+                              <h4
+                                className={`text-base font-black tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+                              >
+                                {g.name}
+                              </h4>
                               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                                {g.wallet_id ? `Terhubung ke: ${wallets.find(w => w.id === g.wallet_id)?.name}` : 'Progres Manual'}
+                                {g.wallet_id
+                                  ? `Terhubung ke: ${wallets.find((w) => w.id === g.wallet_id)?.name}`
+                                  : "Progres Manual"}
                               </p>
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <button onClick={() => { 
-                              setEditingId(g.id); 
-                              setFormData({
-                                name: g.name,
-                                target_amount: g.target_amount,
-                                current_amount: g.current_amount,
-                                wallet_id: g.wallet_id || '',
-                                deadline: g.deadline || '',
-                                icon: g.icon,
-                                color: g.color
-                              });
-                              setIsAdding(true); 
-                            }} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-white/5 text-slate-400 hover:text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}>
+                            <button
+                              onClick={() => {
+                                setEditingId(g.id);
+                                setFormData({
+                                  name: g.name,
+                                  target_amount: g.target_amount,
+                                  current_amount: g.current_amount,
+                                  wallet_id: g.wallet_id || "",
+                                  deadline: g.deadline || "",
+                                  icon: g.icon,
+                                  color: g.color,
+                                });
+                                setIsAdding(true);
+                              }}
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? "bg-white/5 text-slate-400 hover:text-white" : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"}`}
+                            >
                               <Pencil size={14} />
                             </button>
-                            <button onClick={() => handleDelete(g)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? 'bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}>
+                            <button
+                              onClick={() => handleDelete(g)}
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white" : "bg-red-50 text-red-600 hover:bg-red-100"}`}
+                            >
                               <Trash2 size={14} />
                             </button>
                           </div>
@@ -240,29 +334,55 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
                         <div className="space-y-3">
                           <div className="flex justify-between items-baseline">
                             <div className="space-y-0.5">
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Progress</p>
-                              <p className={`text-lg font-black tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                                Rp {current.toLocaleString('id-ID')} <span className="text-xs opacity-40 font-bold">/ {g.target_amount.toLocaleString('id-ID')}</span>
+                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                                Progress
+                              </p>
+                              <p
+                                className={`text-lg font-black tracking-tighter ${isDark ? "text-white" : "text-slate-900"}`}
+                              >
+                                Rp {current.toLocaleString("id-ID")}{" "}
+                                <span className="text-xs opacity-40 font-bold">
+                                  / {g.target_amount.toLocaleString("id-ID")}
+                                </span>
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Status</p>
-                              <p className="text-sm font-black text-rose-500">{progress.toFixed(1)}%</p>
+                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                                Status
+                              </p>
+                              <p className="text-sm font-black text-indigo-600">
+                                {progress.toFixed(1)}%
+                              </p>
                             </div>
                           </div>
-                          
-                          <div className={`h-2.5 w-full rounded-full overflow-hidden ${isDark ? 'bg-slate-700' : 'bg-slate-200'}`}>
-                            <div 
-                              className="h-full transition-all duration-1000 shadow-lg" 
-                              style={{ width: `${progress}%`, backgroundColor: g.color }}
+
+                          <div
+                            className={`h-2.5 w-full rounded-full overflow-hidden ${isDark ? "bg-slate-700" : "bg-slate-200"}`}
+                          >
+                            <div
+                              className="h-full transition-all duration-1000 shadow-lg"
+                              style={{
+                                width: `${progress}%`,
+                                backgroundColor: g.color,
+                              }}
                             />
                           </div>
                         </div>
 
                         {g.deadline && (
-                          <div className={`mt-4 pt-4 border-t flex items-center justify-between ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
+                          <div
+                            className={`mt-4 pt-4 border-t flex items-center justify-between ${isDark ? "border-white/5" : "border-slate-200"}`}
+                          >
                             <p className="text-[8px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
-                              <Calendar size={10} /> Deadline: {new Date(g.deadline).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                              <Calendar size={10} /> Deadline:{" "}
+                              {new Date(g.deadline).toLocaleDateString(
+                                "id-ID",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                },
+                              )}
                             </p>
                           </div>
                         )}
@@ -273,60 +393,148 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
               )}
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-8 animate-in slide-in-from-right-4 duration-500">
-               <div className="flex justify-between items-center mb-4">
-                <h3 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                  {editingId ? 'Edit Target Impian' : 'Konfigurasi Target Baru'}
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-8 animate-in slide-in-from-right-4 duration-500"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3
+                  className={`text-sm font-black uppercase tracking-widest ${isDark ? "text-slate-300" : "text-slate-700"}`}
+                >
+                  {editingId ? "Edit Target Impian" : "Konfigurasi Target Baru"}
                 </h3>
-                <button type="button" onClick={resetForm} className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'}`}>Batal</button>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className={`text-xs font-black uppercase tracking-widest ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}
+                >
+                  Batal
+                </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Nama Target</label>
-                    <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} placeholder="Misal: Rumah Impian, Mobil Baru" />
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">
+                      Nama Target
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      required
+                      className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? "bg-slate-800 border-white/5 text-white" : "bg-slate-50 border-slate-200"}`}
+                      placeholder="Misal: Rumah Impian, Mobil Baru"
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                     <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Jumlah Target (IDR)</label>
-                      <input type="number" value={formData.target_amount} onChange={(e) => setFormData({ ...formData, target_amount: Number(e.target.value) })} required className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} />
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">
+                        Jumlah Target (IDR)
+                      </label>
+                      <input
+                        type="number"
+                        value={formData.target_amount}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            target_amount: Number(e.target.value),
+                          })
+                        }
+                        required
+                        className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? "bg-slate-800 border-white/5 text-white" : "bg-slate-50 border-slate-200"}`}
+                      />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Setoran Manual (IDR)</label>
-                      <input type="number" value={formData.current_amount} onChange={(e) => setFormData({ ...formData, current_amount: Number(e.target.value) })} className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} />
-                      <p className="text-[8px] mt-1 opacity-50">Hanya jika tidak ada dompet yang terhubung.</p>
+                      <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">
+                        Setoran Manual (IDR)
+                      </label>
+                      <input
+                        type="number"
+                        value={formData.current_amount}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            current_amount: Number(e.target.value),
+                          })
+                        }
+                        className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? "bg-slate-800 border-white/5 text-white" : "bg-slate-50 border-slate-200"}`}
+                      />
+                      <p className="text-[8px] mt-1 opacity-50">
+                        Hanya jika tidak ada dompet yang terhubung.
+                      </p>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Hubungkan ke Wallet (Auto-track)</label>
-                    <select value={formData.wallet_id || ''} onChange={(e) => setFormData({ ...formData, wallet_id: e.target.value })} className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`}>
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">
+                      Hubungkan ke Wallet (Auto-track)
+                    </label>
+                    <select
+                      value={formData.wallet_id || ""}
+                      onChange={(e) =>
+                        setFormData({ ...formData, wallet_id: e.target.value })
+                      }
+                      className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? "bg-slate-800 border-white/5 text-white" : "bg-slate-50 border-slate-200"}`}
+                    >
                       <option value="">Progres Manual (Tanpa Link)</option>
-                      {wallets.map(w => <option key={w.id} value={w.id}>{w.name} (Rp {w.current_balance?.toLocaleString('id-ID')})</option>)}
+                      {wallets.map((w) => (
+                        <option key={w.id} value={w.id}>
+                          {w.name} (Rp{" "}
+                          {w.current_balance?.toLocaleString("id-ID")})
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Batas Waktu Target</label>
-                    <input type="date" value={formData.deadline} onChange={(e) => setFormData({ ...formData, deadline: e.target.value })} className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? 'bg-slate-800 border-white/5 text-white' : 'bg-slate-50 border-slate-200'}`} />
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">
+                      Batas Waktu Target
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.deadline}
+                      onChange={(e) =>
+                        setFormData({ ...formData, deadline: e.target.value })
+                      }
+                      className={`w-full px-5 py-4 rounded-2xl border outline-none transition-all ${isDark ? "bg-slate-800 border-white/5 text-white" : "bg-slate-50 border-slate-200"}`}
+                    />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Pilih Ikon</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">
+                      Pilih Ikon
+                    </label>
                     <div className="grid grid-cols-6 gap-2">
                       {ICON_OPTIONS.map((item) => (
-                        <button key={item} type="button" onClick={() => setFormData({ ...formData, icon: item })} className={`p-3 rounded-xl border transition-all flex items-center justify-center ${formData.icon === item ? 'bg-rose-600 border-blue-600 scale-110 text-white' : isDark ? 'bg-slate-800 border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() =>
+                            setFormData({ ...formData, icon: item })
+                          }
+                          className={`p-3 rounded-xl border transition-all flex items-center justify-center ${formData.icon === item ? "bg-indigo-600 border-indigo-700 scale-110 text-white" : isDark ? "bg-slate-800 border-white/5 text-slate-400" : "bg-white border-slate-200 text-slate-500"}`}
+                        >
                           <MinimalistIcon icon={item} size={24} />
                         </button>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Warna Tema</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">
+                      Warna Tema
+                    </label>
                     <div className="grid grid-cols-8 gap-2">
                       {COLOR_OPTIONS.map((color) => (
-                        <button key={color} type="button" onClick={() => setFormData({ ...formData, color })} className={`w-full h-8 rounded-lg border-2 transition-all ${formData.color === color ? 'border-white scale-110' : 'border-transparent'}`} style={{ backgroundColor: color }} />
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, color })}
+                          className={`w-full h-8 rounded-lg border-2 transition-all ${formData.color === color ? "border-white scale-110" : "border-transparent"}`}
+                          style={{ backgroundColor: color }}
+                        />
                       ))}
                     </div>
                   </div>
@@ -334,8 +542,16 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
               </div>
 
               <div className="pt-8">
-                <button type="submit" disabled={loading} className="w-full py-5 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-rose-500/20 active:scale-95 transition-all">
-                  {loading ? 'Memproses Target...' : editingId ? 'Perbarui Target' : 'Simpan Target Baru'}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-[1.02] shadow-xl shadow-indigo-600/20 active:scale-95 transition-all"
+                >
+                  {loading
+                    ? "Memproses Target..."
+                    : editingId
+                      ? "Perbarui Target"
+                      : "Simpan Target Baru"}
                 </button>
               </div>
             </form>
@@ -343,7 +559,7 @@ export default function GoalManager({ user, isDark, onClose }: { user: User, isD
         </div>
       </div>
 
-      <ConfirmationModal 
+      <ConfirmationModal
         isOpen={!!confirmingDelete}
         title="Hapus Target Keuangan"
         message={`Apakah Anda yakin ingin menghapus target "${confirmingDelete?.name}"? Tindakan ini tidak dapat dibatalkan.`}

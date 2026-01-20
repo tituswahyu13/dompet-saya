@@ -169,9 +169,9 @@ function TransactionsContent({
     <div
       className={`min-h-screen transition-all duration-700 relative overflow-hidden ${isDark ? "bg-[#020617] text-slate-100" : "bg-slate-50 text-slate-900"}`}
     >
-      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-rose-600/10 rounded-full blur-[160px] animate-float opacity-50" />
+      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[160px] animate-float opacity-50" />
       <div
-        className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[160px] animate-float opacity-50"
+        className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-violet-600/10 rounded-full blur-[160px] animate-float opacity-50"
         style={{ animationDelay: "-3s" }}
       />
 
@@ -216,7 +216,7 @@ function TransactionsContent({
               <button
                 id="tour-tx-recurring"
                 onClick={() => setShowRecurringManager(true)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? "bg-rose-600/10 text-rose-400 border-rose-500/20 hover:bg-rose-600/20" : "bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100"} hover:scale-105 transition-all`}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? "bg-indigo-600/10 text-indigo-400 border-indigo-600/20 hover:bg-indigo-600/20" : "bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100"} hover:scale-105 transition-all`}
                 title="Penjadwalan Rutin"
               >
                 <RefreshCw size={20} />
@@ -246,7 +246,7 @@ function TransactionsContent({
               <div className="flex items-center justify-between mb-6 px-1">
                 <div className="flex items-center gap-2">
                   <div
-                    className={`w-1.5 h-6 ${isTransferMode ? "bg-pink-600" : "bg-rose-600"} rounded-full`}
+                    className={`w-1.5 h-6 ${isTransferMode ? "bg-violet-600" : "bg-indigo-600"} rounded-full`}
                   />
                   <h2
                     className={`text-lg font-black uppercase tracking-tighter ${isDark ? "text-white" : "text-slate-900"}`}
@@ -262,7 +262,7 @@ function TransactionsContent({
                   <button
                     id="tour-tx-mode"
                     onClick={() => setIsTransferMode(!isTransferMode)}
-                    className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-rose-500/10 text-rose-500 border-rose-500/20"
+                    className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-indigo-500/10 text-indigo-600 border-indigo-600/20"
                   >
                     {isTransferMode ? "Ke Transaksi" : "Ke Transfer"}
                   </button>
@@ -367,7 +367,7 @@ function TransactionsContent({
                   <button
                     id="tour-tx-export"
                     onClick={exportToCSV}
-                    className="p-2 px-4 text-[10px] font-black bg-rose-600/10 text-rose-500 uppercase tracking-widest rounded-xl hover:bg-rose-600 hover:text-white transition-all"
+                    className="p-2 px-4 text-[10px] font-black bg-indigo-600/10 text-indigo-600 uppercase tracking-widest rounded-xl hover:bg-indigo-600 hover:text-white transition-all"
                   >
                     CSV
                   </button>
@@ -458,7 +458,7 @@ function TransactionsContent({
                             <div className="flex justify-center gap-2 transition-all">
                               <button
                                 onClick={() => handleEdit(t)}
-                                className="w-8 h-8 rounded-lg flex items-center justify-center bg-rose-500/10 text-rose-500 hover:bg-blue-500 text-white transition-all"
+                                className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-500/10 text-indigo-600 hover:bg-indigo-500 text-white transition-all"
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"

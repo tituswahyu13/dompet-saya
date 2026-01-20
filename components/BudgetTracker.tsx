@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
-import { Check, Settings, AlertTriangle, Lock } from 'lucide-react';
-import { useSubscription } from '@/hooks/useSubscription';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
+import { Check, Settings, AlertTriangle, Lock } from "lucide-react";
+import { useSubscription } from "@/hooks/useSubscription";
+import Link from "next/link";
 
 interface Transaction {
   kategori: string;
@@ -18,13 +18,21 @@ interface Budget {
 }
 
 const DEFAULT_BUDGETS = [
-  { kategori: 'Kebutuhan Pokok', limit: 3000000 },
-  { kategori: 'Lifestyle (Makan/Jajan)', limit: 1500000 },
-  { kategori: 'Transport', limit: 500000 },
-  { kategori: 'Personal Care', limit: 300000 },
+  { kategori: "Kebutuhan Pokok", limit: 3000000 },
+  { kategori: "Lifestyle (Makan/Jajan)", limit: 1500000 },
+  { kategori: "Transport", limit: 500000 },
+  { kategori: "Personal Care", limit: 300000 },
 ];
 
-export default function BudgetTracker({ transactions, isDark, user }: { transactions: Transaction[], isDark: boolean, user: User }) {
+export default function BudgetTracker({
+  transactions,
+  isDark,
+  user,
+}: {
+  transactions: Transaction[];
+  isDark: boolean;
+  user: User;
+}) {
   const { subscription } = useSubscription();
   const isPro = subscription?.is_pro;
   const [budgets, setBudgets] = useState<Budget[]>(DEFAULT_BUDGETS);
@@ -40,23 +48,23 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from('budgets')
-        .select('*')
-        .eq('user_id', user.id);
+        .from("budgets")
+        .select("*")
+        .eq("user_id", user.id);
 
       if (error) throw error;
 
       if (data && data.length > 0) {
         // Map DB fields to component state
-        const mapped = data.map(b => ({
+        const mapped = data.map((b) => ({
           id: b.id,
           kategori: b.category,
-          limit: Number(b.limit_amount)
+          limit: Number(b.limit_amount),
         }));
-        
+
         // Ensure we keep all default categories if some are missing in DB
-        const merged = DEFAULT_BUDGETS.map(def => {
-          const found = mapped.find(m => m.kategori === def.kategori);
+        const merged = DEFAULT_BUDGETS.map((def) => {
+          const found = mapped.find((m) => m.kategori === def.kategori);
           return found || def;
         });
 
@@ -73,18 +81,18 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
     setLoading(true);
     try {
       // Upsert all budgets for this user
-      const toUpsert = budgets.map(b => ({
+      const toUpsert = budgets.map((b) => ({
         user_id: user.id,
         category: b.kategori,
-        limit_amount: b.limit
+        limit_amount: b.limit,
       }));
 
       const { error } = await supabase
-        .from('budgets')
-        .upsert(toUpsert, { onConflict: 'user_id,category' });
+        .from("budgets")
+        .upsert(toUpsert, { onConflict: "user_id,category" });
 
       if (error) throw error;
-      
+
       setIsEditing(false);
       await fetchBudgets(); // Refresh to get IDs
     } catch (error: any) {
@@ -101,35 +109,50 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
   };
 
   const spendingByCategory = transactions
-    .filter(t => t.outcome > 0)
+    .filter((t) => t.outcome > 0)
     .reduce((acc: any, curr) => {
       acc[curr.kategori] = (acc[curr.kategori] || 0) + curr.outcome;
       return acc;
     }, {});
 
-  const totalSaving = transactions.reduce((acc, curr) => acc + (curr.saving || 0), 0);
+  const totalSaving = transactions.reduce(
+    (acc, curr) => acc + (curr.saving || 0),
+    0,
+  );
   const totalBudgetLimit = budgets.reduce((acc, curr) => acc + curr.limit, 0);
 
   return (
-    <div className={`p-8 rounded-[2.5rem] shadow-xl border transition-all duration-500 relative overflow-hidden ${
-      isDark ? 'glass-dark border-white/5 shadow-black/20' : 'glass border-white shadow-slate-200/50'
-    }`}>
+    <div
+      className={`p-8 rounded-[2.5rem] shadow-xl border transition-all duration-500 relative overflow-hidden ${
+        isDark
+          ? "glass-dark border-white/5 shadow-black/20"
+          : "glass border-white shadow-slate-200/50"
+      }`}
+    >
       {/* Decorative Blur */}
-      <div className="absolute -left-12 -bottom-12 w-32 h-32 bg-blue-500/10 rounded-full blur-[80px] opacity-20" />
+      <div className="absolute -left-12 -bottom-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-[80px] opacity-20" />
 
       <div className="flex justify-between items-center mb-8 relative z-10 shrink-0">
         <div>
-          <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Analitik Anggaran</h3>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manajemen Anggaran Cloud</p>
+          <h3
+            className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? "text-slate-100" : "text-slate-800"}`}
+          >
+            Analitik Anggaran
+          </h3>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+            Manajemen Anggaran Cloud
+          </p>
         </div>
-        <button 
-          onClick={() => isEditing ? saveBudgets() : setIsEditing(true)}
+        <button
+          onClick={() => (isEditing ? saveBudgets() : setIsEditing(true))}
           disabled={loading}
           className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${
-            isEditing 
-              ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' 
-              : isDark ? 'bg-slate-800 text-slate-400 hover:text-white border border-white/5' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200'
-          } ${loading ? 'opacity-50' : ''}`}
+            isEditing
+              ? "bg-green-500 text-white shadow-lg shadow-green-500/20"
+              : isDark
+                ? "bg-slate-800 text-slate-400 hover:text-white border border-white/5"
+                : "bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200"
+          } ${loading ? "opacity-50" : ""}`}
         >
           {loading ? (
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -141,40 +164,70 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
         </button>
       </div>
 
-      {loading && budgets[0].limit === 3000000 && budgets[3].limit === 300000 ? (
-         <div className="absolute inset-0 z-20 bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 animate-pulse">Sinkronisasi Data...</p>
-         </div>
+      {loading &&
+      budgets[0].limit === 3000000 &&
+      budgets[3].limit === 300000 ? (
+        <div className="absolute inset-0 z-20 bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-600 animate-pulse">
+            Sinkronisasi Data...
+          </p>
+        </div>
       ) : null}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-4 mb-8 relative z-10">
-        <div className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
-          isDark ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50/50 border-blue-100'
-        }`}>
-          <p className="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] mb-2">Total Tabungan</p>
+        <div
+          className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
+            isDark
+              ? "bg-indigo-500/5 border-indigo-500/20"
+              : "bg-indigo-50/50 border-indigo-100"
+          }`}
+        >
+          <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-2">
+            Total Tabungan
+          </p>
           <div className="flex items-baseline gap-1 overflow-hidden">
-            <span className="text-[10px] font-bold text-blue-500 flex-shrink-0">Rp</span>
-            <p className={`text-base font-black tracking-tighter truncate ${
-              isDark ? 'text-blue-400' : 'text-blue-600'
-            }`}>{totalSaving.toLocaleString('id-ID')}</p>
+            <span className="text-[10px] font-bold text-indigo-500 flex-shrink-0">
+              Rp
+            </span>
+            <p
+              className={`text-base font-black tracking-tighter truncate ${
+                isDark ? "text-indigo-400" : "text-indigo-600"
+              }`}
+            >
+              {totalSaving.toLocaleString("id-ID")}
+            </p>
           </div>
         </div>
 
-        <div className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
-          isDark ? 'bg-cyan-500/5 border-cyan-500/20' : 'bg-cyan-50/50 border-cyan-100'
-        }`}>
-          <p className="text-[9px] font-black text-cyan-500 uppercase tracking-[0.2em] mb-2">Total Anggaran</p>
+        <div
+          className={`p-5 rounded-2xl border transition-all hover:scale-[1.02] ${
+            isDark
+              ? "bg-violet-500/5 border-violet-500/20"
+              : "bg-violet-50/50 border-violet-100"
+          }`}
+        >
+          <p className="text-[9px] font-black text-violet-500 uppercase tracking-[0.2em] mb-2">
+            Total Anggaran
+          </p>
           <div className="flex items-baseline gap-1 overflow-hidden">
-            <span className="text-[10px] font-bold text-cyan-500 flex-shrink-0">Rp</span>
-            <p className={`text-base font-black tracking-tighter truncate ${
-              isDark ? 'text-cyan-400' : 'text-cyan-600'
-            }`}>{totalBudgetLimit.toLocaleString('id-ID')}</p>
+            <span className="text-[10px] font-bold text-violet-500 flex-shrink-0">
+              Rp
+            </span>
+            <p
+              className={`text-base font-black tracking-tighter truncate ${
+                isDark ? "text-violet-400" : "text-violet-600"
+              }`}
+            >
+              {totalBudgetLimit.toLocaleString("id-ID")}
+            </p>
           </div>
         </div>
       </div>
 
-      <div className={`h-px mb-8 relative z-10 ${isDark ? 'bg-white/5' : 'bg-slate-200'}`} />
+      <div
+        className={`h-px mb-8 relative z-10 ${isDark ? "bg-white/5" : "bg-slate-200"}`}
+      />
 
       <div className="space-y-6 relative z-10">
         {budgets.map((budget, index) => {
@@ -184,53 +237,83 @@ export default function BudgetTracker({ transactions, isDark, user }: { transact
           const isLocked = !isPro && index >= 2; // Lock categories beyond index 1 (3rd category onwards)
 
           return (
-            <div key={budget.kategori} className={`group relative ${isLocked ? 'opacity-40' : ''}`}>
+            <div
+              key={budget.kategori}
+              className={`group relative ${isLocked ? "opacity-40" : ""}`}
+            >
               {isLocked && (
-                <Link href="/pricing" className="absolute inset-0 z-10 flex items-center justify-center bg-black/5 rounded-xl backdrop-blur-[1px] cursor-pointer hover:bg-black/10 transition-colors">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-full">
-                    <Lock size={10} className="text-rose-500" />
-                    <span className="text-[8px] font-black text-rose-500 uppercase tracking-widest">PRO</span>
+                <Link
+                  href="/pricing"
+                  className="absolute inset-0 z-10 flex items-center justify-center bg-black/5 rounded-xl backdrop-blur-[1px] cursor-pointer hover:bg-black/10 transition-colors"
+                >
+                  <div className="flex items-center gap-2 px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full">
+                    <Lock size={10} className="text-indigo-600" />
+                    <span className="text-[8px] font-black text-indigo-600 uppercase tracking-widest">
+                      PRO
+                    </span>
                   </div>
                 </Link>
               )}
               <div className="flex justify-between items-start mb-2.5 px-0.5">
                 <div className="flex-1">
-                  <h4 className={`text-[11px] font-black uppercase tracking-[0.15em] mb-1.5 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{budget.kategori}</h4>
+                  <h4
+                    className={`text-[11px] font-black uppercase tracking-[0.15em] mb-1.5 ${isDark ? "text-slate-300" : "text-slate-700"}`}
+                  >
+                    {budget.kategori}
+                  </h4>
                   <div className="flex items-baseline gap-1.5">
                     {isEditing ? (
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-black text-indigo-500">Rp</span>
-                        <input 
+                        <span className="text-[10px] font-black text-indigo-500">
+                          Rp
+                        </span>
+                        <input
                           type="number"
                           value={budget.limit}
                           onChange={(e) => updateLimit(index, e.target.value)}
                           className={`w-28 px-2 py-1 text-right font-black rounded-lg border outline-none text-sm bg-transparent ${
-                            isDark ? 'border-white/10 text-white' : 'border-slate-200 text-slate-900'
+                            isDark
+                              ? "border-white/10 text-white"
+                              : "border-slate-200 text-slate-900"
                           }`}
                         />
                       </div>
                     ) : (
                       <>
-                        <span className="text-[10px] font-bold text-indigo-500">Rp</span>
-                        <p className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{spent.toLocaleString('id-ID')}</p>
-                        <span className="text-[10px] font-bold text-slate-400 ml-1">/ {(budget.limit / 1000).toFixed(0)}k</span>
+                        <span className="text-[10px] font-bold text-indigo-500">
+                          Rp
+                        </span>
+                        <p
+                          className={`text-lg font-black tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+                        >
+                          {spent.toLocaleString("id-ID")}
+                        </p>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">
+                          / {(budget.limit / 1000).toFixed(0)}k
+                        </span>
                       </>
                     )}
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`text-sm font-black ${isOver ? 'text-red-500' : 'text-indigo-500'}`}>
+                  <p
+                    className={`text-sm font-black ${isOver ? "text-red-500" : "text-indigo-500"}`}
+                  >
                     {percent.toFixed(0)}%
                   </p>
                 </div>
               </div>
 
-              <div className={`h-3 w-full rounded-full overflow-hidden flex ${isDark ? 'bg-slate-950/50' : 'bg-slate-100'}`}>
-                <div 
+              <div
+                className={`h-3 w-full rounded-full overflow-hidden flex ${isDark ? "bg-slate-950/50" : "bg-slate-100"}`}
+              >
+                <div
                   className={`h-full rounded-full transition-all duration-1000 relative ${
-                    isOver ? 'bg-gradient-to-r from-red-500 to-rose-600 shadow-[0_0_12px_rgba(239,68,68,0.4)]' : 
-                    percent > 80 ? 'bg-gradient-to-r from-amber-500 to-orange-600 shadow-[0_0_10px_rgba(245,158,11,0.3)]' :
-                    'bg-gradient-to-r from-indigo-500 to-cyan-600 shadow-[0_0_12px_rgba(79,70,229,0.4)]'
+                    isOver
+                      ? "bg-gradient-to-r from-red-500 to-red-700 shadow-[0_0_12px_rgba(239,68,68,0.4)]"
+                      : percent > 80
+                        ? "bg-gradient-to-r from-amber-500 to-orange-600 shadow-[0_0_10px_rgba(245,158,11,0.3)]"
+                        : "bg-gradient-to-r from-indigo-500 to-violet-600 shadow-[0_0_12px_rgba(79,70,229,0.4)]"
                   }`}
                   style={{ width: `${percent}%` }}
                 >

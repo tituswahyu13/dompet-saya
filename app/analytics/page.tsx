@@ -68,9 +68,9 @@ function AnalyticsContent({
     <div
       className={`min-h-screen transition-all duration-700 relative overflow-hidden ${isDark ? "bg-[#020617] text-slate-100" : "bg-slate-50 text-slate-900"}`}
     >
-      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-emerald-600/10 rounded-full blur-[160px] animate-float opacity-50" />
+      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[160px] animate-float opacity-50" />
       <div
-        className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[160px] animate-float opacity-50"
+        className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-violet-600/10 rounded-full blur-[160px] animate-float opacity-50"
         style={{ animationDelay: "-3s" }}
       />
 
@@ -128,19 +128,20 @@ function AnalyticsContent({
         >
           <div>
             <h2 className="text-xl sm:text-3xl font-black mb-1 sm:mb-2 tracking-tighter uppercase flex items-center gap-2 sm:gap-3">
-              Pusat Kecerdasan <BarChart3 className="text-rose-500" size={20} />
+              Pusat Kecerdasan{" "}
+              <BarChart3 className="text-indigo-600" size={20} />
             </h2>
             <p className="text-[8px] sm:text-sm font-bold opacity-50 uppercase tracking-widest leading-relaxed">
               Analisis Data & Prediksi AI
             </p>
           </div>
-          <div
+          {/* <div
             id="tour-analytics-toggle"
             className={`p-1 rounded-xl sm:rounded-2xl border flex w-full sm:w-auto ${isDark ? "bg-slate-900/50 border-white/5" : "bg-slate-100/50 border-slate-200"}`}
           >
             <button
               onClick={() => setIsAdvanced(false)}
-              className={`flex-1 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${!isAdvanced ? "bg-rose-500 text-white shadow-lg shadow-rose-500/20" : "text-slate-500 hover:text-rose-400"}`}
+              className={`flex-1 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${!isAdvanced ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" : "text-slate-500 hover:text-indigo-400"}`}
             >
               Sederhana
             </button>
@@ -149,7 +150,7 @@ function AnalyticsContent({
                 if (isPro) setIsAdvanced(true);
                 else setShowUpgradeModalCharts(true);
               }}
-              className={`flex-1 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${isAdvanced ? "bg-rose-500 text-white shadow-lg shadow-rose-500/20" : "text-slate-500 hover:text-rose-400"}`}
+              className={`flex-1 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${isAdvanced ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" : "text-slate-500 hover:text-indigo-400"}`}
             >
               Lanjutan{" "}
               {!isPro && (
@@ -159,12 +160,12 @@ function AnalyticsContent({
                 />
               )}
             </button>
-          </div>
+          </div> */}
         </div>
 
         <section
           id="tour-analytics-ai"
-          className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden group ${isDark ? "glass-dark border-white/5" : "glass border-white shadow-2xl shadow-rose-100/30"}`}
+          className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden group ${isDark ? "glass-dark border-white/5" : "glass border-white shadow-2xl shadow-indigo-100/30"}`}
         >
           <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8 px-1">
             <div className="w-1 h-5 sm:w-1.5 sm:h-6 bg-purple-500 rounded-full animate-pulse" />

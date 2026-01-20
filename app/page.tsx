@@ -240,9 +240,9 @@ function DashboardContent({
     <div
       className={`min-h-screen transition-all duration-700 relative overflow-hidden ${isDark ? "bg-[#020617] text-slate-100" : "bg-slate-50 text-slate-900"}`}
     >
-      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-rose-600/10 rounded-full blur-[160px] animate-float opacity-50" />
+      <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[160px] animate-float opacity-50" />
       <div
-        className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[160px] animate-float opacity-50"
+        className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-violet-600/10 rounded-full blur-[160px] animate-float opacity-50"
         style={{ animationDelay: "-3s" }}
       />
 
@@ -341,13 +341,13 @@ function DashboardContent({
                   onClick={() =>
                     setBalanceMode(balanceMode === "all" ? "liquid" : "all")
                   }
-                  className="text-[8px] font-black uppercase text-rose-500 border border-rose-500/20 px-2 py-0.5 rounded-lg active:scale-90 transition-transform"
+                  className="text-[8px] font-black uppercase text-indigo-600 border border-indigo-600/20 px-2 py-0.5 rounded-lg active:scale-90 transition-transform"
                 >
                   {balanceMode === "all" ? "Semua" : "Likuid"}
                 </button>
               </div>
               <div className="flex items-baseline gap-1 sm:gap-1.5 overflow-hidden">
-                <span className="text-[10px] sm:text-xs font-black text-rose-500">
+                <span className="text-[10px] sm:text-xs font-black text-indigo-600">
                   IDR
                 </span>
                 <p
@@ -471,7 +471,7 @@ function DashboardContent({
             className={`p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] group ${isDark ? "glass-dark border-white/5 hover:bg-white/5" : "bg-white border-slate-100 shadow-sm hover:shadow-md"}`}
           >
             <div className="flex justify-between items-center mb-4 sm:mb-6">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-600">
                 <Percent size={16} className="sm:w-5 sm:h-5" />
               </div>
               <ChevronRight
@@ -514,7 +514,7 @@ function DashboardContent({
           <div id="tour-ledger" className="lg:col-span-12 space-y-6">
             <div className="flex items-center justify-between px-1 relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
+                <div className="w-1.5 h-6 bg-indigo-600 rounded-full" />
                 <h2
                   className={`text-lg font-black ${isDark ? "text-white" : "text-slate-900"} uppercase tracking-tighter`}
                 >
@@ -524,7 +524,7 @@ function DashboardContent({
               <Link
                 id="tour-goto-transactions"
                 href="/transactions"
-                className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400 transition-all flex items-center gap-1.5 group relative z-20 cursor-pointer"
+                className="text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-400 transition-all flex items-center gap-1.5 group relative z-20 cursor-pointer"
               >
                 Lihat Semua{" "}
                 <ChevronRight
@@ -538,7 +538,7 @@ function DashboardContent({
             >
               {loading ? (
                 <div className="p-20 text-center">
-                  <div className="w-12 h-12 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin mx-auto mb-4" />
+                  <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4" />
                   <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">
                     Sinkronisasi Data...
                   </p>
