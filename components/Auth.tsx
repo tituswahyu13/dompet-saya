@@ -286,7 +286,7 @@ export default function Auth({ isDark }: AuthProps) {
               }}
               className={`text-[10px] font-black uppercase tracking-widest ${isDark ? "text-slate-400 hover:text-indigo-400" : "text-slate-500 hover:text-indigo-500"} transition-all`}
             >
-              Kembali ke Login
+              <span className="underline">Kembali ke Login</span>
             </button>
           ) : (
             <>
@@ -298,7 +298,10 @@ export default function Auth({ isDark }: AuthProps) {
                 className={`text-[10px] font-black uppercase tracking-widest ${isDark ? "text-slate-400 hover:text-indigo-400" : "text-slate-500 hover:text-indigo-500"} transition-all`}
               >
                 {mode === "signup" ? (
-                  "Sudah punya akses? Kembali ke Login"
+                  <>
+                    Sudah punya akses?{" "}
+                    <span className="underline">Kembali ke Login</span>
+                  </>
                 ) : (
                   <>
                     Belum punya akses?{" "}
