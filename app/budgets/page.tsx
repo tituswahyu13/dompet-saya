@@ -53,8 +53,8 @@ function BudgetsContent({ user, isDark, setIsDark }: { user: User, isDark: boole
               <img src="/DompetSaya.svg" alt="Dompet Saya Mascot" className="w-full h-full object-contain p-1" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">Kecerdasan Finansial</p>
-              <h1 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'}`}>{isDark ? 'Pro' : 'Dompet'} Saya</h1>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">Kecerdasan<br/>Finansial</p>
+              <h1 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-slate-900'}`}>{isDark ? 'Dompet' : 'Dompet'} Saya</h1>
             </div>
           </div>
 
@@ -65,12 +65,6 @@ function BudgetsContent({ user, isDark, setIsDark }: { user: User, isDark: boole
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            <Link 
-              href="/transactions"
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'bg-rose-600 text-white shadow-lg shadow-rose-500/20'} hover:scale-105 active:scale-95`}
-            >
-              <Plus size={20} />
-            </Link>
             <button 
               onClick={async () => {
                 const { error } = await supabase.auth.signOut();

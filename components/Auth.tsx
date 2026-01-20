@@ -208,7 +208,7 @@ export default function Auth({ isDark }: AuthProps) {
                 onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setMessage(null); }}
                 className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-rose-400' : 'text-slate-500 hover:text-rose-500'} transition-all`}
               >
-                {mode === 'signup' ? 'Sudah punya akses? Kembali ke Login' : "Belum punya akses? Buat Akun Baru"}
+                {mode === 'signup' ? 'Sudah punya akses? Kembali ke Login' : <>Belum punya akses? <span className="underline">Buat Akun Baru</span></>}
               </button>
             </>
           )}
