@@ -340,12 +340,12 @@ function DashboardContent({ user, isDark, setIsDark }: { user: User, isDark: boo
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           <div id="tour-ledger" className="lg:col-span-12 space-y-6">
-            <div className="flex items-center justify-between px-1">
+            <div className="flex items-center justify-between px-1 relative z-10">
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
                 <h2 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Transaksi Terakhir</h2>
               </div>
-              <Link id="tour-goto-transactions" href="/transactions" className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400 transition-all flex items-center gap-1.5 group">
+              <Link id="tour-goto-transactions" href="/transactions" className="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-400 transition-all flex items-center gap-1.5 group relative z-20 cursor-pointer">
                 Lihat Semua <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>

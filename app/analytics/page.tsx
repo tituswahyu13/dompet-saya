@@ -11,6 +11,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Sun, Moon, LogOut, BarChart3, TrendingUp as TrendIcon, Bot, Sparkles, Zap, Plus } from 'lucide-react';
+import AppTour from '@/components/AppTour';
 
 function AnalyticsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
   const { subscription } = useSubscription();
@@ -90,14 +91,14 @@ function AnalyticsContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 sm:space-y-12 pb-32">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
+        <div id="tour-analytics-header" className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
           <div>
             <h2 className="text-xl sm:text-3xl font-black mb-1 sm:mb-2 tracking-tighter uppercase flex items-center gap-2 sm:gap-3">
               Pusat Kecerdasan <BarChart3 className="text-rose-500" size={20} />
             </h2>
             <p className="text-[8px] sm:text-sm font-bold opacity-50 uppercase tracking-widest leading-relaxed">Analisis Data & Prediksi AI</p>
           </div>
-          <div className={`p-1 rounded-xl sm:rounded-2xl border flex w-full sm:w-auto ${isDark ? 'bg-slate-900/50 border-white/5' : 'bg-slate-100/50 border-slate-200'}`}>
+          <div id="tour-analytics-toggle" className={`p-1 rounded-xl sm:rounded-2xl border flex w-full sm:w-auto ${isDark ? 'bg-slate-900/50 border-white/5' : 'bg-slate-100/50 border-slate-200'}`}>
             <button 
               onClick={() => setIsAdvanced(false)}
               className={`flex-1 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${!isAdvanced ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'text-slate-500 hover:text-rose-400'}`}
@@ -116,7 +117,7 @@ function AnalyticsContent({ user, isDark, setIsDark }: { user: User, isDark: boo
           </div>
         </div>
 
-        <section className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-white shadow-2xl shadow-rose-100/30'}`}>
+        <section id="tour-analytics-ai" className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-white shadow-2xl shadow-rose-100/30'}`}>
            <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8 px-1">
              <div className="w-1 h-5 sm:w-1.5 sm:h-6 bg-purple-500 rounded-full animate-pulse" />
              <h2 className={`text-sm sm:text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Sorotan Analisis AI</h2>
@@ -132,7 +133,7 @@ function AnalyticsContent({ user, isDark, setIsDark }: { user: User, isDark: boo
         </section>
 
         {/* Visual Analytics Section */}
-        <section className={`p-8 rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <section id="tour-analytics-visual" className={`p-8 rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
            <div className="flex justify-between items-center mb-10 px-1">
              <div className="flex items-center gap-3">
                <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
@@ -187,6 +188,7 @@ function AnalyticsContent({ user, isDark, setIsDark }: { user: User, isDark: boo
       <div className="sm:hidden">
         <Navigation isDark={isDark} variant="bottom" />
       </div>
+      <AppTour isDark={isDark} />
     </div>
   );
 }

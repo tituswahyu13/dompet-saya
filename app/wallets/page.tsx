@@ -9,6 +9,7 @@ import { User } from '@supabase/supabase-js';
 import { Sun, Moon, LogOut, Wallet, TrendingUp as TrendIcon, Coins, Building2, Smartphone, Plus } from 'lucide-react';
 
 import Navigation from '@/components/Navigation';
+import AppTour from '@/components/AppTour';
 
 function WalletsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
   const [wallets, setWallets] = useState<any[]>([]);
@@ -101,7 +102,7 @@ function WalletsContent({ user, isDark, setIsDark }: { user: User, isDark: boole
             <h2 className="text-xl sm:text-3xl font-black mb-1 sm:mb-2 tracking-tighter uppercase text-rose-500 sm:text-inherit">Arsitektur Dompet</h2>
             <p className="text-[8px] sm:text-sm font-bold opacity-50 uppercase tracking-widest">Manajemen Aset & Alokasi Dana</p>
           </div>
-          <div className="w-full sm:w-auto p-4 sm:p-0 rounded-2xl sm:rounded-none bg-rose-500/5 sm:bg-transparent border border-rose-500/10 sm:border-0">
+          <div id="tour-wallets-total" className="w-full sm:w-auto p-4 sm:p-0 rounded-2xl sm:rounded-none bg-rose-500/5 sm:bg-transparent border border-rose-500/10 sm:border-0">
             <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Saldo Terkonsolidasi</p>
             <p className="text-xl sm:text-2xl font-black tracking-tighter text-rose-500">
               <span className="text-[10px] mr-1.5 opacity-60">IDR</span>
@@ -110,13 +111,14 @@ function WalletsContent({ user, isDark, setIsDark }: { user: User, isDark: boole
           </div>
         </div>
 
-        <section className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <section id="tour-wallets-list" className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
            <div className="flex justify-between items-center mb-6 sm:mb-10">
              <div className="flex items-center gap-2 sm:gap-3">
                <div className="w-1 h-5 sm:w-1.5 sm:h-6 bg-rose-600 rounded-full" />
                <h2 className={`text-sm sm:text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Struktur Aset</h2>
              </div>
              <button 
+               id="tour-wallets-manage"
                onClick={() => setShowWalletManager(true)}
                className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${isDark ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'bg-rose-600 text-white shadow-lg shadow-rose-500/20'} hover:scale-105 active:scale-95`}
              >
@@ -177,6 +179,7 @@ function WalletsContent({ user, isDark, setIsDark }: { user: User, isDark: boole
       <div className="sm:hidden">
         <Navigation isDark={isDark} variant="bottom" />
       </div>
+      <AppTour isDark={isDark} />
     </div>
   );
 }

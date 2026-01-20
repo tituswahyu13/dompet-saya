@@ -7,6 +7,7 @@ import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { Sun, Moon, LogOut, Percent, ArrowDownRight, ArrowUpRight, Plus } from 'lucide-react';
+import AppTour from '@/components/AppTour';
 
 function BudgetsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
   const [budgets, setBudgets] = useState<any[]>([]);
@@ -94,7 +95,7 @@ function BudgetsContent({ user, isDark, setIsDark }: { user: User, isDark: boole
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
+        <div id="tour-budgets-summary" className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
            <div className={`p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border transition-all ${isDark ? 'glass-dark border-green-900/20' : 'bg-green-50/50 border-green-100'}`}>
               <div className="flex justify-between items-start mb-2 sm:mb-4">
                 <p className="text-[8px] sm:text-[10px] font-black text-green-500 uppercase tracking-[0.2em]">Pemasukan</p>
@@ -118,7 +119,7 @@ function BudgetsContent({ user, isDark, setIsDark }: { user: User, isDark: boole
            </div>
         </div>
 
-        <section className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
+        <section id="tour-budgets-tracker" className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? 'glass-dark border-white/5' : 'glass border-white'}`}>
            <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8 px-1">
              <div className="w-1 h-5 sm:w-1.5 h-6 bg-blue-600 rounded-full" />
              <h2 className={`text-sm sm:text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Target Anggaran</h2>
@@ -138,6 +139,7 @@ function BudgetsContent({ user, isDark, setIsDark }: { user: User, isDark: boole
       <div className="sm:hidden">
         <Navigation isDark={isDark} variant="bottom" />
       </div>
+      <AppTour isDark={isDark} />
     </div>
   );
 }

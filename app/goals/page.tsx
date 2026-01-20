@@ -8,6 +8,7 @@ import MinimalistIcon from '@/components/MinimalistIcon';
 import { User } from '@supabase/supabase-js';
 import { Sun, Moon, LogOut, Target, TrendingUp as TrendIcon, ChevronRight, Plus } from 'lucide-react';
 import Link from 'next/link';
+import AppTour from '@/components/AppTour';
 
 function GoalsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean, setIsDark: (val: boolean) => void }) {
   const [goals, setGoals] = useState<any[]>([]);
@@ -105,6 +106,7 @@ function GoalsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean
             <p className="text-[8px] sm:text-sm font-bold opacity-50 uppercase tracking-widest">Membangun Kekayaan di Masa Depan</p>
           </div>
           <button 
+             id="tour-goals-add"
              onClick={() => setShowGoalManager(true)}
              className={`w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${isDark ? 'bg-rose-500 text-white shadow-xl shadow-rose-500/20' : 'bg-rose-600 text-white shadow-xl shadow-rose-500/20'} hover:scale-105 active:scale-95 flex items-center justify-center gap-2`}
           >
@@ -112,7 +114,7 @@ function GoalsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean
           </button>
         </div>
 
-        <section className={`p-5 sm:p-10 rounded-[2rem] sm:rounded-[4rem] border transition-all duration-700 relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-white shadow-2xl shadow-rose-100/50'}`}>
+        <section id="tour-goals-summary" className={`p-5 sm:p-10 rounded-[2rem] sm:rounded-[4rem] border transition-all duration-700 relative overflow-hidden group ${isDark ? 'glass-dark border-white/5' : 'glass border-white shadow-2xl shadow-rose-100/50'}`}>
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
               <div className="lg:col-span-5 space-y-6 sm:space-y-8">
                 <div className="space-y-2 sm:space-y-3">
@@ -159,7 +161,7 @@ function GoalsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean
                    <h2 className={`text-sm sm:text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Daftar Impian</h2>
                  </div>
 
-                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                 <div id="tour-goals-list" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                    {loading ? (
                      <div className="col-span-full p-12 sm:p-20 text-center">
                         <div className="w-12 h-12 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin mx-auto mb-4" />
@@ -221,6 +223,7 @@ function GoalsContent({ user, isDark, setIsDark }: { user: User, isDark: boolean
       <div className="sm:hidden">
         <Navigation isDark={isDark} variant="bottom" />
       </div>
+      <AppTour isDark={isDark} />
     </div>
   );
 }
