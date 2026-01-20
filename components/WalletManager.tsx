@@ -45,7 +45,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
     type: 'cash',
     icon: '💵',
     color: '#10b981',
-    initial_balance: 0,
+    initial_balance: '' as string | number,
   });
 
   useEffect(() => {
@@ -102,7 +102,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
           type: formData.type,
           icon: formData.icon,
           color: formData.color,
-          initial_balance: formData.initial_balance,
+          initial_balance: Number(formData.initial_balance) || 0,
           is_active: true,
         });
 
@@ -188,7 +188,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
       type: 'cash',
       icon: '💵',
       color: '#10b981',
-      initial_balance: 0,
+      initial_balance: '',
     });
     setEditingId(null);
     setIsAdding(false);
@@ -428,7 +428,7 @@ export default function WalletManager({ user, isDark, onClose }: { user: User, i
                     <input
                       type="number"
                       value={formData.initial_balance}
-                      onChange={(e) => setFormData({ ...formData, initial_balance: Number(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, initial_balance: e.target.value })}
                       placeholder="0"
                       className={`w-full px-4 py-3 rounded-xl border outline-none transition-all ${
                         isDark ? 'bg-slate-800 border-white/10 text-white placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900'
