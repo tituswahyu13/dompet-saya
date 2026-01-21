@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Dompet Saya Pro - Platform Kecerdasan Finansial",
-  description: "Manajer keuangan pribadi cerdas Anda dengan wawasan berbasis AI, pelacakan anggaran, dan manajemen target finansial",
+  description:
+    "Manajer keuangan pribadi cerdas Anda dengan wawasan berbasis AI, pelacakan anggaran, dan manajemen target finansial",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -31,7 +32,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  themeColor: "#f43f5e",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#4f46e5" },
+    { media: "(prefers-color-scheme: dark)", color: "#020617" },
+  ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
