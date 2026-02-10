@@ -7,8 +7,18 @@ import AdvancedCharts from "@/components/AdvancedCharts";
 import Insights from "@/components/Insights";
 import Navigation from "@/components/Navigation";
 import UpgradeModal from "@/components/UpgradeModal";
+import TransactionForm from "@/components/TransactionForm";
+import TransferForm from "@/components/TransferForm";
 import { useSubscription } from "@/hooks/useSubscription";
 import { User } from "@supabase/supabase-js";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip as ChartTooltip,
+} from "recharts";
+import { isSameMonth, parseISO } from "date-fns";
 import Link from "next/link";
 import {
   Sun,
@@ -20,8 +30,10 @@ import {
   Sparkles,
   Zap,
   Plus,
+  Crown,
 } from "lucide-react";
 import AppTour from "@/components/AppTour";
+import Skeleton from "@/components/Skeleton";
 
 function AnalyticsContent({
   user,
@@ -39,6 +51,9 @@ function AnalyticsContent({
   const [loading, setLoading] = useState(true);
   const [isAdvanced, setIsAdvanced] = useState(false);
   const [showUpgradeModalCharts, setShowUpgradeModalCharts] = useState(false);
+  const [activeQuickAction, setActiveQuickAction] = useState<
+    "income" | "outcome" | "transfer" | null
+  >(null);
 
   const fetchData = async (user: User) => {
     setLoading(true);
@@ -74,54 +89,61 @@ function AnalyticsContent({
         style={{ animationDelay: "-3s" }}
       />
 
-      <header
-        className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-500 ${isDark ? "bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20" : "bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20"}`}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4 group cursor-pointer">
-            <div className="w-11 h-11 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 overflow-hidden border border-white/20">
-              <img
-                src="/DompetSaya.svg"
-                alt="Dompet Saya Mascot"
-                className="w-full h-full object-contain p-1"
-              />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">
-                Kecerdasan
-                <br />
-                Finansial
-              </p>
-              <h1
-                className={`text-sm font-black uppercase tracking-widest ${isDark ? "text-white" : "text-slate-900"}`}
-              >
-                {isDark ? "Dompet" : "Dompet"} Saya
-              </h1>
-            </div>
+      <header className="px-6 pt-8 pb-4 relative z-20">
+        <div className="max-w-[1600px] mx-auto flex justify-between items-center">
+          <div className="flex flex-col">
+            <h1
+              className={`text-xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+            >
+              Hai, {user.email?.split("@")[0]}
+            </h1>
           </div>
-
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
+              id="tour-theme"
               onClick={() => setIsDark(!isDark)}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-slate-100 text-slate-500 border border-slate-200"} hover:scale-105 active:scale-95`}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Ganti Tema"
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
+
+            <Link
+              href="/pricing"
+              className={`px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
+                isDark
+                  ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                  : "bg-indigo-50 border-indigo-100 text-indigo-600"
+              }`}
+            >
+              <Sparkles size={12} className="animate-pulse" />
+              <div className="flex flex-col">
+                <span className="text-sm font-black uppercase tracking-widest">
+                  PRO
+                </span>
+                {subscription?.status === "trialing" && (
+                  <span className="text-[7px] font-bold opacity-60 -mt-0.5 whitespace-nowrap">
+                    {subscription.days_left} HARI
+                  </span>
+                )}
+              </div>
+            </Link>
+
             <button
               onClick={async () => {
                 const { error } = await supabase.auth.signOut();
                 if (error) alert("Gagal keluar: " + error.message);
               }}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"} hover:scale-105 active:scale-95`}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Keluar"
             >
-              <LogOut size={20} />
+              <LogOut size={18} />
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 sm:space-y-12 pb-32">
+      <main className="max-w-[1600px] mx-auto px-6 py-8 sm:py-12 space-y-12 pb-32 transition-all duration-500 relative z-10">
         <div
           id="tour-analytics-header"
           className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6"
@@ -176,11 +198,14 @@ function AnalyticsContent({
             </h2>
           </div>
           {loading ? (
-            <div className="p-20 text-center relative z-10">
-              <div className="w-12 h-12 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">
-                Menjalankan Analisis Finansial Neural...
-              </p>
+            <div className="p-8 space-y-4">
+              <Skeleton className="w-3/4 h-8 rounded-xl" />
+              <Skeleton className="w-1/2 h-4 rounded-lg" />
+              <div className="space-y-2 mt-4">
+                <Skeleton className="w-full h-3 rounded" />
+                <Skeleton className="w-full h-3 rounded" />
+                <Skeleton className="w-2/3 h-3 rounded" />
+              </div>
             </div>
           ) : (
             <AIInsights transactions={transactions} isDark={isDark} />
@@ -225,11 +250,9 @@ function AnalyticsContent({
           </div>
 
           {loading ? (
-            <div className="p-20 text-center">
-              <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">
-                Memproses Matriks Transaksi...
-              </p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <Skeleton className="h-80 rounded-[2.5rem]" />
+              <Skeleton className="h-80 rounded-[2.5rem]" />
             </div>
           ) : isAdvanced ? (
             <AdvancedCharts transactions={transactions} isDark={isDark} />
@@ -254,8 +277,54 @@ function AnalyticsContent({
 
       {/* Mobile Bottom Navigation */}
       <div className="sm:hidden">
-        <Navigation isDark={isDark} variant="bottom" />
+        <Navigation
+          isDark={isDark}
+          variant="bottom"
+          onQuickAction={(action) => setActiveQuickAction(action)}
+        />
       </div>
+
+      {/* Quick Action Modal */}
+      {activeQuickAction && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+            onClick={() => setActiveQuickAction(null)}
+          />
+          <div
+            className={`relative w-full max-w-2xl rounded-[3rem] border shadow-2xl overflow-hidden transition-all ${
+              isDark
+                ? "bg-slate-900 border-white/10"
+                : "bg-white border-slate-200"
+            }`}
+          >
+            <div className="p-8">
+              {activeQuickAction === "transfer" ? (
+                <TransferForm
+                  user={user}
+                  isDark={isDark}
+                  onCancel={() => setActiveQuickAction(null)}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setActiveQuickAction(null);
+                  }}
+                />
+              ) : (
+                <TransactionForm
+                  user={user}
+                  isDark={isDark}
+                  editData={{ type: activeQuickAction }}
+                  onCancel={() => setActiveQuickAction(null)}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setActiveQuickAction(null);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <AppTour isDark={isDark} />
     </div>
   );

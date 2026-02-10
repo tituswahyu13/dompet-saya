@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { parse, unparse } from "papaparse";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import autoTable from "jspdf-autotable";
 import { format } from "date-fns";
 import { Lock } from "lucide-react";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -91,129 +91,142 @@ export default function ExportManager({
 
   const exportToPDF = async () => {
     const filtered = getFilteredTransactions();
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
 
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+    // 1. Header
+    // Gradient Background
+    doc.setFillColor(79, 70, 229); // Indigo 600
+    doc.rect(0, 0, pageWidth, 40, "F");
 
-    // Header
-    pdf.setFontSize(20);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("LAPORAN KEUANGAN", pageWidth / 2, 20, { align: "center" });
+    // Title
+    doc.setFontSize(22);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.text("LAPORAN KEUANGAN", 15, 20);
 
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`Dompet Saya - Financial Report`, pageWidth / 2, 28, {
-      align: "center",
-    });
-    pdf.text(
-      `Generated: ${format(new Date(), "dd MMMM yyyy, HH:mm")}`,
-      pageWidth / 2,
-      34,
-      { align: "center" },
+    // Subtitle
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Dompet Saya Pro - Financial Intelligence", 15, 28);
+
+    // Date
+    doc.setFontSize(10);
+    doc.text(
+      `Dicetak pada: ${format(new Date(), "dd MMMM yyyy, HH:mm")}`,
+      pageWidth - 15,
+      20,
+      { align: "right" },
+    );
+    doc.text(
+      `Periode: ${dateRange.start ? format(new Date(dateRange.start), "dd/MM/yy") : "Awal"} - ${
+        dateRange.end ? format(new Date(dateRange.end), "dd/MM/yy") : "Sekarang"
+      }`,
+      pageWidth - 15,
+      28,
+      { align: "right" },
     );
 
-    // Summary Stats
+    // 2. Summary Section
     const totalIncome = filtered.reduce((sum, t) => sum + (t.income || 0), 0);
     const totalOutcome = filtered.reduce((sum, t) => sum + (t.outcome || 0), 0);
     const totalSaving = filtered.reduce((sum, t) => sum + (t.saving || 0), 0);
     const balance = totalIncome - totalOutcome - totalSaving;
 
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("RINGKASAN", 15, 45);
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Ringkasan", 15, 55);
 
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "normal");
-    let yPos = 52;
-    pdf.text(`Total Transaksi: ${filtered.length}`, 15, yPos);
-    yPos += 6;
-    pdf.text(`Pemasukan: Rp ${totalIncome.toLocaleString("id-ID")}`, 15, yPos);
-    yPos += 6;
-    pdf.text(
-      `Pengeluaran: Rp ${totalOutcome.toLocaleString("id-ID")}`,
-      15,
-      yPos,
-    );
-    yPos += 6;
-    pdf.text(`Tabungan: Rp ${totalSaving.toLocaleString("id-ID")}`, 15, yPos);
-    yPos += 6;
-    pdf.setFont("helvetica", "bold");
-    pdf.text(`Saldo: Rp ${balance.toLocaleString("id-ID")}`, 15, yPos);
+    // Summary Cards Logic (simplified as text for PDF)
+    const startY = 60;
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
 
-    // Transaction Table
-    yPos += 12;
-    pdf.setFont("helvetica", "bold");
-    pdf.text("DAFTAR TRANSAKSI", 15, yPos);
+    // Income
+    doc.setFillColor(240, 253, 244); // Green 50
+    doc.setDrawColor(34, 197, 94); // Green 500
+    doc.roundedRect(15, startY, 40, 20, 2, 2, "FD");
+    doc.setTextColor(21, 128, 61); // Green 700
+    doc.text("Pemasukan", 18, startY + 6);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Rp ${(totalIncome / 1000).toFixed(0)}k`, 18, startY + 14);
 
-    yPos += 8;
-    pdf.setFontSize(8);
+    // Outcome
+    doc.setFillColor(255, 241, 242); // Rose 50
+    doc.setDrawColor(244, 63, 94); // Rose 500
+    doc.roundedRect(60, startY, 40, 20, 2, 2, "FD");
+    doc.setTextColor(190, 18, 60); // Rose 700
+    doc.setFont("helvetica", "normal");
+    doc.text("Pengeluaran", 63, startY + 6);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Rp ${(totalOutcome / 1000).toFixed(0)}k`, 63, startY + 14);
 
-    // Table Header
-    pdf.setFillColor(79, 70, 229); // Indigo 600
-    pdf.rect(15, yPos - 4, pageWidth - 30, 6, "F");
-    pdf.setTextColor(255, 255, 255);
-    pdf.text("Tanggal", 17, yPos);
-    pdf.text("Keterangan", 40, yPos);
-    pdf.text("Kategori", 100, yPos);
-    pdf.text("Pemasukan", 130, yPos);
-    pdf.text("Pengeluaran", 160, yPos);
+    // Savings
+    doc.setFillColor(239, 246, 255); // Blue 50
+    doc.setDrawColor(59, 130, 246); // Blue 500
+    doc.roundedRect(105, startY, 40, 20, 2, 2, "FD");
+    doc.setTextColor(29, 78, 216); // Blue 700
+    doc.setFont("helvetica", "normal");
+    doc.text("Tabungan", 108, startY + 6);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Rp ${(totalSaving / 1000).toFixed(0)}k`, 108, startY + 14);
 
-    pdf.setTextColor(0, 0, 0);
-    yPos += 8;
+    // Balance
+    doc.setFillColor(250, 250, 250); // Gray 50
+    doc.setDrawColor(100, 100, 100); // Gray
+    doc.roundedRect(150, startY, 40, 20, 2, 2, "FD");
+    doc.setTextColor(0, 0, 0); // Black
+    doc.setFont("helvetica", "normal");
+    doc.text("Saldo Bersih", 153, startY + 6);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Rp ${(balance / 1000).toFixed(0)}k`, 153, startY + 14);
 
-    // Table Rows
-    filtered.slice(0, 30).forEach((t, index) => {
-      if (yPos > pageHeight - 20) {
-        pdf.addPage();
-        yPos = 20;
-      }
+    // 3. Table
+    const tableData = filtered.map((t) => [
+      format(new Date(t.tanggal), "dd/MM/yyyy"),
+      t.keterangan,
+      t.kategori,
+      t.is_transfer
+        ? "Transfer"
+        : t.income > 0
+          ? "Masuk"
+          : t.outcome > 0
+            ? "Keluar"
+            : "Tabungan",
+      `Rp ${(t.income || t.outcome || t.saving).toLocaleString("id-ID")}`,
+    ]);
 
-      if (index % 2 === 0) {
-        pdf.setFillColor(248, 250, 252);
-        pdf.rect(15, yPos - 4, pageWidth - 30, 6, "F");
-      }
-
-      pdf.text(format(new Date(t.tanggal), "dd/MM/yy"), 17, yPos);
-      pdf.text(t.keterangan.substring(0, 25), 40, yPos);
-      pdf.text(t.kategori.substring(0, 15), 100, yPos);
-      pdf.text(
-        t.income ? `Rp ${(t.income / 1000).toFixed(0)}k` : "-",
-        130,
-        yPos,
-      );
-      pdf.text(
-        t.outcome ? `Rp ${(t.outcome / 1000).toFixed(0)}k` : "-",
-        160,
-        yPos,
-      );
-
-      yPos += 6;
+    autoTable(doc, {
+      startY: 90,
+      head: [["Tanggal", "Keterangan", "Kategori", "Tipe", "Jumlah"]],
+      body: tableData,
+      theme: "grid",
+      headStyles: {
+        fillColor: [79, 70, 229],
+        textColor: 255,
+        fontStyle: "bold",
+      },
+      styles: { fontSize: 9, cellPadding: 3 },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
     });
 
-    if (filtered.length > 30) {
-      pdf.setFontSize(8);
-      pdf.setFont("helvetica", "italic");
-      pdf.text(
-        `... dan ${filtered.length - 30} transaksi lainnya`,
-        15,
-        yPos + 5,
+    // Footer
+    const pageCount = (doc as any).internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text(
+        "Dompet Saya Pro - Generated by AI Report System",
+        pageWidth / 2,
+        doc.internal.pageSize.getHeight() - 10,
+        { align: "center" },
       );
     }
 
-    // Footer
-    pdf.setFontSize(8);
-    pdf.setFont("helvetica", "italic");
-    pdf.text(
-      "Dompet Saya - Your Financial Intelligence Partner",
-      pageWidth / 2,
-      pageHeight - 10,
-      { align: "center" },
-    );
-
-    pdf.save(`laporan_keuangan_${format(new Date(), "yyyy-MM-dd")}.pdf`);
-    pdf.save(`laporan_keuangan_${format(new Date(), "yyyy-MM-dd")}.pdf`);
-    alert("✅ PDF berhasil diunduh!");
+    doc.save(`laporan_keuangan_pro_${format(new Date(), "yyyy-MM-dd")}.pdf`);
+    alert("✅ Laporan PDF Professional berhasil dibuat!");
   };
 
   const handleExport = () => {

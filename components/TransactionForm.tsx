@@ -34,8 +34,13 @@ export default function TransactionForm({
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [type, setType] = useState<"income" | "outcome" | "saving">("outcome");
-  const [category, setCategory] = useState("Lifestyle (Makan/Jajan)");
+  const [type, setType] = useState<"income" | "outcome" | "saving">(
+    editData?.type || "outcome",
+  );
+  const [category, setCategory] = useState(
+    editData?.category ||
+      (editData?.type === "income" ? "Pendapatan" : "Lifestyle (Makan/Jajan)"),
+  );
   const [loading, setLoading] = useState(false);
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
   const [wallets, setWallets] = useState<any[]>([]);
@@ -64,13 +69,14 @@ export default function TransactionForm({
 
   // Sync state when editData changes
   useEffect(() => {
-    if (editData) {
-      setDesc(editData.keterangan);
-      setAmount(
-        (editData.income || editData.outcome || editData.saving).toString(),
-      );
+    if (editData && editData.id) {
+      // Logic for editing an existing transaction
+      setDesc(editData.keterangan || "");
+      const amountValue =
+        editData.income || editData.outcome || editData.saving || 0;
+      setAmount(amountValue.toString());
       setCategory(editData.kategori || "Others");
-      setDate(editData.tanggal);
+      setDate(editData.tanggal || new Date().toISOString().split("T")[0]);
       setSelectedWalletId(editData.wallet_id || "");
       if (editData.income > 0) setType("income");
       else if (editData.saving > 0) setType("saving");
@@ -78,7 +84,14 @@ export default function TransactionForm({
 
       setSourceWalletId("");
       setErrorStatus(null);
-    } else {
+    } else if (editData && editData.type) {
+      // Logic for pre-setting type from Quick Action
+      setType(editData.type);
+      setCategory(
+        editData.type === "income" ? "Pendapatan" : "Lifestyle (Makan/Jajan)",
+      );
+    } else if (!editData) {
+      // Reset logic
       setDesc("");
       setAmount("");
       setDate(new Date().toISOString().split("T")[0]);
@@ -250,7 +263,7 @@ export default function TransactionForm({
             }`}
           />
           <label
-            className={`text-xs font-black uppercase tracking-[0.2em] ${isDark ? "text-slate-400" : "text-slate-500"}`}
+            className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? "text-slate-400" : "text-slate-600"}`}
           >
             {editData ? "Mode Koreksi" : "Kategori Input"}
           </label>
@@ -259,7 +272,7 @@ export default function TransactionForm({
           <button
             type="button"
             onClick={onCancel}
-            className="text-[10px] font-black text-red-500 hover:text-red-400 transition-colors uppercase tracking-widest"
+            className="text-sm font-black text-red-500 hover:text-red-400 transition-colors uppercase tracking-widest px-2 pb-2"
           >
             Batal
           </button>
@@ -305,7 +318,7 @@ export default function TransactionForm({
             {type === "saving" ? (
               <>
                 <div className="animate-in slide-in-from-left-4 duration-300">
-                  <label className="block text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2 px-1">
+                  <label className="block text-sm font-black text-indigo-500 dark:text-indigo-400 uppercase tracking-widest mb-3 px-1">
                     Asal Wallet (Sumber)
                   </label>
                   <div className="relative">
@@ -348,7 +361,7 @@ export default function TransactionForm({
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+                  <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
                     Tujuan (Investasi)
                   </label>
                   <div className="relative">
@@ -393,7 +406,7 @@ export default function TransactionForm({
               </>
             ) : (
               <div className="col-span-1">
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+                <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
                   Wallet
                 </label>
                 <div className="relative">
@@ -437,7 +450,7 @@ export default function TransactionForm({
               </div>
             )}
             <div className={`${type === "saving" ? "col-span-2" : ""}`}>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+              <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
                 Kategori
               </label>
               <div className="relative">
@@ -477,7 +490,7 @@ export default function TransactionForm({
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Keterangan
             </label>
             <input
@@ -497,7 +510,7 @@ export default function TransactionForm({
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Tanggal
             </label>
             <input
@@ -517,7 +530,7 @@ export default function TransactionForm({
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Nominal (Rp)
             </label>
             <div className="relative">
@@ -540,12 +553,12 @@ export default function TransactionForm({
                 }`}
                 required
               />
-              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-indigo-600/50">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-sm font-black text-indigo-600/60">
                 IDR
               </span>
             </div>
             {errorStatus && (
-              <p className="text-[10px] text-red-500 mt-2 px-2 font-black uppercase tracking-widest">
+              <p className="text-sm text-red-500 mt-2 px-2 font-black uppercase tracking-widest">
                 {errorStatus}
               </p>
             )}
@@ -554,7 +567,7 @@ export default function TransactionForm({
 
         <button
           disabled={loading}
-          className={`w-full mt-4 p-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 ${
+          className={`w-full mt-6 p-6 rounded-2xl font-black text-sm uppercase tracking-[0.2em] text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 ${
             editData
               ? "bg-slate-900 hover:bg-black"
               : type === "income"
@@ -567,7 +580,7 @@ export default function TransactionForm({
           {loading ? (
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
           ) : (
-            <span className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em]">
+            <span className="flex items-center gap-2 text-sm font-black uppercase tracking-[0.2em]">
               {editData
                 ? "Perbarui Data"
                 : type === "saving"

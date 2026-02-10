@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useSubscription } from "@/hooks/useSubscription";
 import AuthWrapper from "@/components/AuthWrapper";
@@ -8,7 +9,9 @@ import Navigation from "@/components/Navigation";
 import { Check, X, Sparkles, Crown, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-function PricingContent() {
+import { Sun, Moon, LogOut } from "lucide-react";
+
+function PricingContent({ user }: { user: User }) {
   const router = useRouter();
   const { subscription, loading } = useSubscription();
   const [isDark, setIsDark] = useState(() => {
@@ -84,12 +87,39 @@ function PricingContent() {
       <div className="absolute bottom-[10%] right-[-10%] w-[50%] h-[50%] bg-violet-600/10 rounded-full blur-[160px] animate-float opacity-50" />
       <div className="absolute top-[30%] right-[10%] w-[20%] h-[20%] bg-indigo-600/5 rounded-full blur-[100px] animate-pulse-slow" />
 
-      {/* Mobile Bottom Navigation */}
-      <div className="sm:hidden">
-        <Navigation isDark={isDark} variant="bottom" />
-      </div>
+      <header className="px-6 pt-8 pb-4 relative z-20">
+        <div className="max-w-[1600px] mx-auto flex justify-between items-center">
+          <div className="flex flex-col">
+            <h1
+              className={`text-xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+            >
+              Hai, {user.email?.split("@")[0]}
+            </h1>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button
+              onClick={() => handleThemeChange(!isDark)}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Ganti Tema"
+            >
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-32 sm:py-20 relative z-10">
+            <button
+              onClick={async () => {
+                const { error } = await supabase.auth.signOut();
+                if (error) alert("Gagal keluar: " + error.message);
+              }}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Keluar"
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-[1600px] mx-auto px-6 py-8 sm:py-20 relative z-10 transition-all duration-500">
         {/* Back Button */}
         <Link
           href="/"
@@ -353,5 +383,5 @@ function PricingContent() {
 }
 
 export default function PricingPage() {
-  return <AuthWrapper>{(user) => <PricingContent />}</AuthWrapper>;
+  return <AuthWrapper>{(user) => <PricingContent user={user} />}</AuthWrapper>;
 }

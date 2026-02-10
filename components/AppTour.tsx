@@ -42,6 +42,14 @@ const DASHBOARD_STEPS: TourStep[] = [
     position: "bottom",
   },
   {
+    id: "goals-shortcut",
+    targetId: "tour-goals-shortcut",
+    title: "Akses Cepat Target",
+    content:
+      "Jalan pintas menuju impian Anda. Klik ikon target ini untuk melihat progres tabungan Anda secara instan.",
+    position: "bottom",
+  },
+  {
     id: "balance",
     targetId: "tour-balance",
     title: "Dashboard Utama",
@@ -89,6 +97,14 @@ const DASHBOARD_STEPS: TourStep[] = [
       'Ingin mengelola data lebih detail? Klik "Lihat Semua" untuk masuk ke halaman manajemen transaksi yang lebih lengkap.',
     position: "top",
   },
+  {
+    id: "quick-action",
+    targetId: "tour-quick-action",
+    title: "Aksi Cepat",
+    content:
+      "Tombol sakti untuk mencatat transaksi dalam hitungan detik. Tekan (+) untuk menambah Pemasukan, Pengeluaran, atau Transfer baru.",
+    position: "top",
+  },
 ];
 
 const TRANSACTION_STEPS: TourStep[] = [
@@ -101,19 +117,19 @@ const TRANSACTION_STEPS: TourStep[] = [
     position: "center",
   },
   {
-    id: "tx-form",
-    targetId: "tour-tx-form",
-    title: "Form Transaksi Pintar",
+    id: "tx-add",
+    targetId: "tour-tx-add",
+    title: "Tambah Transaksi Baru",
     content:
-      "Ada 3 mode: Masuk (Hijau) untuk pemasukan, Keluar (Merah) untuk pengeluaran, dan Simpan (Biru) untuk tabungan. Pilih sesuai jenis transaksi Anda.",
+      "Klik tombol ini untuk mencatat transaksi baru. Mendukung Pemasukan, Pengeluaran, Transfer, dan Tabungan dalam satu modal praktis.",
     position: "bottom",
   },
   {
-    id: "tx-mode",
-    targetId: "tour-tx-mode",
-    title: "Beralih ke Transfer",
+    id: "tx-filters",
+    targetId: "tour-tx-filters",
+    title: "Filter Cerdas",
     content:
-      "Gunakan tombol ini jika Anda hanya ingin memindahkan uang antar rekening tanpa mencatat sebagai pengeluaran.",
+      "Temukan transaksi spesifik berdasarkan Bulan, Tahun, atau Kategori. Sangat berguna saat melakukan audit bulanan.",
     position: "bottom",
   },
   {
@@ -121,7 +137,7 @@ const TRANSACTION_STEPS: TourStep[] = [
     targetId: "tour-tx-list",
     title: "Kontrol Transaksi",
     content:
-      "Tombol Edit dan Hapus kini selalu terlihat untuk memudahkan Anda mengelola data tanpa perlu hover.",
+      "Daftar lengkap transaksi Anda. Tombol Edit dan Hapus kini selalu terlihat dan mudah diakses.",
     position: "top",
   },
   {
@@ -135,9 +151,9 @@ const TRANSACTION_STEPS: TourStep[] = [
   {
     id: "tx-export",
     targetId: "tour-tx-export",
-    title: "Ekspor Data CSV",
+    title: "Ekspor Data Pro",
     content:
-      "Butuh data untuk Excel atau Sheets? Klik di sini untuk mengunduh laporan transaksi lengkap Anda kapan saja.",
+      "Unduh laporan keuangan Anda dalam format CSV untuk olah data, atau PDF Professional lengkap dengan kop dan ringkasan.",
     position: "bottom",
   },
 ];
@@ -166,14 +182,6 @@ const ANALYTICS_STEPS: TourStep[] = [
     content:
       "AI kami memproses ribuan data untuk memberikan saran penghematan dan peringatan risiko finansial secara real-time.",
     position: "top",
-  },
-  {
-    id: "an-toggle",
-    targetId: "tour-analytics-toggle",
-    title: "Mode Tampilan",
-    content:
-      "Beralih antara visualisasi sederhana atau grafik lanjutan (Advanced) untuk analisis yang lebih mendalam.",
-    position: "bottom",
   },
   {
     id: "an-visual",

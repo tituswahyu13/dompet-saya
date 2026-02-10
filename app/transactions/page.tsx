@@ -1,10 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FileText, Sun, Moon, RefreshCw, Wallet, LogOut } from "lucide-react";
+import {
+  FileText,
+  Sun,
+  Moon,
+  RefreshCw,
+  Wallet,
+  LogOut,
+  Crown,
+  Sparkles,
+  Plus,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import TransactionForm from "@/components/TransactionForm";
 import TransferForm from "@/components/TransferForm";
+import Skeleton from "@/components/Skeleton";
 import AuthWrapper from "@/components/AuthWrapper";
 import WalletManager from "@/components/WalletManager";
 import Navigation from "@/components/Navigation";
@@ -47,6 +58,7 @@ function TransactionsContent({
   const [budgets, setBudgets] = useState<any[]>([]); // Added for NotificationCenter
   const [goals, setGoals] = useState<any[]>([]); // Added for NotificationCenter
   const [recurringTemplates, setRecurringTemplates] = useState<any[]>([]); // Added for NotificationCenter
+  const [showAddModal, setShowAddModal] = useState(false);
   const ITEMS_PER_PAGE = 15;
 
   const fetchData = async (user: User) => {
@@ -180,117 +192,71 @@ function TransactionsContent({
         <Navigation isDark={isDark} variant="bottom" />
       </div>
 
-      <header
-        className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-500 ${isDark ? "bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20" : "bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20"}`}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center gap-3">
-          <div className="flex items-center gap-2 sm:gap-4 group cursor-pointer flex-shrink-0">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 overflow-hidden border border-white/20">
-              <img
-                src="/DompetSaya.svg"
-                alt="Dompet Saya Mascot"
-                className="w-full h-full object-contain p-1"
-              />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">
-                Kecerdasan
-                <br />
-                Finansial
-              </p>
-              <h1
-                className={`text-sm font-black uppercase tracking-widest ${isDark ? "text-white" : "text-slate-900"}`}
-              >
-                {isDark ? "Dompet" : "Dompet"} Saya
-              </h1>
-            </div>
+      <header className="px-6 pt-8 pb-4 relative z-20">
+        <div className="max-w-[1600px] mx-auto flex justify-between items-center">
+          <div className="flex flex-col">
+            <h1
+              className={`text-xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+            >
+              Hai, {user.email?.split("@")[0]}
+            </h1>
           </div>
-          <div className="flex items-center gap-6 justify-end flex-1 min-w-0">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setIsDark(!isDark)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? "bg-slate-800 text-amber-400 border-white/5" : "bg-slate-100 text-slate-500 border-slate-200"} hover:scale-105 transition-all`}
-              >
-                {isDark ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
-              <button
-                id="tour-tx-recurring"
-                onClick={() => setShowRecurringManager(true)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isDark ? "bg-indigo-600/10 text-indigo-400 border-indigo-600/20 hover:bg-indigo-600/20" : "bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100"} hover:scale-105 transition-all`}
-                title="Penjadwalan Rutin"
-              >
-                <RefreshCw size={20} />
-              </button>
-              <button
-                onClick={async () => {
-                  const { error } = await supabase.auth.signOut();
-                  if (error) alert("Gagal keluar: " + error.message);
-                }}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"} hover:scale-105 active:scale-95`}
-                title="Keluar"
-              >
-                <LogOut size={20} />
-              </button>
-            </div>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Ganti Tema"
+            >
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+            <button
+              id="tour-tx-recurring"
+              onClick={() => setShowRecurringManager(true)}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 hover:bg-indigo-600/20" : "bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Penjadwalan Rutin"
+            >
+              <RefreshCw size={20} />
+            </button>
+
+            <Link
+              href="/pricing"
+              className={`px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
+                isDark
+                  ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                  : "bg-indigo-50 border-indigo-100 text-indigo-600"
+              }`}
+            >
+              <Sparkles size={12} className="animate-pulse" />
+              <div className="flex flex-col">
+                <span className="text-sm font-black uppercase tracking-widest">
+                  PRO
+                </span>
+                {subscription?.status === "trialing" && (
+                  <span className="text-[7px] font-bold opacity-60 -mt-0.5 whitespace-nowrap">
+                    {subscription.days_left} HARI
+                  </span>
+                )}
+              </div>
+            </Link>
+
+            <button
+              onClick={async () => {
+                const { error } = await supabase.auth.signOut();
+                if (error) alert("Gagal keluar: " + error.message);
+              }}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Keluar"
+            >
+              <LogOut size={18} />
+            </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 space-y-12 pb-32 sm:pb-12">
+      <main className="max-w-[1600px] mx-auto px-6 py-8 sm:py-12 relative z-10 space-y-12 pb-32">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          <div
-            id="tour-tx-form"
-            className="lg:col-span-4 lg:sticky lg:top-28 h-fit space-y-8"
-          >
-            <section>
-              <div className="flex items-center justify-between mb-6 px-1">
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`w-1.5 h-6 ${isTransferMode ? "bg-violet-600" : "bg-indigo-600"} rounded-full`}
-                  />
-                  <h2
-                    className={`text-lg font-black uppercase tracking-tighter ${isDark ? "text-white" : "text-slate-900"}`}
-                  >
-                    {editingTransaction
-                      ? "Koreksi Data"
-                      : isTransferMode
-                        ? "Transfer Dana"
-                        : "Transaksi Baru"}
-                  </h2>
-                </div>
-                {!editingTransaction && (
-                  <button
-                    id="tour-tx-mode"
-                    onClick={() => setIsTransferMode(!isTransferMode)}
-                    className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-indigo-500/10 text-indigo-600 border-indigo-600/20"
-                  >
-                    {isTransferMode ? "Ke Transaksi" : "Ke Transfer"}
-                  </button>
-                )}
-              </div>
-              {isTransferMode && !editingTransaction ? (
-                <TransferForm
-                  user={user}
-                  isDark={isDark}
-                  onRefresh={() => fetchData(user)}
-                  onCancel={() => setIsTransferMode(false)}
-                />
-              ) : (
-                <TransactionForm
-                  user={user}
-                  isDark={isDark}
-                  editData={editingTransaction}
-                  onRefresh={() => fetchData(user)}
-                  onCancel={() => {
-                    setEditingTransaction(null);
-                    setIsTransferMode(false);
-                  }}
-                />
-              )}
-            </section>
-          </div>
-
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-12 space-y-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 px-1">
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-6 bg-slate-400 rounded-full" />
@@ -302,6 +268,18 @@ function TransactionsContent({
               </div>
 
               <div className="flex flex-wrap w-full md:w-auto items-center gap-3">
+                <button
+                  id="tour-tx-add"
+                  onClick={() => setShowAddModal(true)}
+                  className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 transition-all shadow-lg hover:scale-105 active:scale-95 ${
+                    isDark
+                      ? "bg-indigo-600 text-white shadow-indigo-600/30"
+                      : "bg-indigo-600 text-white shadow-indigo-600/30"
+                  }`}
+                >
+                  <Plus size={16} />
+                  <span className="hidden sm:inline">Baru</span>
+                </button>
                 <div
                   id="tour-tx-filters"
                   className="flex items-center gap-2 bg-slate-200/20 dark:bg-white/5 p-1.5 rounded-2xl border border-white/5"
@@ -380,8 +358,23 @@ function TransactionsContent({
               className={`rounded-[2.5rem] border overflow-hidden backdrop-blur-sm transition-all duration-500 ${isDark ? "glass-dark border-white/5 shadow-2xl shadow-black/40" : "glass border-white shadow-xl shadow-slate-200/50"}`}
             >
               {loading ? (
-                <div className="p-20 text-center animate-pulse text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-                  Sinkronisasi Data...
+                <div className="p-6 space-y-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between gap-4"
+                    >
+                      <div className="flex items-center gap-4 flex-1">
+                        <Skeleton className="w-12 h-12 rounded-2xl" />
+                        <div className="space-y-2">
+                          <Skeleton className="w-32 h-4" />
+                          <Skeleton className="w-20 h-3" />
+                        </div>
+                      </div>
+                      <Skeleton className="w-24 h-6 rounded-lg" />
+                      <Skeleton className="w-32 h-6 rounded-lg" />
+                    </div>
+                  ))}
                 </div>
               ) : filteredTransactions.length === 0 ? (
                 <div className="p-20 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
@@ -542,12 +535,57 @@ function TransactionsContent({
       <ConfirmationModal
         isOpen={!!transactionToDelete}
         title="Hapus Transaksi"
-        message={`Apakah Anda yakin ingin menghapus "${transactionToDelete?.keterangan}"? Tindakan ini tidak dapat dibatalkan.`}
+        message="Apakah Anda yakin ingin menghapus transaksi ini? Saldo wallet akan dikembalikan."
         confirmText="Hapus Permanen"
         onConfirm={confirmDelete}
         onCancel={() => setTransactionToDelete(null)}
         isDark={isDark}
+        type="danger"
       />
+
+      {/* Edit Transaction Modal */}
+      {editingTransaction && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+            onClick={() => setEditingTransaction(null)}
+          />
+          <div
+            className={`relative w-full max-w-2xl rounded-[3rem] border shadow-2xl overflow-hidden transition-all ${
+              isDark
+                ? "bg-slate-900 border-white/10"
+                : "bg-white border-slate-200"
+            }`}
+          >
+            <div className="p-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2
+                  className={`text-xl font-black uppercase tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+                >
+                  Koreksi Transaksi
+                </h2>
+                <button
+                  onClick={() => setEditingTransaction(null)}
+                  className={`p-2 rounded-xl transition-all ${isDark ? "bg-white/5 hover:bg-white/10 text-slate-400" : "bg-slate-100 hover:bg-slate-200 text-slate-500"}`}
+                >
+                  <LogOut size={18} className="rotate-180" />
+                </button>
+              </div>
+
+              <TransactionForm
+                user={user}
+                isDark={isDark}
+                editData={editingTransaction}
+                onRefresh={() => {
+                  fetchData(user);
+                  setEditingTransaction(null);
+                }}
+                onCancel={() => setEditingTransaction(null)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
       {showExportManager && (
         <ExportManager
           transactions={transactions}
@@ -557,6 +595,34 @@ function TransactionsContent({
         />
       )}
       <AppTour isDark={isDark} />
+      {/* Add Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"
+            onClick={() => setShowAddModal(false)}
+          />
+          <div
+            className={`relative w-full max-w-2xl rounded-[3rem] border shadow-2xl overflow-hidden transition-all animate-in zoom-in-95 duration-300 ${
+              isDark
+                ? "bg-slate-900 border-white/10"
+                : "bg-white border-slate-200"
+            }`}
+          >
+            <div className="p-8">
+              <TransactionForm
+                user={user}
+                isDark={isDark}
+                onCancel={() => setShowAddModal(false)}
+                onRefresh={() => {
+                  fetchData(user);
+                  setShowAddModal(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

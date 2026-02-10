@@ -13,13 +13,20 @@ import {
   Wallet,
   TrendingUp as TrendIcon,
   Coins,
-  Building2,
   Smartphone,
   Plus,
+  Crown,
+  Building2,
+  Sparkles,
 } from "lucide-react";
+import Link from "next/link";
+import { useSubscription } from "@/hooks/useSubscription";
 
 import Navigation from "@/components/Navigation";
+import TransactionForm from "@/components/TransactionForm";
+import TransferForm from "@/components/TransferForm";
 import AppTour from "@/components/AppTour";
+import Skeleton from "@/components/Skeleton";
 
 function WalletsContent({
   user,
@@ -30,10 +37,15 @@ function WalletsContent({
   isDark: boolean;
   setIsDark: (val: boolean) => void;
 }) {
+  const { subscription } = useSubscription();
+  const isPro = subscription?.is_pro;
   const [wallets, setWallets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showWalletManager, setShowWalletManager] = useState(false);
   const [selectedWalletFilter, setSelectedWalletFilter] = useState("All");
+  const [activeQuickAction, setActiveQuickAction] = useState<
+    "income" | "outcome" | "transfer" | null
+  >(null);
 
   const fetchData = async (user: User) => {
     setLoading(true);
@@ -83,54 +95,60 @@ function WalletsContent({
         style={{ animationDelay: "-3s" }}
       />
 
-      <header
-        className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-500 ${isDark ? "bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20" : "bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20"}`}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4 group cursor-pointer">
-            <div className="w-11 h-11 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 overflow-hidden border border-white/20">
-              <img
-                src="/DompetSaya.svg"
-                alt="Dompet Saya Mascot"
-                className="w-full h-full object-contain p-1"
-              />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">
-                Kecerdasan
-                <br />
-                Finansial
-              </p>
-              <h1
-                className={`text-sm font-black uppercase tracking-widest ${isDark ? "text-white" : "text-slate-900"}`}
-              >
-                {isDark ? "Dompet" : "Dompet"} Saya
-              </h1>
-            </div>
+      <header className="px-6 pt-8 pb-4 relative z-20">
+        <div className="max-w-[1600px] mx-auto flex justify-between items-center">
+          <div className="flex flex-col">
+            <h1
+              className={`text-xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+            >
+              Hai, {user.email?.split("@")[0]}
+            </h1>
           </div>
-
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => setIsDark(!isDark)}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-slate-100 text-slate-500 border border-slate-200"} hover:scale-105 active:scale-95`}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Ganti Tema"
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
+
+            <Link
+              href="/pricing"
+              className={`px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
+                isDark
+                  ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                  : "bg-indigo-50 border-indigo-100 text-indigo-600"
+              }`}
+            >
+              <Sparkles size={12} className="animate-pulse" />
+              <div className="flex flex-col">
+                <span className="text-sm font-black uppercase tracking-widest">
+                  PRO
+                </span>
+                {subscription?.status === "trialing" && (
+                  <span className="text-[7px] font-bold opacity-60 -mt-0.5 whitespace-nowrap">
+                    {subscription.days_left} HARI
+                  </span>
+                )}
+              </div>
+            </Link>
+
             <button
               onClick={async () => {
                 const { error } = await supabase.auth.signOut();
                 if (error) alert("Gagal keluar: " + error.message);
               }}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"} hover:scale-105 active:scale-95`}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Keluar"
             >
-              <LogOut size={20} />
+              <LogOut size={18} />
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 sm:space-y-12 pb-32">
+      <main className="max-w-[1600px] mx-auto px-6 py-8 sm:py-12 space-y-12 pb-32 relative z-10 transition-all duration-500">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
             <h2 className="text-xl sm:text-3xl font-black mb-1 sm:mb-2 tracking-tighter uppercase text-indigo-600 sm:text-inherit">
@@ -178,91 +196,111 @@ function WalletsContent({
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-12">
-            {Object.keys(groupedWallets)
-              .sort()
-              .map((type) => (
-                <div key={type} className="space-y-4 sm:space-y-6">
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-12">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="space-y-4 sm:space-y-6">
                   <div className="flex items-center gap-3 px-1">
-                    <div
-                      className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl ${isDark ? "bg-indigo-500/10" : "bg-indigo-50"}`}
-                    >
-                      {type === "cash" && (
-                        <Coins size={16} className="text-indigo-600" />
-                      )}
-                      {type === "bank" && (
-                        <Building2 size={16} className="text-indigo-600" />
-                      )}
-                      {type === "ewallet" && (
-                        <Smartphone size={16} className="text-indigo-600" />
-                      )}
-                      {type === "investment" && (
-                        <TrendIcon size={16} className="text-indigo-600" />
-                      )}
-                      {type === "other" && (
-                        <Wallet size={16} className="text-indigo-600" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] sm:tracking-[0.25em]">
-                        {typeLabels[type] || type.toUpperCase()}
-                      </p>
-                      <p
-                        className={`text-[10px] sm:text-xs font-bold ${isDark ? "text-slate-200" : "text-slate-600"}`}
-                      >
-                        Rp{" "}
-                        {groupedWallets[type]
-                          .reduce(
-                            (acc: number, w: any) =>
-                              acc + (w.current_balance || 0),
-                            0,
-                          )
-                          .toLocaleString("id-ID")}
-                      </p>
+                    <Skeleton className="w-8 h-8 rounded-xl" />
+                    <div className="space-y-1">
+                      <Skeleton className="w-16 h-3 rounded" />
+                      <Skeleton className="w-24 h-4 rounded" />
                     </div>
                   </div>
                   <div className="space-y-2.5">
-                    {groupedWallets[type].map((w: any) => (
-                      <div
-                        key={w.id}
-                        className={`p-4 sm:p-5 rounded-[1.5rem] sm:rounded-3xl border transition-all flex items-center justify-between group relative overflow-hidden ${isDark ? "bg-slate-900/40 border-white/5 hover:bg-slate-900/60" : "bg-white border-slate-100 hover:bg-slate-50 shadow-sm"}`}
-                      >
-                        <div
-                          className="absolute left-0 top-0 bottom-0 w-1 transition-all"
-                          style={{ backgroundColor: w.color }}
-                        />
-                        <div className="flex items-center gap-3 sm:gap-4">
-                          <div className="scale-100 group-hover:scale-110 transition-transform">
-                            <MinimalistIcon
-                              icon={w.icon}
-                              size={20}
-                              style={{ color: w.color }}
-                            />
-                          </div>
-                          <div>
-                            <p
-                              className={`text-xs sm:text-sm font-black ${isDark ? "text-white" : "text-slate-900"}`}
-                            >
-                              {w.name}
-                            </p>
-                            <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase">
-                              {w.type?.toUpperCase()}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p
-                            className={`text-xs sm:text-sm font-black tracking-tighter ${isDark ? "text-white" : "text-slate-900"}`}
-                          >
-                            Rp {w.current_balance?.toLocaleString("id-ID")}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                    <Skeleton className="w-full h-16 rounded-[1.5rem]" />
+                    <Skeleton className="w-full h-16 rounded-[1.5rem]" />
                   </div>
                 </div>
               ))}
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-12">
+              {Object.keys(groupedWallets)
+                .sort()
+                .map((type) => (
+                  <div key={type} className="space-y-4 sm:space-y-6">
+                    <div className="flex items-center gap-3 px-1">
+                      <div
+                        className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl ${isDark ? "bg-indigo-500/10" : "bg-indigo-50"}`}
+                      >
+                        {type === "cash" && (
+                          <Coins size={16} className="text-indigo-600" />
+                        )}
+                        {type === "bank" && (
+                          <Building2 size={16} className="text-indigo-600" />
+                        )}
+                        {type === "ewallet" && (
+                          <Smartphone size={16} className="text-indigo-600" />
+                        )}
+                        {type === "investment" && (
+                          <TrendIcon size={16} className="text-indigo-600" />
+                        )}
+                        {type === "other" && (
+                          <Wallet size={16} className="text-indigo-600" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] sm:tracking-[0.25em]">
+                          {typeLabels[type] || type.toUpperCase()}
+                        </p>
+                        <p
+                          className={`text-[10px] sm:text-xs font-bold ${isDark ? "text-slate-200" : "text-slate-600"}`}
+                        >
+                          Rp{" "}
+                          {groupedWallets[type]
+                            .reduce(
+                              (acc: number, w: any) =>
+                                acc + (w.current_balance || 0),
+                              0,
+                            )
+                            .toLocaleString("id-ID")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-2.5">
+                      {groupedWallets[type].map((w: any) => (
+                        <div
+                          key={w.id}
+                          className={`p-4 sm:p-5 rounded-[1.5rem] sm:rounded-3xl border transition-all flex items-center justify-between group relative overflow-hidden ${isDark ? "bg-slate-900/40 border-white/5 hover:bg-slate-900/60" : "bg-white border-slate-100 hover:bg-slate-50 shadow-sm"}`}
+                        >
+                          <div
+                            className="absolute left-0 top-0 bottom-0 w-1 transition-all"
+                            style={{ backgroundColor: w.color }}
+                          />
+                          <div className="flex items-center gap-3 sm:gap-4">
+                            <div className="scale-100 group-hover:scale-110 transition-transform">
+                              <MinimalistIcon
+                                icon={w.icon}
+                                size={20}
+                                style={{ color: w.color }}
+                              />
+                            </div>
+                            <div>
+                              <p
+                                className={`text-xs sm:text-sm font-black ${isDark ? "text-white" : "text-slate-900"}`}
+                              >
+                                {w.name}
+                              </p>
+                              <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase">
+                                {w.type?.toUpperCase()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p
+                              className={`text-xs sm:text-sm font-black tracking-tighter ${isDark ? "text-white" : "text-slate-900"}`}
+                            >
+                              Rp {w.current_balance?.toLocaleString("id-ID")}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
         </section>
       </main>
 
@@ -279,8 +317,54 @@ function WalletsContent({
 
       {/* Mobile Bottom Navigation */}
       <div className="sm:hidden">
-        <Navigation isDark={isDark} variant="bottom" />
+        <Navigation
+          isDark={isDark}
+          variant="bottom"
+          onQuickAction={(action) => setActiveQuickAction(action)}
+        />
       </div>
+
+      {/* Quick Action Modal */}
+      {activeQuickAction && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+            onClick={() => setActiveQuickAction(null)}
+          />
+          <div
+            className={`relative w-full max-w-2xl rounded-[3rem] border shadow-2xl overflow-hidden transition-all ${
+              isDark
+                ? "bg-slate-900 border-white/10"
+                : "bg-white border-slate-200"
+            }`}
+          >
+            <div className="p-8">
+              {activeQuickAction === "transfer" ? (
+                <TransferForm
+                  user={user}
+                  isDark={isDark}
+                  onCancel={() => setActiveQuickAction(null)}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setActiveQuickAction(null);
+                  }}
+                />
+              ) : (
+                <TransactionForm
+                  user={user}
+                  isDark={isDark}
+                  editData={{ type: activeQuickAction }}
+                  onCancel={() => setActiveQuickAction(null)}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setActiveQuickAction(null);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <AppTour isDark={isDark} />
     </div>
   );

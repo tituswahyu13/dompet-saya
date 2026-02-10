@@ -7,14 +7,17 @@ import Navigation from "@/components/Navigation";
 import MinimalistIcon from "@/components/MinimalistIcon";
 import { User } from "@supabase/supabase-js";
 import {
+  Plus,
+  Crown,
   Sun,
   Moon,
   LogOut,
   Target,
   TrendingUp as TrendIcon,
   ChevronRight,
-  Plus,
+  Sparkles,
 } from "lucide-react";
+import { useSubscription } from "@/hooks/useSubscription";
 import Link from "next/link";
 import AppTour from "@/components/AppTour";
 
@@ -27,6 +30,8 @@ function GoalsContent({
   isDark: boolean;
   setIsDark: (val: boolean) => void;
 }) {
+  const { subscription } = useSubscription();
+  const isPro = subscription?.is_pro;
   const [goals, setGoals] = useState<any[]>([]);
   const [wallets, setWallets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,54 +86,60 @@ function GoalsContent({
         style={{ animationDelay: "-3s" }}
       />
 
-      <header
-        className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-500 ${isDark ? "bg-slate-950/40 border-white/5 shadow-2xl shadow-black/20" : "bg-white/60 border-slate-200/50 shadow-xl shadow-slate-200/20"}`}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4 group cursor-pointer">
-            <div className="w-11 h-11 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 overflow-hidden border border-white/20">
-              <img
-                src="/DompetSaya.svg"
-                alt="Dompet Saya Mascot"
-                className="w-full h-full object-contain p-1"
-              />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">
-                Kecerdasan
-                <br />
-                Finansial
-              </p>
-              <h1
-                className={`text-sm font-black uppercase tracking-widest ${isDark ? "text-white" : "text-slate-900"}`}
-              >
-                {isDark ? "Dompet" : "Dompet"} Saya
-              </h1>
-            </div>
+      <header className="px-6 pt-8 pb-4 relative z-20">
+        <div className="max-w-[1600px] mx-auto flex justify-between items-center">
+          <div className="flex flex-col">
+            <h1
+              className={`text-xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+            >
+              Hai, {user.email?.split("@")[0]}
+            </h1>
           </div>
-
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => setIsDark(!isDark)}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-slate-100 text-slate-500 border border-slate-200"} hover:scale-105 active:scale-95`}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Ganti Tema"
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
+
+            <Link
+              href="/pricing"
+              className={`px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
+                isDark
+                  ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                  : "bg-indigo-50 border-indigo-100 text-indigo-600"
+              }`}
+            >
+              <Sparkles size={12} className="animate-pulse" />
+              <div className="flex flex-col">
+                <span className="text-sm font-black uppercase tracking-widest">
+                  PRO
+                </span>
+                {subscription?.status === "trialing" && (
+                  <span className="text-[7px] font-bold opacity-60 -mt-0.5 whitespace-nowrap">
+                    {subscription.days_left} HARI
+                  </span>
+                )}
+              </div>
+            </Link>
+
             <button
               onClick={async () => {
                 const { error } = await supabase.auth.signOut();
                 if (error) alert("Gagal keluar: " + error.message);
               }}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"} hover:scale-105 active:scale-95`}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Keluar"
             >
-              <LogOut size={20} />
+              <LogOut size={18} />
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 sm:space-y-12 pb-32">
+      <main className="max-w-[1600px] mx-auto px-6 py-8 sm:py-12 space-y-12 pb-32 transition-all duration-500 relative z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
             <h2 className="text-xl sm:text-3xl font-black mb-1 sm:mb-2 tracking-tighter uppercase flex items-center gap-2 sm:gap-3">

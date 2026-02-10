@@ -255,7 +255,7 @@ export default function WalletManager({
               >
                 Manajemen Dompet
               </h2>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
+              <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1">
                 Kelola Dompet Anda
               </p>
             </div>
@@ -285,7 +285,7 @@ export default function WalletManager({
                 </h3>
                 <button
                   onClick={() => setIsAdding(true)}
-                  className="px-4 py-2 bg-indigo-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2"
+                  className="px-5 py-4 bg-indigo-600 text-white text-sm font-black uppercase tracking-wider rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2"
                 >
                   <Plus size={14} /> Tambah Wallet
                 </button>
@@ -340,7 +340,7 @@ export default function WalletManager({
                             >
                               {wallet.name}
                             </h4>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                               {WALLET_TYPES.find((t) => t.value === wallet.type)
                                 ?.label || wallet.type}
                             </p>
@@ -388,7 +388,7 @@ export default function WalletManager({
                       <div
                         className={`pt-3 border-t ${isDark ? "border-white/10" : "border-slate-200"}`}
                       >
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                        <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                           Saldo Saat Ini
                         </p>
                         <div className="flex items-baseline gap-1">
@@ -426,7 +426,7 @@ export default function WalletManager({
                 <button
                   type="button"
                   onClick={resetForm}
-                  className={`text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}
+                  className={`text-sm font-bold uppercase tracking-wider ${isDark ? "text-slate-400 hover:text-white" : "text-slate-600 hover:text-slate-900"}`}
                 >
                   Batal
                 </button>
@@ -438,7 +438,7 @@ export default function WalletManager({
                 {/* Name */}
                 <div className="mb-4">
                   <label
-                    className={`block text-xs font-black uppercase tracking-wider mb-2 ${isDark ? "text-slate-300" : "text-slate-700"}`}
+                    className={`block text-sm font-black uppercase tracking-wider mb-3 ${isDark ? "text-slate-300" : "text-slate-700"}`}
                   >
                     Nama Wallet
                   </label>
@@ -461,7 +461,7 @@ export default function WalletManager({
                 {/* Type */}
                 <div className="mb-4">
                   <label
-                    className={`block text-xs font-black uppercase tracking-wider mb-2 ${isDark ? "text-slate-300" : "text-slate-700"}`}
+                    className={`block text-sm font-black uppercase tracking-wider mb-3 ${isDark ? "text-slate-300" : "text-slate-700"}`}
                   >
                     Tipe Wallet
                   </label>
@@ -477,7 +477,7 @@ export default function WalletManager({
                             icon: type.defaultIcon,
                           })
                         }
-                        className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                        className={`p-4 rounded-xl border text-sm font-bold transition-all ${
                           formData.type === type.value
                             ? "bg-indigo-600 text-white border-indigo-700"
                             : isDark
@@ -494,7 +494,7 @@ export default function WalletManager({
                 {/* Icon */}
                 <div className="mb-4">
                   <label
-                    className={`block text-xs font-black uppercase tracking-wider mb-2 ${isDark ? "text-slate-300" : "text-slate-700"}`}
+                    className={`block text-sm font-black uppercase tracking-wider mb-3 ${isDark ? "text-slate-300" : "text-slate-700"}`}
                   >
                     Icon
                   </label>
@@ -521,7 +521,7 @@ export default function WalletManager({
                 {/* Color */}
                 <div className="mb-4">
                   <label
-                    className={`block text-xs font-black uppercase tracking-wider mb-2 ${isDark ? "text-slate-300" : "text-slate-700"}`}
+                    className={`block text-sm font-black uppercase tracking-wider mb-3 ${isDark ? "text-slate-300" : "text-slate-700"}`}
                   >
                     Warna
                   </label>
@@ -546,7 +546,7 @@ export default function WalletManager({
                 {!editingId && (
                   <div className="mb-4">
                     <label
-                      className={`block text-xs font-black uppercase tracking-wider mb-2 ${isDark ? "text-slate-300" : "text-slate-700"}`}
+                      className={`block text-sm font-black uppercase tracking-wider mb-3 ${isDark ? "text-slate-300" : "text-slate-700"}`}
                     >
                       Saldo Awal (Opsional)
                     </label>
@@ -595,14 +595,14 @@ export default function WalletManager({
                 >
                   Sesuaikan Saldo
                 </h3>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">
+                <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">
                   {syncingWallet.name}
                 </p>
 
                 <div className="space-y-4 mb-8">
                   <div>
                     <label
-                      className={`block text-[10px] font-black uppercase tracking-widest mb-2 ${isDark ? "text-slate-400" : "text-slate-500"}`}
+                      className={`block text-sm font-black uppercase tracking-widest mb-3 ${isDark ? "text-slate-400" : "text-slate-600"}`}
                     >
                       Saldo Riwayat (Aplikasi)
                     </label>
@@ -617,7 +617,7 @@ export default function WalletManager({
                   </div>
                   <div>
                     <label
-                      className={`block text-[10px] font-black uppercase tracking-widest mb-2 ${isDark ? "text-slate-400" : "text-slate-500"}`}
+                      className={`block text-sm font-black uppercase tracking-widest mb-3 ${isDark ? "text-slate-400" : "text-slate-600"}`}
                     >
                       Saldo Sebenarnya
                     </label>
@@ -633,7 +633,7 @@ export default function WalletManager({
                         }`}
                         autoFocus
                       />
-                      <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-blue-500/50">
+                      <span className="absolute left-6 top-1/2 -translate-y-1/2 text-sm font-black text-blue-500/60">
                         RP
                       </span>
                     </div>
@@ -643,7 +643,7 @@ export default function WalletManager({
                 <div className="flex gap-3">
                   <button
                     onClick={() => setSyncingWallet(null)}
-                    className={`flex-1 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                    className={`flex-1 py-5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
                       isDark
                         ? "bg-slate-800 text-slate-400 hover:bg-slate-700"
                         : "bg-slate-100 text-slate-500 hover:bg-slate-200"
@@ -654,7 +654,7 @@ export default function WalletManager({
                   <button
                     onClick={handleSyncSubmit}
                     disabled={loading}
-                    className="flex-1 py-4 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 disabled:opacity-50"
+                    className="flex-1 py-5 bg-indigo-600 text-white text-sm font-black uppercase tracking-widest rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 disabled:opacity-50"
                   >
                     {loading ? "Proses..." : "Update Saldo"}
                   </button>

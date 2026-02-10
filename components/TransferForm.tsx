@@ -156,7 +156,7 @@ export default function TransferForm({
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full animate-pulse bg-indigo-500" />
           <label
-            className={`text-xs font-black uppercase tracking-[0.2em] ${isDark ? "text-slate-400" : "text-slate-500"}`}
+            className={`text-sm font-black uppercase tracking-[0.2em] ${isDark ? "text-slate-400" : "text-slate-600"}`}
           >
             Transfer Antar Dompet
           </label>
@@ -164,7 +164,7 @@ export default function TransferForm({
         <button
           type="button"
           onClick={onCancel}
-          className="text-[10px] font-black text-red-500 hover:text-red-400 transition-colors uppercase tracking-widest"
+          className="text-sm font-black text-red-500 hover:text-red-400 transition-colors uppercase tracking-widest px-2 pb-2"
         >
           Batal
         </button>
@@ -173,7 +173,7 @@ export default function TransferForm({
       <div className="space-y-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Dari Dompet (Asal)
             </label>
             <div className="relative">
@@ -235,7 +235,7 @@ export default function TransferForm({
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Ke Dompet (Tujuan)
             </label>
             <div className="relative">
@@ -278,7 +278,7 @@ export default function TransferForm({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Tanggal
             </label>
             <input
@@ -294,7 +294,7 @@ export default function TransferForm({
             />
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Catatan
             </label>
             <input
@@ -313,7 +313,7 @@ export default function TransferForm({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Jumlah (Rp)
             </label>
             <div className="relative">
@@ -336,13 +336,13 @@ export default function TransferForm({
                 }`}
                 required
               />
-              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-indigo-600/50">
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-sm font-black text-indigo-600/60">
                 IDR
               </span>
             </div>
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+            <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">
               Biaya Admin (Rp)
             </label>
             <div className="relative">
@@ -357,7 +357,7 @@ export default function TransferForm({
                     : "bg-white/50 border-slate-200 text-slate-900 focus:border-indigo-600"
                 }`}
               />
-              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400">
+              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-600 dark:text-slate-400">
                 FEES
               </span>
             </div>
@@ -365,14 +365,14 @@ export default function TransferForm({
         </div>
 
         {errorStatus && (
-          <p className="text-[10px] text-red-500 px-2 font-black uppercase tracking-widest">
+          <p className="text-sm text-red-500 px-2 font-black uppercase tracking-widest mb-2">
             {errorStatus}
           </p>
         )}
 
         <button
           disabled={loading || wallets.length < 1}
-          className={`w-full mt-4 p-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 shadow-indigo-600/20 hover:shadow-indigo-600/40 ${loading || wallets.length < 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+          className={`w-full mt-6 p-6 rounded-2xl font-black text-sm uppercase tracking-[0.2em] text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 shadow-indigo-600/20 hover:shadow-indigo-600/40 ${loading || wallets.length < 1 ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           {loading ? (
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
