@@ -45,7 +45,16 @@ function ProfileContent({
     }
   };
 
-  const profileSections = [
+  interface ProfileItem {
+    icon: React.ReactNode;
+    label: string;
+    value: string | number | undefined | null;
+    color: string;
+    action?: () => void;
+    isToggle?: boolean;
+  }
+
+  const profileSections: { title: string; items: ProfileItem[] }[] = [
     {
       title: "Akun",
       items: [
@@ -74,7 +83,7 @@ function ProfileContent({
           icon: isDark ? <Sun size={20} /> : <Moon size={20} />,
           label: "Tema",
           value: isDark ? "Mode Gelap" : "Mode Terang",
-          color: isDark ? "text-amber-500" : "text-indigo-500",
+          color: isDark ? "text-amber-500" : "text-amber-500",
           action: () => setIsDark(!isDark),
           isToggle: true,
         },
