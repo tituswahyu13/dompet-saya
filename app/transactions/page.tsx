@@ -201,34 +201,30 @@ function TransactionsContent({
               Hai, {user.email?.split("@")[0]}
             </h1>
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
             <button
+              id="tour-theme"
               onClick={() => setIsDark(!isDark)}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Ganti Tema"
             >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-
-            <button
-              id="tour-tx-recurring"
-              onClick={() => setShowRecurringManager(true)}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 hover:bg-indigo-600/20" : "bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100 shadow-sm"} hover:scale-105 active:scale-95`}
-              title="Penjadwalan Rutin"
-            >
-              <RefreshCw size={20} />
+              {isDark ? (
+                <Sun size={18} className="sm:w-5 sm:h-5" />
+              ) : (
+                <Moon size={18} className="sm:w-5 sm:h-5" />
+              )}
             </button>
 
             <Link
               href="/pricing"
-              className={`px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
+              className={`px-2 py-1.5 sm:px-3 sm:py-1 rounded-xl sm:rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
                 isDark
                   ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
                   : "bg-indigo-50 border-indigo-100 text-indigo-600"
               }`}
             >
-              <Sparkles size={12} className="animate-pulse" />
-              <div className="flex flex-col">
+              <Sparkles size={14} className="animate-pulse sm:w-3 sm:h-3" />
+              <div className="hidden sm:flex flex-col">
                 <span className="text-sm font-black uppercase tracking-widest">
                   PRO
                 </span>
@@ -240,21 +236,37 @@ function TransactionsContent({
               </div>
             </Link>
 
+            <div className="w-px h-6 bg-slate-200 dark:bg-white/10 hidden sm:block" />
+
+            <button
+              id="tour-tx-recurring"
+              onClick={() => setShowRecurringManager(true)}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 hover:bg-indigo-600/20" : "bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100 shadow-sm"} hover:scale-105 active:scale-95`}
+              title="Penjadwalan Rutin"
+            >
+              <RefreshCw size={18} className="sm:w-5 sm:h-5" />
+            </button>
+
+            <div className="w-px h-6 bg-slate-200 dark:bg-white/10 hidden sm:block" />
+
             <button
               onClick={async () => {
                 const { error } = await supabase.auth.signOut();
                 if (error) alert("Gagal keluar: " + error.message);
               }}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Keluar"
             >
-              <LogOut size={18} />
+              <LogOut size={18} className="sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-[1600px] mx-auto px-6 py-8 sm:py-12 relative z-10 space-y-12 pb-32">
+      <main className="max-w-[1600px] mx-auto px-6 py-8 sm:py-12 relative z-10 space-y-12">
+        {/* Divider */}
+        <div className="w-full h-px bg-slate-200 dark:bg-white/10" />
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           <div className="lg:col-span-12 space-y-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 px-1">
@@ -353,9 +365,12 @@ function TransactionsContent({
               </div>
             </div>
 
+            {/* Divider */}
+            <div className="w-full h-px bg-slate-200 dark:bg-white/10" />
+
             <div
               id="tour-tx-list"
-              className={`rounded-[2.5rem] border overflow-hidden backdrop-blur-sm transition-all duration-500 ${isDark ? "glass-dark border-white/5 shadow-2xl shadow-black/40" : "glass border-white shadow-xl shadow-slate-200/50"}`}
+              className="w-full overflow-hidden transition-all duration-500"
             >
               {loading ? (
                 <div className="p-6 space-y-4">

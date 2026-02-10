@@ -31,9 +31,13 @@ import {
   Zap,
   Plus,
   Crown,
+  Calendar,
+  Filter,
 } from "lucide-react";
 import AppTour from "@/components/AppTour";
 import Skeleton from "@/components/Skeleton";
+import { format, subDays, startOfMonth, endOfMonth } from "date-fns";
+import { id } from "date-fns/locale";
 
 function AnalyticsContent({
   user,
@@ -55,13 +59,43 @@ function AnalyticsContent({
     "income" | "outcome" | "transfer" | null
   >(null);
 
+  // Date Range State
+  const [startDate, setStartDate] = useState(
+    format(startOfMonth(new Date()), "yyyy-MM-dd"),
+  );
+  const [endDate, setEndDate] = useState(
+    format(endOfMonth(new Date()), "yyyy-MM-dd"),
+  );
+  const [activePreset, setActivePreset] = useState("thisMonth");
+
+  const handlePresetChange = (preset: string) => {
+    setActivePreset(preset);
+    const today = new Date();
+    if (preset === "7days") {
+      setStartDate(format(subDays(today, 7), "yyyy-MM-dd"));
+      setEndDate(format(today, "yyyy-MM-dd"));
+    } else if (preset === "30days") {
+      setStartDate(format(subDays(today, 30), "yyyy-MM-dd"));
+      setEndDate(format(today, "yyyy-MM-dd"));
+    } else if (preset === "thisMonth") {
+      setStartDate(format(startOfMonth(today), "yyyy-MM-dd"));
+      setEndDate(format(endOfMonth(today), "yyyy-MM-dd"));
+    }
+  };
+
   const fetchData = async (user: User) => {
     setLoading(true);
-    const { data: txData } = await supabase
+
+    // Fetch Transactions with Date Filter
+    let query = supabase
       .from("transaction")
       .select("*")
       .eq("user_id", user.id)
+      .gte("tanggal", startDate)
+      .lte("tanggal", endDate)
       .order("tanggal", { ascending: false });
+
+    const { data: txData } = await query;
 
     if (txData) setTransactions(txData);
 
@@ -77,7 +111,7 @@ function AnalyticsContent({
 
   useEffect(() => {
     fetchData(user);
-  }, [user]);
+  }, [user, startDate, endDate]);
 
   return (
     <div
@@ -91,33 +125,37 @@ function AnalyticsContent({
 
       <header className="px-6 pt-8 pb-4 relative z-20">
         <div className="max-w-[1600px] mx-auto flex justify-between items-center">
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0 pr-2">
             <h1
-              className={`text-xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+              className={`text-lg sm:text-xl font-bold tracking-tight truncate ${isDark ? "text-white" : "text-slate-900"}`}
             >
               Hai, {user.email?.split("@")[0]}
             </h1>
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
             <button
               id="tour-theme"
               onClick={() => setIsDark(!isDark)}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Ganti Tema"
             >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+              {isDark ? (
+                <Sun size={18} className="sm:w-5 sm:h-5" />
+              ) : (
+                <Moon size={18} className="sm:w-5 sm:h-5" />
+              )}
             </button>
 
             <Link
               href="/pricing"
-              className={`px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
+              className={`px-2 py-1.5 sm:px-3 sm:py-1 rounded-xl sm:rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
                 isDark
                   ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
                   : "bg-indigo-50 border-indigo-100 text-indigo-600"
               }`}
             >
-              <Sparkles size={12} className="animate-pulse" />
-              <div className="flex flex-col">
+              <Sparkles size={14} className="animate-pulse sm:w-3 sm:h-3" />
+              <div className="hidden sm:flex flex-col">
                 <span className="text-sm font-black uppercase tracking-widest">
                   PRO
                 </span>
@@ -134,14 +172,79 @@ function AnalyticsContent({
                 const { error } = await supabase.auth.signOut();
                 if (error) alert("Gagal keluar: " + error.message);
               }}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Keluar"
             >
-              <LogOut size={18} />
+              <LogOut size={18} className="sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
       </header>
+
+      {/* Date Range Filter */}
+      <div className="px-6 mb-6 relative z-20">
+        <div className="max-w-[1600px] mx-auto">
+          <div
+            className={`p-4 rounded-3xl border border-white/5 backdrop-blur-md ${isDark ? "bg-slate-900/50" : "bg-white/50"}`}
+          >
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide">
+                {[
+                  { id: "7days", label: "7 Hari" },
+                  { id: "30days", label: "30 Hari" },
+                  { id: "thisMonth", label: "Bulan Ini" },
+                ].map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => handlePresetChange(preset.id)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+                      activePreset === preset.id
+                        ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                        : isDark
+                          ? "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white"
+                          : "bg-white text-slate-500 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-2 w-full md:w-auto">
+                <div
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl border w-full md:w-auto ${isDark ? "bg-slate-950 border-white/10" : "bg-white border-slate-200"}`}
+                >
+                  <Calendar size={14} className="opacity-50" />
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => {
+                      setStartDate(e.target.value);
+                      setActivePreset("custom");
+                    }}
+                    className="bg-transparent text-xs font-bold outline-none w-full md:w-auto"
+                  />
+                </div>
+                <span className="opacity-50">-</span>
+                <div
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl border w-full md:w-auto ${isDark ? "bg-slate-950 border-white/10" : "bg-white border-slate-200"}`}
+                >
+                  <Calendar size={14} className="opacity-50" />
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => {
+                      setEndDate(e.target.value);
+                      setActivePreset("custom");
+                    }}
+                    className="bg-transparent text-xs font-bold outline-none w-full md:w-auto"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <main className="max-w-[1600px] mx-auto px-6 py-8 sm:py-12 space-y-12 pb-32 transition-all duration-500 relative z-10">
         <div
@@ -185,10 +288,7 @@ function AnalyticsContent({
           </div> */}
         </div>
 
-        <section
-          id="tour-analytics-ai"
-          className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden group ${isDark ? "glass-dark border-white/5" : "glass border-white shadow-2xl shadow-indigo-100/30"}`}
-        >
+        <section id="tour-analytics-ai" className="py-4">
           <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8 px-1">
             <div className="w-1 h-5 sm:w-1.5 sm:h-6 bg-purple-500 rounded-full animate-pulse" />
             <h2
@@ -212,11 +312,11 @@ function AnalyticsContent({
           )}
         </section>
 
+        {/* Divider */}
+        <div className="w-full h-px bg-slate-200 dark:bg-white/10" />
+
         {/* Visual Analytics Section */}
-        <section
-          id="tour-analytics-visual"
-          className={`p-8 rounded-[3rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? "glass-dark border-white/5" : "glass border-white"}`}
-        >
+        <section id="tour-analytics-visual" className="py-4">
           <div className="flex justify-between items-center mb-10 px-1">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />

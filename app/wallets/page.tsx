@@ -97,32 +97,36 @@ function WalletsContent({
 
       <header className="px-6 pt-8 pb-4 relative z-20">
         <div className="max-w-[1600px] mx-auto flex justify-between items-center">
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0 pr-2">
             <h1
-              className={`text-xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+              className={`text-lg sm:text-xl font-bold tracking-tight truncate ${isDark ? "text-white" : "text-slate-900"}`}
             >
               Hai, {user.email?.split("@")[0]}
             </h1>
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
             <button
               onClick={() => setIsDark(!isDark)}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Ganti Tema"
             >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+              {isDark ? (
+                <Sun size={18} className="sm:w-5 sm:h-5" />
+              ) : (
+                <Moon size={18} className="sm:w-5 sm:h-5" />
+              )}
             </button>
 
             <Link
               href="/pricing"
-              className={`px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
+              className={`px-2 py-1.5 sm:px-3 sm:py-1 rounded-xl sm:rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
                 isDark
                   ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
                   : "bg-indigo-50 border-indigo-100 text-indigo-600"
               }`}
             >
-              <Sparkles size={12} className="animate-pulse" />
-              <div className="flex flex-col">
+              <Sparkles size={14} className="animate-pulse sm:w-3 sm:h-3" />
+              <div className="hidden sm:flex flex-col">
                 <span className="text-sm font-black uppercase tracking-widest">
                   PRO
                 </span>
@@ -139,10 +143,10 @@ function WalletsContent({
                 const { error } = await supabase.auth.signOut();
                 if (error) alert("Gagal keluar: " + error.message);
               }}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Keluar"
             >
-              <LogOut size={18} />
+              <LogOut size={18} className="sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
@@ -172,10 +176,10 @@ function WalletsContent({
           </div>
         </div>
 
-        <section
-          id="tour-wallets-list"
-          className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all duration-500 shadow-xl relative overflow-hidden ${isDark ? "glass-dark border-white/5" : "glass border-white"}`}
-        >
+        {/* Divider */}
+        <div className="w-full h-px bg-slate-200 dark:bg-white/10" />
+
+        <section id="tour-wallets-list" className="py-4">
           <div className="flex justify-between items-center mb-6 sm:mb-10">
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-1 h-5 sm:w-1.5 sm:h-6 bg-indigo-600 rounded-full" />

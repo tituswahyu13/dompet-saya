@@ -88,32 +88,36 @@ function GoalsContent({
 
       <header className="px-6 pt-8 pb-4 relative z-20">
         <div className="max-w-[1600px] mx-auto flex justify-between items-center">
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0 pr-2">
             <h1
-              className={`text-xl font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}
+              className={`text-lg sm:text-xl font-bold tracking-tight truncate ${isDark ? "text-white" : "text-slate-900"}`}
             >
               Hai, {user.email?.split("@")[0]}
             </h1>
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
             <button
               onClick={() => setIsDark(!isDark)}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-slate-800 text-amber-400 border border-white/5" : "bg-white text-slate-500 border border-slate-200 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Ganti Tema"
             >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+              {isDark ? (
+                <Sun size={18} className="sm:w-5 sm:h-5" />
+              ) : (
+                <Moon size={18} className="sm:w-5 sm:h-5" />
+              )}
             </button>
 
             <Link
               href="/pricing"
-              className={`px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
+              className={`px-2 py-1.5 sm:px-3 sm:py-1 rounded-xl sm:rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
                 isDark
                   ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
                   : "bg-indigo-50 border-indigo-100 text-indigo-600"
               }`}
             >
-              <Sparkles size={12} className="animate-pulse" />
-              <div className="flex flex-col">
+              <Sparkles size={14} className="animate-pulse sm:w-3 sm:h-3" />
+              <div className="hidden sm:flex flex-col">
                 <span className="text-sm font-black uppercase tracking-widest">
                   PRO
                 </span>
@@ -130,10 +134,10 @@ function GoalsContent({
                 const { error } = await supabase.auth.signOut();
                 if (error) alert("Gagal keluar: " + error.message);
               }}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all ${isDark ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-100 shadow-sm"} hover:scale-105 active:scale-95`}
               title="Keluar"
             >
-              <LogOut size={18} />
+              <LogOut size={18} className="sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
@@ -158,10 +162,10 @@ function GoalsContent({
           </button>
         </div>
 
-        <section
-          id="tour-goals-summary"
-          className={`p-5 sm:p-10 rounded-[2rem] sm:rounded-[4rem] border transition-all duration-700 relative overflow-hidden group ${isDark ? "glass-dark border-white/5" : "glass border-white shadow-2xl shadow-indigo-100/50"}`}
-        >
+        {/* Divider */}
+        <div className="w-full h-px bg-slate-200 dark:bg-white/10" />
+
+        <section id="tour-goals-summary" className="py-4">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             <div className="lg:col-span-5 space-y-6 sm:space-y-8">
               <div className="space-y-2 sm:space-y-3">
@@ -275,7 +279,7 @@ function GoalsContent({
                     return (
                       <div
                         key={g.id}
-                        className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] relative overflow-hidden group ${isDark ? "bg-slate-900/60 border-white/5" : "bg-white border-slate-100 shadow-sm hover:shadow-md"}`}
+                        className={`p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all hover:scale-[1.02] relative overflow-hidden group ${isDark ? "bg-slate-900/60 border-white/5" : "bg-white border-slate-200"}`}
                       >
                         <div className="absolute right-0 top-0 w-24 h-24 sm:w-32 sm:h-32 -mr-6 -mt-6 sm:-mr-8 sm:-mt-8 opacity-5 group-hover:rotate-12 transition-transform duration-500">
                           <MinimalistIcon
