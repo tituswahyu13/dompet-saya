@@ -27,7 +27,6 @@ import {
   BarChart3,
   TrendingUp as TrendIcon,
   Bot,
-  Sparkles,
   Zap,
   Plus,
   Crown,
@@ -150,11 +149,11 @@ function AnalyticsContent({
               href="/pricing"
               className={`px-2 py-1.5 sm:px-3 sm:py-1 rounded-xl sm:rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
                 isDark
-                  ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
-                  : "bg-indigo-50 border-indigo-100 text-indigo-600"
+                  ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                  : "bg-amber-50 border-amber-100 text-amber-600"
               }`}
             >
-              <Sparkles size={14} className="animate-pulse sm:w-3 sm:h-3" />
+              <Crown size={14} className="animate-pulse sm:w-3 sm:h-3" />
               <div className="hidden sm:flex flex-col">
                 <span className="text-sm font-black uppercase tracking-widest">
                   PRO

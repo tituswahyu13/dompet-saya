@@ -582,7 +582,7 @@ export default function TransactionForm({
           ) : (
             <span className="flex items-center gap-2 text-sm font-black uppercase tracking-[0.2em]">
               {editData
-                ? "Perbarui Data"
+                ? "Simpan"
                 : type === "saving"
                   ? "Simpan Tabungan"
                   : "Simpan Data"}

@@ -110,10 +110,19 @@ export default function RecurringManager({
       return;
     }
 
+    if (formData.type === "transfer" && !formData.target_wallet_id) {
+      alert("Harap pilih dompet tujuan transfer!");
+      return;
+    }
+
     setLoading(true);
 
     const payload = {
       ...formData,
+      target_wallet_id:
+        formData.type === "transfer" && formData.target_wallet_id
+          ? formData.target_wallet_id
+          : null,
       user_id: user.id,
     };
 
@@ -245,7 +254,7 @@ export default function RecurringManager({
       wallet_id: wallets[0]?.id || "",
       target_wallet_id: "",
       frequency: "monthly",
-      day_of_month: 1,
+      day_of_month: 0,
       is_active: true,
     });
     setEditingId(null);
@@ -541,7 +550,7 @@ export default function RecurringManager({
                     </label>
                     <input
                       type="number"
-                      value={formData.amount}
+                      value={formData.amount === 0 ? "" : formData.amount}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -667,7 +676,11 @@ export default function RecurringManager({
                         type="number"
                         min="1"
                         max="31"
-                        value={formData.day_of_month}
+                        value={
+                          formData.day_of_month === 0
+                            ? ""
+                            : formData.day_of_month
+                        }
                         onChange={(e) =>
                           setFormData({
                             ...formData,

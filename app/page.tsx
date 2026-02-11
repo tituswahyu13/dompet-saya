@@ -33,6 +33,8 @@ import UpgradeModal from "@/components/UpgradeModal";
 import TransactionForm from "@/components/TransactionForm";
 import TransferForm from "@/components/TransferForm";
 import AppTour from "@/components/AppTour";
+import TransactionSkeleton from "@/components/skeletons/TransactionSkeleton";
+import PullToRefresh from "@/components/PullToRefresh";
 import { User } from "@supabase/supabase-js";
 import { processRecurringTransactions } from "@/lib/recurringProcessor";
 import Link from "next/link";
@@ -56,7 +58,7 @@ import {
   Smartphone,
   Coins,
   Plus,
-  Sparkles,
+  Crown,
   HelpCircle,
   Eye,
   EyeOff,
@@ -450,11 +452,11 @@ function DashboardContent({
               href="/pricing"
               className={`px-2 py-1.5 sm:px-3 sm:py-1 rounded-xl sm:rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
                 isDark
-                  ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
-                  : "bg-indigo-50 border-indigo-100 text-indigo-600"
+                  ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                  : "bg-amber-50 border-amber-100 text-amber-600"
               }`}
             >
-              <Sparkles size={14} className="animate-pulse sm:w-3 sm:h-3" />
+              <Crown size={14} className="animate-pulse sm:w-3 sm:h-3" />
               <div className="hidden sm:flex flex-col">
                 <span className="text-sm font-black uppercase tracking-widest">
                   PRO
@@ -798,11 +800,8 @@ function DashboardContent({
           </div>
 
           {loading ? (
-            <div className="p-12 text-center">
-              <div className="w-10 h-10 border-4 border-indigo-600/20 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                Sinkronisasi...
-              </p>
+            <div className="space-y-4">
+              <TransactionSkeleton count={5} isDark={isDark} />
             </div>
           ) : transactions.length === 0 ? (
             <div className="p-16 text-center border-2 border-dashed border-slate-200 rounded-[2.5rem] bg-slate-50/50">

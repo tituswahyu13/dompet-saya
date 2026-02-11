@@ -16,7 +16,6 @@ import {
   Bell,
   Shield,
   HelpCircle,
-  Sparkles,
   ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
@@ -135,11 +134,11 @@ function ProfileContent({
               href="/pricing"
               className={`px-2 py-1.5 sm:px-3 sm:py-1 rounded-xl sm:rounded-full flex items-center gap-1.5 border transition-all hover:scale-105 active:scale-95 ${
                 isDark
-                  ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
-                  : "bg-indigo-50 border-indigo-100 text-indigo-600"
+                  ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                  : "bg-amber-50 border-amber-100 text-amber-600"
               }`}
             >
-              <Sparkles size={14} className="animate-pulse sm:w-3 sm:h-3" />
+              <Crown size={14} className="animate-pulse sm:w-3 sm:h-3" />
               <div className="hidden sm:flex flex-col">
                 <span className="text-sm font-black uppercase tracking-widest">
                   PRO
@@ -188,7 +187,7 @@ function ProfileContent({
                 </p>
                 {isPro && subscription?.status === "trialing" && (
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-xl">
-                    <Sparkles size={14} className="text-amber-500" />
+                    <Crown size={14} className="text-amber-500" />
                     <span className="text-xs font-black text-amber-600 dark:text-amber-400 uppercase tracking-wider">
                       Trial: {subscription.days_left} hari tersisa
                     </span>

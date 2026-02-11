@@ -9,7 +9,6 @@ import {
   Wallet,
   LogOut,
   Crown,
-  Sparkles,
   Plus,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -24,8 +23,13 @@ import ExportManager from "@/components/ExportManager";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import NotificationCenter from "@/components/NotificationCenter";
 import AppTour from "@/components/AppTour";
+import PullToRefresh from "@/components/PullToRefresh";
+import BottomSheet from "@/components/BottomSheet";
+import SwipeableListItem from "@/components/SwipeableListItem";
+import TransactionSkeleton from "@/components/skeletons/TransactionSkeleton";
 import { User } from "@supabase/supabase-js";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { subMonths } from "date-fns";
 
 function TransactionsContent({
@@ -124,10 +128,29 @@ function TransactionsContent({
   };
 
   const filteredTransactions = getFilteredTransactions();
-  const paginatedTransactions = filteredTransactions.slice(
+
+  // Calculate displayed transactions
+  const displayedTransactions = filteredTransactions.slice(
     0,
     page * ITEMS_PER_PAGE,
   );
+
+  // Check if there's more data to load
+  const hasMore = displayedTransactions.length < filteredTransactions.length;
+
+  // Infinite scroll handler
+  const handleLoadMore = () => {
+    if (hasMore && !loading) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  // Use infinite scroll hook
+  const { sentinelRef } = useInfiniteScroll({
+    onLoadMore: handleLoadMore,
+    hasMore,
+    loading,
+  });
 
   useEffect(() => {
     fetchData(user);
@@ -189,7 +212,19 @@ function TransactionsContent({
 
       {/* Mobile Bottom Navigation */}
       <div className="sm:hidden">
-        <Navigation isDark={isDark} variant="bottom" />
+        <Navigation
+          isDark={isDark}
+          variant="bottom"
+          onQuickAction={(action) => {
+            if (action === "transfer") {
+              setIsTransferMode(true);
+              setShowAddModal(true);
+            } else {
+              setIsTransferMode(false);
+              setShowAddModal(true);
+            }
+          }}
+        />
       </div>
 
       <header className="px-6 pt-8 pb-4 relative z-20">
@@ -223,7 +258,7 @@ function TransactionsContent({
                   : "bg-indigo-50 border-indigo-100 text-indigo-600"
               }`}
             >
-              <Sparkles size={14} className="animate-pulse sm:w-3 sm:h-3" />
+              <Crown size={14} className="animate-pulse sm:w-3 sm:h-3" />
               <div className="hidden sm:flex flex-col">
                 <span className="text-sm font-black uppercase tracking-widest">
                   PRO
@@ -373,23 +408,8 @@ function TransactionsContent({
               className="w-full overflow-hidden transition-all duration-500"
             >
               {loading ? (
-                <div className="p-6 space-y-4">
-                  {[...Array(5)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center justify-between gap-4"
-                    >
-                      <div className="flex items-center gap-4 flex-1">
-                        <Skeleton className="w-12 h-12 rounded-2xl" />
-                        <div className="space-y-2">
-                          <Skeleton className="w-32 h-4" />
-                          <Skeleton className="w-20 h-3" />
-                        </div>
-                      </div>
-                      <Skeleton className="w-24 h-6 rounded-lg" />
-                      <Skeleton className="w-32 h-6 rounded-lg" />
-                    </div>
-                  ))}
+                <div className="p-6">
+                  <TransactionSkeleton count={5} isDark={isDark} />
                 </div>
               ) : filteredTransactions.length === 0 ? (
                 <div className="p-20 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
@@ -419,104 +439,118 @@ function TransactionsContent({
                     <tbody
                       className={`divide-y ${isDark ? "divide-white/5" : "divide-slate-100"}`}
                     >
-                      {paginatedTransactions.map((t) => (
-                        <tr
+                      {displayedTransactions.map((t) => (
+                        <SwipeableListItem
                           key={t.id}
-                          className="hover:bg-white/[0.02] group transition-all duration-300"
+                          isDark={isDark}
+                          onEdit={() => handleEdit(t)}
+                          onDelete={() => setTransactionToDelete(t)}
                         >
-                          <td className="p-6">
-                            <div className="text-md font-black tracking-tighter">
-                              {new Date(t.tanggal).toLocaleDateString("id-ID", {
-                                day: "2-digit",
-                                month: "short",
-                              })}
-                            </div>
-                            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                              {new Date(t.tanggal).getFullYear()}
-                            </div>
-                          </td>
-                          <td className="p-6">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-sm font-bold">
-                                {t.keterangan}
-                              </span>
+                          <tr className="hover:bg-white/[0.02] group transition-all duration-300">
+                            <td className="p-6">
+                              <div className="text-md font-black tracking-tighter">
+                                {new Date(t.tanggal).toLocaleDateString(
+                                  "id-ID",
+                                  {
+                                    day: "2-digit",
+                                    month: "short",
+                                  },
+                                )}
+                              </div>
+                              <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                {new Date(t.tanggal).getFullYear()}
+                              </div>
+                            </td>
+                            <td className="p-6">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-sm font-bold">
+                                  {t.keterangan}
+                                </span>
+                                <span
+                                  className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tight ${isDark ? "bg-slate-800 text-slate-400" : "bg-slate-100 text-slate-500"}`}
+                                >
+                                  {
+                                    wallets.find((w) => w.id === t.wallet_id)
+                                      ?.name
+                                  }
+                                </span>
+                              </div>
                               <span
-                                className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tight ${isDark ? "bg-slate-800 text-slate-400" : "bg-slate-100 text-slate-500"}`}
+                                className={`text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-wider ${t.income > 0 ? "bg-green-500/10 text-green-500" : t.saving > 0 ? "bg-blue-500/10 text-blue-500" : "bg-red-500/10 text-red-500"}`}
                               >
-                                {
-                                  wallets.find((w) => w.id === t.wallet_id)
-                                    ?.name
-                                }
+                                {t.kategori}
                               </span>
-                            </div>
-                            <span
-                              className={`text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-wider ${t.income > 0 ? "bg-green-500/10 text-green-500" : t.saving > 0 ? "bg-blue-500/10 text-blue-500" : "bg-red-500/10 text-red-500"}`}
+                            </td>
+                            <td
+                              className={`p-6 text-right font-black tracking-tighter ${t.income > 0 ? "text-green-500" : t.saving > 0 ? "text-blue-500" : "text-red-500"}`}
                             >
-                              {t.kategori}
-                            </span>
-                          </td>
-                          <td
-                            className={`p-6 text-right font-black tracking-tighter ${t.income > 0 ? "text-green-500" : t.saving > 0 ? "text-blue-500" : "text-red-500"}`}
-                          >
-                            {(t.income || t.outcome || t.saving).toLocaleString(
-                              "id-ID",
-                            )}
-                          </td>
-                          <td className="p-6">
-                            <div className="flex justify-center gap-2 transition-all">
-                              <button
-                                onClick={() => handleEdit(t)}
-                                className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-500/10 text-indigo-600 hover:bg-indigo-500 text-white transition-all"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-4 w-4"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
+                              {(
+                                t.income ||
+                                t.outcome ||
+                                t.saving
+                              ).toLocaleString("id-ID")}
+                            </td>
+                            <td className="p-6">
+                              <div className="flex justify-center gap-2 transition-all">
+                                <button
+                                  onClick={() => handleEdit(t)}
+                                  className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-500/10 text-indigo-600 hover:bg-indigo-500 text-white transition-all"
                                 >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                  />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={() => setTransactionToDelete(t)}
-                                className="w-8 h-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-500 hover:bg-red-500 text-white transition-all"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-4 w-4"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  onClick={() => setTransactionToDelete(t)}
+                                  className="w-8 h-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-500 hover:bg-red-500 text-white transition-all"
                                 >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                  />
-                                </svg>
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        </SwipeableListItem>
                       ))}
                     </tbody>
                   </table>
-                  {filteredTransactions.length >
-                    paginatedTransactions.length && (
+
+                  {/* Infinite Scroll Sentinel */}
+                  {hasMore && (
+                    <div ref={sentinelRef} className="p-6">
+                      <TransactionSkeleton count={3} isDark={isDark} />
+                    </div>
+                  )}
+
+                  {/* End of list message */}
+                  {!hasMore && displayedTransactions.length > 0 && (
                     <div className="p-8 text-center border-t border-white/5">
-                      <button
-                        onClick={() => setPage(page + 1)}
-                        className="px-10 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition-all"
-                      >
-                        Muat Lebih Banyak
-                      </button>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                        Semua transaksi telah dimuat
+                      </p>
                     </div>
                   )}
                 </div>
@@ -625,15 +659,129 @@ function TransactionsContent({
             }`}
           >
             <div className="p-8">
-              <TransactionForm
-                user={user}
-                isDark={isDark}
-                onCancel={() => setShowAddModal(false)}
-                onRefresh={() => {
-                  fetchData(user);
-                  setShowAddModal(false);
-                }}
-              />
+              {isTransferMode ? (
+                <TransferForm
+                  user={user}
+                  isDark={isDark}
+                  onCancel={() => setShowAddModal(false)}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setShowAddModal(false);
+                  }}
+                />
+              ) : (
+                <TransactionForm
+                  user={user}
+                  isDark={isDark}
+                  editData={editingTransaction}
+                  onCancel={() => {
+                    setShowAddModal(false);
+                    setEditingTransaction(null);
+                  }}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setShowAddModal(false);
+                    setEditingTransaction(null);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Bottom Sheet */}
+      {showAddModal && (
+        <div className="md:hidden">
+          <BottomSheet
+            isOpen={showAddModal}
+            onClose={() => {
+              setShowAddModal(false);
+              setEditingTransaction(null);
+              setIsTransferMode(false);
+            }}
+            isDark={isDark}
+            title={
+              isTransferMode
+                ? "Transfer"
+                : editingTransaction
+                  ? "Edit Transaksi"
+                  : "Tambah Transaksi"
+            }
+          >
+            <div className="p-6">
+              {isTransferMode ? (
+                <TransferForm
+                  user={user}
+                  isDark={isDark}
+                  onCancel={() => setShowAddModal(false)}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setShowAddModal(false);
+                  }}
+                />
+              ) : (
+                <TransactionForm
+                  user={user}
+                  isDark={isDark}
+                  editData={editingTransaction}
+                  onCancel={() => {
+                    setShowAddModal(false);
+                    setEditingTransaction(null);
+                  }}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setShowAddModal(false);
+                    setEditingTransaction(null);
+                  }}
+                />
+              )}
+            </div>
+          </BottomSheet>
+        </div>
+      )}
+
+      {/* Desktop Centered Modal */}
+      {showAddModal && (
+        <div className="hidden md:block fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div
+            className="absolute inset-0"
+            onClick={() => setShowAddModal(false)}
+          />
+          <div
+            className={`relative w-full max-w-2xl rounded-[3rem] border shadow-2xl overflow-hidden transition-all animate-in zoom-in-95 duration-300 ${
+              isDark
+                ? "bg-slate-900 border-white/10"
+                : "bg-white border-slate-200"
+            }`}
+          >
+            <div className="p-8">
+              {isTransferMode ? (
+                <TransferForm
+                  user={user}
+                  isDark={isDark}
+                  onCancel={() => setShowAddModal(false)}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setShowAddModal(false);
+                  }}
+                />
+              ) : (
+                <TransactionForm
+                  user={user}
+                  isDark={isDark}
+                  editData={editingTransaction}
+                  onCancel={() => {
+                    setShowAddModal(false);
+                    setEditingTransaction(null);
+                  }}
+                  onRefresh={() => {
+                    fetchData(user);
+                    setShowAddModal(false);
+                    setEditingTransaction(null);
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>
